@@ -1,0 +1,1427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ElevUra Dashboard - AI Command Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+  /* === Base Backgrounds === */
+  --bg-primary: #05070b;
+  --bg-secondary: #0b0f14;
+  --bg-tertiary: #11161d;
+  --bg-card: rgba(12, 16, 22, 0.88);
+  --bg-sidebar: #070b10;
+  --bg-navbar: rgba(8, 12, 18, 0.95);
+
+  /* === Grid / Borders === */
+  --border-primary: rgba(0, 255, 255, 0.12);
+  --border-secondary: rgba(255, 255, 255, 0.08);
+  --border-glow: rgba(0, 238, 255, 0.35);
+
+  /* === Neon Accent Colors === */
+  --accent-cyan: #00eaff;
+  --accent-cyan-soft: #39d8ff;
+  --accent-teal: #00c2c7;
+  --accent-blue: #3b82f6;
+  --accent-purple: #a78bfa;
+
+  /* === Glow Effects === */
+  --glow-cyan: 0 0 12px rgba(0, 234, 255, 0.45);
+  --glow-purple: 0 0 10px rgba(167, 139, 250, 0.35);
+
+  /* === Text Colors === */
+  --text-primary: #f3f7fb;
+  --text-secondary: #9aa4b2;
+  --text-muted: #64748b;
+  --text-accent: #00eaff;
+
+  /* === Buttons === */
+  --btn-primary-bg: linear-gradient(
+    135deg,
+    #00eaff 0%,
+    #00c2c7 100%
+  );
+
+  --btn-secondary-bg: rgba(255,255,255,0.04);
+
+  --btn-hover: #12f7ff;
+
+  /* === Cards === */
+  --card-bg: linear-gradient(
+    180deg,
+    rgba(15, 20, 28, 0.95) 0%,
+    rgba(9, 12, 18, 0.95) 100%
+  );
+
+  --card-border: rgba(255,255,255,0.06);
+
+  /* === Graph Colors === */
+  --graph-line-1: #00eaff;
+  --graph-line-2: #b388ff;
+
+  /* === Shadows === */
+  --shadow-card:
+    0 0 0 1px rgba(255,255,255,0.04),
+    0 8px 40px rgba(0,0,0,0.55);
+
+  --shadow-glow:
+    0 0 25px rgba(0, 234, 255, 0.12);
+
+  /* === Hex Grid Background === */
+  --hex-line: rgba(255,255,255,0.08);
+}
+        html {
+            scroll-behavior: smooth;
+        }
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: Inter, sans-serif;
+}
+
+/* Background Pattern - Volumetric Wireframe Grid */
+
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+
+    background-image: url('images/bg.png');
+    background-repeat: repeat;
+
+    /* SMALLER cubes */
+    background-size: 80px 80px;
+
+    /* visibility */
+    opacity: 0.45;
+
+    pointer-events: none;
+    z-index: 0;
+
+    filter:
+        brightness(1.2)
+        contrast(1.4);
+
+    mix-blend-mode: screen;
+}
+/* Ambient Glow Overlay */
+body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+
+    background:
+        radial-gradient(
+            ellipse 1200px 800px at 50% 20%,
+            rgba(0, 229, 255, 0.15) 0%,
+            rgba(0, 229, 255, 0.05) 30%,
+            transparent 70%
+        ),
+
+        radial-gradient(
+            ellipse at 50% 50%,
+            transparent 30%,
+            rgba(5, 6, 7, 0.4) 100%
+        ),
+
+        radial-gradient(
+            ellipse 800px 400px at 50% 0%,
+            rgba(0, 229, 255, 0.08) 0%,
+            transparent 60%
+        );
+
+    pointer-events: none;
+    z-index: 1;
+}
+        .container-wrapper {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ==================== SIDEBAR ==================== */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 220px;
+            height: 100vh;
+            background: var(--bg-sidebar);
+            border-right: 1px solid var(--border-secondary);
+            display: flex;
+            flex-direction: column;
+            padding: 32px 16px;
+            z-index: 100;
+            overflow-y: auto;
+            box-shadow: none;
+        }
+
+        /* Sidebar lighting zone overlay - removed */
+        .sidebar::before {
+            display: none;
+        }
+
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 48px;
+            padding: 12px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .sidebar-brand-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--cyan-primary), var(--cyan-deep));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar-brand-icon::before {
+            content: '⚡';
+        }
+
+        .sidebar-brand-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+
+        .sidebar-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            border: 1px solid transparent;
+            position: relative;
+            z-index: 2;
+        }
+
+        .sidebar-item:hover {
+            background: rgba(0, 229, 255, 0.08);
+            color: var(--text-primary);
+            border-color: var(--border-secondary);
+            box-shadow: none;
+        }
+
+        .sidebar-item.active {
+            background: rgba(0, 229, 255, 0.12);
+            color: var(--text-primary);
+            border-color: var(--border-secondary);
+            box-shadow: none;
+        }
+
+        .sidebar-item-icon {
+            font-size: 18px;
+            width: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sidebar-status {
+            margin-top: auto;
+            padding: 12px;
+            background: 
+                linear-gradient(135deg, rgba(0, 229, 255, 0.1) 0%, rgba(0, 229, 255, 0.05) 100%);
+            border: 1px solid var(--border-cyan);
+            border-radius: 12px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            position: relative;
+            z-index: 2;
+            box-shadow: 
+                0 0 20px rgba(0, 229, 255, 0.1),
+                inset 0 1px 8px rgba(255, 255, 255, 0.02);
+        }
+
+        .sidebar-status-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: var(--cyan-primary);
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* ==================== MAIN CONTENT ==================== */
+        .main-content {
+            margin-left: 220px;
+            width: calc(100% - 220px);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background: var(--bg-primary);
+            position: relative;
+        }
+
+        /* Invisible lighting zone - ambient glow - removed */
+        .main-content::before {
+            display: none;
+        }
+
+        /* ==================== TOP HEADER ==================== */
+        .top-header {
+            height: 72px;
+            border-bottom: 1px solid var(--border-secondary);
+            background: var(--bg-navbar);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 28px;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            box-shadow: none;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .version-badge {
+            height: 30px;
+            padding: 0 12px;
+            background: rgba(15, 17, 21, 0.8);
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            color: var(--text-secondary);
+            letter-spacing: 0.5px;
+        }
+
+        .environment-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .environment-text .production {
+            color: var(--cyan-primary);
+            font-weight: 600;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .notification-icon {
+            position: relative;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .notification-icon:hover {
+            color: var(--cyan-primary);
+        }
+
+        .notification-dot {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            width: 8px;
+            height: 8px;
+            background: var(--cyan-primary);
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(0, 229, 255, 0.6);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--purple-accent), var(--cyan-primary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
+        }
+
+        .user-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .user-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .user-tier {
+            font-size: 11px;
+            color: var(--cyan-primary);
+            font-weight: 500;
+        }
+
+        /* ==================== CONTENT AREA ==================== */
+        .content-area {
+            padding: 32px 32px 40px 32px;
+            flex: 1;
+            overflow-y: auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ==================== HERO SECTION ==================== */
+        .hero-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-secondary);
+            border-radius: 32px;
+            min-height: 320px;
+            padding: 40px;
+            margin-bottom: 40px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: none;
+        }
+
+        /* Layered lighting planes - removed */
+        .hero-panel::before {
+            display: none;
+        }
+
+        /* Volumetric haze layer - removed */
+        .hero-panel::after {
+            display: none;
+        }
+
+        @keyframes glowShift {
+            0%, 100% { opacity: 0.8; transform: translateY(0px); }
+            50% { opacity: 1; transform: translateY(20px); }
+        }
+
+        .hero-left {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border: 1px solid var(--cyan-primary);
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--cyan-primary);
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            width: fit-content;
+        }
+
+        .hero-title {
+            font-size: 56px;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 8px;
+            letter-spacing: -2px;
+            color: var(--text-primary);
+            text-transform: none;
+        }
+
+        .hero-title-gradient {
+            background: linear-gradient(90deg, var(--cyan-primary) 0%, var(--cyan-deep) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            line-height: 1.5;
+            max-width: 600px;
+        }
+
+        .command-input-wrapper {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 0;
+        }
+
+        .command-input {
+            flex: 1;
+            height: 48px;
+            padding: 0 16px;
+            background: 
+                /* Matte recessed surface */
+                radial-gradient(ellipse at center, rgba(8, 9, 11, 0.8) 0%, rgba(5, 6, 7, 0.9) 100%);
+            border: 1px solid var(--border-cyan);
+            border-radius: 14px;
+            color: var(--text-primary);
+            font-size: 13px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+            box-shadow: 
+                /* Inset recessed shadow */
+                inset 0 4px 12px rgba(0, 0, 0, 0.6),
+                inset 0 1px 3px rgba(255, 255, 255, 0.02);
+        }
+
+        .command-input::placeholder {
+            color: rgba(155, 163, 175, 0.6);
+            font-style: italic;
+        }
+
+        .command-input:focus {
+            outline: none;
+            border-color: var(--cyan-primary);
+            box-shadow: 
+                inset 0 4px 12px rgba(0, 0, 0, 0.6),
+                inset 0 1px 3px rgba(255, 255, 255, 0.02),
+                0 0 30px rgba(0, 229, 255, 0.25),
+                0 0 60px rgba(0, 229, 255, 0.15);
+        }
+
+        .command-input::before {
+            content: '⌘';
+            margin-right: 8px;
+            color: var(--cyan-primary);
+            font-weight: 600;
+        }
+
+        .execute-button {
+            width: 120px;
+            height: 48px;
+            background: linear-gradient(135deg, #F5F7FA 0%, #E8EAEE 100%);
+            color: #050607;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            box-shadow: 
+                /* Main glow */
+                0 0 30px rgba(0, 229, 255, 0.2),
+                /* Depth shadow */
+                0 12px 30px rgba(0, 0, 0, 0.4),
+                /* Inner highlight */
+                inset 0 1px 10px rgba(255, 255, 255, 0.3);
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .execute-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 0 40px rgba(0, 229, 255, 0.35),
+                0 18px 40px rgba(0, 0, 0, 0.5),
+                inset 0 1px 10px rgba(255, 255, 255, 0.4);
+        }
+
+        .execute-button:active {
+            transform: translateY(0);
+        }
+
+        .hero-right {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 280px;
+        }
+
+        .floating-cube {
+            position: relative;
+            width: 160px;
+            height: 160px;
+            animation: floatAnimation 6s ease-in-out infinite;
+        }
+
+        @keyframes floatAnimation {
+            0%, 100% { transform: translateY(0px) rotateZ(0deg); }
+            50% { transform: translateY(-15px) rotateZ(5deg); }
+        }
+
+        .cube-line {
+            position: absolute;
+            background: linear-gradient(90deg, var(--cyan-primary), var(--cyan-deep));
+            opacity: 0.3;
+        }
+
+        .cube-line-1 { top: 0; left: 0; width: 120px; height: 2px; }
+        .cube-line-2 { top: 0; left: 120px; width: 2px; height: 120px; }
+        .cube-line-3 { top: 120px; left: 0; width: 120px; height: 2px; }
+        .cube-line-4 { top: 0; left: 0; width: 2px; height: 120px; }
+
+        .cube-inner {
+            position: absolute;
+            top: 32px;
+            left: 32px;
+            width: 80px;
+            height: 80px;
+            border: 2px solid var(--cyan-primary);
+            border-radius: 4px;
+            opacity: 0.5;
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
+            animation: rotateInner 8s linear infinite;
+        }
+
+        @keyframes rotateInner {
+            0% { transform: rotateX(0deg) rotateY(0deg); }
+            100% { transform: rotateX(360deg) rotateY(360deg); }
+        }
+
+        .cube-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 220px;
+            height: 220px;
+            background: 
+                /* Volumetric core glow */
+                radial-gradient(circle, rgba(0, 229, 255, 0.25) 0%, rgba(0, 229, 255, 0.1) 25%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(60px);
+            animation: volumetricPulse 4s ease-in-out infinite;
+            box-shadow: 
+                0 0 100px rgba(0, 229, 255, 0.2),
+                0 0 200px rgba(0, 229, 255, 0.1);
+        }
+
+        @keyframes volumetricPulse {
+            0%, 100% { 
+                opacity: 0.5;
+                transform: translate(-50%, -50%) scale(0.9);
+            }
+            50% { 
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+        }
+
+        /* ==================== MODULE GRID ==================== */
+        .module-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 26px;
+            margin-bottom: 40px;
+        }
+
+        .module-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-secondary);
+            border-radius: 28px;
+            height: 240px;
+            padding: 28px;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            display: flex;
+            flex-direction: column;
+            box-shadow: none;
+        }
+
+        /* Layer 1: Removed glass gradient overlay */
+        .module-card::before {
+            display: none;
+        }
+
+        /* Layer 2: Ambient shadow diffusion - removed */
+        .module-card::after {
+            display: none;
+        }
+
+        .module-card:hover::after {
+            display: none;
+        }
+
+        .module-card:hover {
+            border-color: var(--border-secondary);
+            box-shadow: none;
+            transform: translateY(-2px);
+        }
+
+        .module-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .module-icon {
+            width: 44px;
+            height: 44px;
+            background: rgba(0, 229, 255, 0.1);
+            border: 1px solid var(--cyan-primary);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .module-tag {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--cyan-primary);
+            background: rgba(0, 229, 255, 0.1);
+            padding: 4px 10px;
+            border-radius: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .module-title {
+            font-size: 34px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .module-description {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 32px;
+            max-width: 420px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .module-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--cyan-primary);
+            font-weight: 600;
+            font-size: 15px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .module-cta:hover {
+            gap: 12px;
+            text-shadow: 0 0 8px rgba(0, 229, 255, 0.4);
+        }
+
+        /* ==================== ANALYTICS SECTION ==================== */
+        .analytics-section {
+            display: grid;
+            grid-template-columns: 360px 1fr;
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .analytics-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-secondary);
+            border-radius: 28px;
+            height: 340px;
+            padding: 28px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: none;
+        }
+
+        /* Layered glass reflection effect - removed */
+        .analytics-panel::before {
+            display: none;
+        }
+
+        .analytics-panel:hover {
+            border-color: var(--border-secondary);
+            box-shadow: none;
+        }
+
+        .analytics-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .analytics-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .export-button {
+            height: 34px;
+            padding: 0 14px;
+            background: rgba(0, 229, 255, 0.12);
+            border: 1px solid var(--cyan-primary);
+            color: var(--cyan-primary);
+            border-radius: 10px;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 0 12px rgba(0, 229, 255, 0.15),
+                inset 0 1px 4px rgba(255, 255, 255, 0.02);
+        }
+
+        .export-button:hover {
+            background: rgba(0, 229, 255, 0.2);
+            box-shadow: 
+                0 0 20px rgba(0, 229, 255, 0.3),
+                inset 0 1px 4px rgba(255, 255, 255, 0.04);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .metric-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-secondary);
+            border-radius: 18px;
+            height: 84px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+            box-shadow: none;
+        }
+
+        .metric-label {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            margin-bottom: 4px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .metric-value {
+            font-size: 42px;
+            font-weight: 700;
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+            margin-bottom: 0;
+        }
+
+        .metric-unit {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .metric-latency {
+            color: var(--cyan-primary);
+            font-weight: 600;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 220px;
+            margin-top: 16px;
+        }
+
+        .chart-canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Custom chart styles */
+        .success-chart {
+            position: relative;
+            height: 240px;
+        }
+
+        .chart-line {
+            position: absolute;
+            bottom: 40px;
+            left: 40px;
+            right: 40px;
+            height: 200px;
+            background: linear-gradient(90deg, 
+                transparent 0%,
+                transparent 20%,
+                transparent 40%,
+                transparent 60%,
+                transparent 80%,
+                transparent 100%);
+        }
+
+        svg.chart-svg {
+            width: 100%;
+            height: 100%;
+            filter: 
+                drop-shadow(0 0 20px rgba(0, 229, 255, 0.15))
+                drop-shadow(0 0 40px rgba(0, 229, 255, 0.08));
+        }
+
+        .chart-axis {
+            position: absolute;
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+
+        .chart-legend {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-top: 8px;
+            font-size: 13px;
+        }
+
+        .chart-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .legend-dot-cyan {
+            background: var(--cyan-primary);
+            box-shadow: 0 0 8px rgba(0, 229, 255, 0.5);
+        }
+
+        .legend-dot-purple {
+            background: var(--purple-accent);
+            box-shadow: 0 0 8px rgba(167, 139, 250, 0.5);
+        }
+
+        .chart-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: grid;
+            grid-template-rows: repeat(4, 1fr);
+            opacity: 0.15;
+            pointer-events: none;
+        }
+
+        .chart-grid-line {
+            border-bottom: 1px solid var(--text-tertiary);
+        }
+
+        /* ==================== SCROLLBAR ==================== */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 229, 255, 0.3);
+            border-radius: 4px;
+            transition: background 0.3s ease;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 229, 255, 0.6);
+        }
+
+        /* ==================== RESPONSIVE ==================== */
+        @media (max-width: 1400px) {
+            .content-area {
+                padding: 32px 24px;
+            }
+            
+            .hero-panel {
+                padding: 36px;
+                gap: 36px;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 180px;
+                padding: 24px 12px;
+            }
+
+            .main-content {
+                margin-left: 180px;
+                width: calc(100% - 180px);
+            }
+
+            .hero-panel {
+                grid-template-columns: 1fr;
+                gap: 32px;
+                padding: 32px;
+            }
+
+            .analytics-section {
+                grid-template-columns: 1fr;
+            }
+
+            .module-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 60px;
+                align-items: center;
+            }
+
+            .sidebar-brand {
+                margin-bottom: 32px;
+                justify-content: center;
+            }
+
+            .sidebar-brand-name {
+                display: none;
+            }
+
+            .sidebar-item {
+                justify-content: center;
+                padding: 12px 8px;
+            }
+
+            .sidebar-item-icon {
+                margin-right: 0;
+            }
+
+            .main-content {
+                margin-left: 60px;
+                width: calc(100% - 60px);
+            }
+
+            .header-left {
+                gap: 12px;
+            }
+
+            .version-badge {
+                display: none;
+            }
+
+            .environment-text {
+                font-size: 12px;
+            }
+
+            .hero-title {
+                font-size: 48px;
+            }
+
+            .content-area {
+                padding: 24px 16px;
+            }
+
+            .module-grid,
+            .analytics-section {
+                gap: 24px;
+            }
+
+            .hero-panel {
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+<body >
+    <div class="container-wrapper">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <div class="sidebar-brand-icon"></div>
+                <div class="sidebar-brand-name">ElevUra</div>
+            </div>
+
+            <nav class="sidebar-menu">
+                <a href="#" class="sidebar-item active">
+                    <span class="sidebar-item-icon">🎮</span>
+                    <span>Command Center</span>
+                </a>
+                <a href="#" class="sidebar-item">
+                    <span class="sidebar-item-icon">🤖</span>
+                    <span>AI Coach</span>
+                </a>
+                <a href="#" class="sidebar-item">
+                    <span class="sidebar-item-icon">📄</span>
+                    <span>CV Optimizer</span>
+                </a>
+                <a href="#" class="sidebar-item">
+                    <span class="sidebar-item-icon">📚</span>
+                    <span>Study Buddy</span>
+                </a>
+                <a href="#" class="sidebar-item">
+                    <span class="sidebar-item-icon">🔬</span>
+                    <span>Research Assist</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-status">
+                <div><span class="sidebar-status-indicator"></span>API: ONLINE</div>
+                <div style="margin-top: 8px; font-size: 11px;">Latency: 24ms</div>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content" style="background-image: url('images/bg.png'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+    
+</section>
+            <!-- TOP HEADER -->
+            <header class="top-header">
+                <div class="header-left">
+                    <div class="version-badge">v2.4.0</div>
+                    <div class="environment-text">
+                        Environment: <span class="production">Production</span>
+                    </div>
+                </div>
+
+                <div class="header-right">
+                    <div class="notification-icon">
+                        🔔
+                        <span class="notification-dot"></span>
+                    </div>
+
+                    <div class="user-info">
+                        <div class="user-avatar">A</div>
+                        <div class="user-meta">
+                            <div class="user-name">Alex Chen</div>
+                            <div class="user-tier">Pro Tier</div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- CONTENT AREA -->
+            <section class="content-area";>
+                <!-- HERO PANEL -->
+                <div class="hero-panel">
+                    <div class="hero-left">
+                        <div class="hero-badge"> <_SYSTEM INITIALIZED</div>
+                        <h1 class="hero-title">
+                            Initialize Your
+                            <span class="hero-title-gradient"> Future Trajectory</span>
+                        </h1>
+                        <p class="hero-subtitle">
+                            Unlock your potential with AI-powered career guidance, CV optimization, and personalized learning paths.
+                        </p>
+                        <div class="command-input-wrapper">
+                            <input
+                                type="text"
+                                class="command-input"
+                                placeholder="Prompt the command center..."
+                            />
+                            <button class="execute-button">Execute</button>
+                        </div>
+                    </div>
+
+                    <div class="hero-right">
+                        <img src="https://images.unsplash.com/photo-1639322537228-f710d846310a?auto=format&fit=crop&q=80&w=400&h=400" alt="Abstract Tech" style="width: 200px; height: 200px; border-radius: 16px; opacity: 0.3; object-fit: cover;">
+                    </div>
+                </div>
+
+                <!-- MODULE GRID -->
+                <div class="module-grid">
+                    <!-- AI Career Coach -->
+                    <div class="module-card">
+                        <div class="module-header">
+                            <div class="module-icon">🎯</div>
+                            <div class="module-tag">MODULE</div>
+                        </div>
+                        <h3 class="module-title">AI Career Coach</h3>
+                        <p class="module-description">
+                            Get personalized career guidance, interview prep, and salary negotiation strategies powered by advanced AI.
+                        </p>
+                        <a href="#" class="module-cta">Launch Module →</a>
+                    </div>
+
+                    <!-- CV Optimizer -->
+                    <div class="module-card">
+                        <div class="module-header">
+                            <div class="module-icon">📋</div>
+                            <div class="module-tag">MODULE</div>
+                        </div>
+                        <h3 class="module-title">CV Optimizer</h3>
+                        <p class="module-description">
+                            Transform your resume with AI-driven optimization for ATS systems and recruiter preferences.
+                        </p>
+                        <a href="#" class="module-cta">Launch Module →</a>
+                    </div>
+
+                    <!-- Study Buddy -->
+                    <div class="module-card">
+                        <div class="module-header">
+                            <div class="module-icon">📖</div>
+                            <div class="module-tag">MODULE</div>
+                        </div>
+                        <h3 class="module-title">Study Buddy</h3>
+                        <p class="module-description">
+                            Master any subject with adaptive learning paths, quizzes, and AI-generated study materials.
+                        </p>
+                        <a href="#" class="module-cta">Launch Module →</a>
+                    </div>
+
+                    <!-- Research Assistant -->
+                    <div class="module-card">
+                        <div class="module-header">
+                            <div class="module-icon">🔍</div>
+                            <div class="module-tag">MODULE</div>
+                        </div>
+                        <h3 class="module-title">Research Assistant</h3>
+                        <p class="module-description">
+                            Accelerate your research with intelligent paper analysis, source verification, and synthesis tools.
+                        </p>
+                        <a href="#" class="module-cta">Launch Module →</a>
+                    </div>
+                </div>
+
+                <!-- ANALYTICS SECTION -->
+                <div class="analytics-section">
+                    <!-- Live API Pulse -->
+                    <div class="analytics-panel">
+                        <div class="analytics-header">
+                            <h3 class="analytics-title">Live API Pulse</h3>
+                        </div>
+
+                        <div class="metrics-grid">
+                            <div class="metric-card">
+                                <div class="metric-label">TOKENS PROCESSED</div>
+                                <div class="metric-value">2.4M</div>
+                                <div class="metric-unit">today</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-label">LATENCY</div>
+                                <div class="metric-value metric-latency">24ms</div>
+                                <div class="metric-unit">avg</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-label">UPTIME</div>
+                                <div class="metric-value">99.99%</div>
+                                <div class="metric-unit">SLA</div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 24px;">
+                            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 12px;">Active Models</div>
+                            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                <span style="padding: 4px 10px; background: rgba(0, 229, 255, 0.1); border-radius: 6px; font-size: 12px; color: var(--cyan-primary);">GPT-4</span>
+                                <span style="padding: 4px 10px; background: rgba(0, 229, 255, 0.1); border-radius: 6px; font-size: 12px; color: var(--cyan-primary);">Claude 3</span>
+                                <span style="padding: 4px 10px; background: rgba(0, 229, 255, 0.1); border-radius: 6px; font-size: 12px; color: var(--cyan-primary);">Gemini</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Success Path Visualization -->
+                    <div class="analytics-panel">
+                        <div class="analytics-header">
+                            <h3 class="analytics-title">Success Path Visualization</h3>
+                            <button class="export-button">Export Data</button>
+                        </div>
+
+                        <div class="success-chart">
+                            <div class="chart-grid">
+                                <div class="chart-grid-line"></div>
+                                <div class="chart-grid-line"></div>
+                                <div class="chart-grid-line"></div>
+                                <div class="chart-grid-line"></div>
+                            </div>
+                            <svg class="chart-svg" viewBox="0 0 400 240" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+                                <!-- Gradient definitions -->
+                                <defs>
+                                    <linearGradient id="gradientCyan" x1="0%" y1="0%" x2="0%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#00E5FF;stop-opacity:0.3" />
+                                        <stop offset="100%" style="stop-color:#00E5FF;stop-opacity:0.05" />
+                                    </linearGradient>
+                                    <linearGradient id="gradientPurple" x1="0%" y1="0%" x2="0%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#A78BFA;stop-opacity:0.3" />
+                                        <stop offset="100%" style="stop-color:#A78BFA;stop-opacity:0.05" />
+                                    </linearGradient>
+                                    <filter id="glow">
+                                        <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                                        <feMerge>
+                                            <feMergeNode in="coloredBlur"/>
+                                            <feMergeNode in="SourceGraphic"/>
+                                        </feMerge>
+                                    </filter>
+                                </defs>
+
+                                <!-- Grid lines -->
+                                <line x1="40" y1="200" x2="380" y2="200" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+                                <line x1="40" y1="150" x2="380" y2="150" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+                                <line x1="40" y1="100" x2="380" y2="100" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+                                <line x1="40" y1="50" x2="380" y2="50" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+
+                                <!-- Cyan data line (success) with area fill -->
+                                <path d="M 40 180 L 80 160 L 120 140 L 160 100 L 200 80 L 240 60 L 280 45 L 320 35 L 360 30" 
+                                      stroke="#00E5FF" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/>
+                                <path d="M 40 180 L 80 160 L 120 140 L 160 100 L 200 80 L 240 60 L 280 45 L 320 35 L 360 30 L 360 200 L 40 200 Z" 
+                                      fill="url(#gradientCyan)"/>
+
+                                <!-- Purple data line (growth) with area fill -->
+                                <path d="M 40 190 L 80 175 L 120 155 L 160 125 L 200 95 L 240 70 L 280 50 L 320 40 L 360 32" 
+                                      stroke="#A78BFA" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/>
+                                <path d="M 40 190 L 80 175 L 120 155 L 160 125 L 200 95 L 240 70 L 280 50 L 320 40 L 360 32 L 360 200 L 40 200 Z" 
+                                      fill="url(#gradientPurple)"/>
+
+                                <!-- Data points for cyan line -->
+                                <circle cx="40" cy="180" r="4" fill="#00E5FF" opacity="0.8" filter="url(#glow)"/>
+                                <circle cx="80" cy="160" r="4" fill="#00E5FF" opacity="0.8" filter="url(#glow)"/>
+                                <circle cx="120" cy="140" r="4" fill="#00E5FF" opacity="0.8" filter="url(#glow)"/>
+                                <circle cx="160" cy="100" r="4" fill="#00E5FF" opacity="0.8" filter="url(#glow)"/>
+                                <circle cx="200" cy="80" r="4" fill="#00E5FF" opacity="0.8" filter="url(#glow)"/>
+                                <circle cx="240" cy="60" r="4" fill="#00E5FF" opacity="0.8" filter="url(#glow)"/>
+                                <circle cx="280" cy="45" r="4" fill="#00E5FF" opacity="0.8" filter="url(#glow)"/>
+                                <circle cx="320" cy="35" r="4" fill="#00E5FF" opacity="0.8" filter="url(#glow)"/>
+                                <circle cx="360" cy="30" r="4" fill="#00E5FF" opacity="0.8" filter="url(#glow)"/>
+
+                                <!-- Data points for purple line -->
+                                <circle cx="40" cy="190" r="4" fill="#A78BFA" opacity="0.8" filter="url(#glow)"/>
+                                <circle cx="80" cy="175" r="4" fill="#A78BFA" opacity="0.8" filter="url(#glow)"/>
+                                <circle cx="120" cy="155" r="4" fill="#A78BFA" opacity="0.8" filter="url(#glow)"/>
+                                <circle cx="160" cy="125" r="4" fill="#A78BFA" opacity="0.8" filter="url(#glow)"/>
+                                <circle cx="200" cy="95" r="4" fill="#A78BFA" opacity="0.8" filter="url(#glow)"/>
+                                <circle cx="240" cy="70" r="4" fill="#A78BFA" opacity="0.8" filter="url(#glow)"/>
+                                <circle cx="280" cy="50" r="4" fill="#A78BFA" opacity="0.8" filter="url(#glow)"/>
+                                <circle cx="320" cy="40" r="4" fill="#A78BFA" opacity="0.8" filter="url(#glow)"/>
+                                <circle cx="360" cy="32" r="4" fill="#A78BFA" opacity="0.8" filter="url(#glow)"/>
+
+                                <!-- X-axis labels -->
+                                <text x="40" y="220" text-anchor="middle" font-size="12" fill="rgba(155, 163, 175, 0.6)">Week 1</text>
+                                <text x="80" y="220" text-anchor="middle" font-size="12" fill="rgba(155, 163, 175, 0.6)">Week 2</text>
+                                <text x="120" y="220" text-anchor="middle" font-size="12" fill="rgba(155, 163, 175, 0.6)">Week 3</text>
+                                <text x="160" y="220" text-anchor="middle" font-size="12" fill="rgba(155, 163, 175, 0.6)">Week 4</text>
+                                <text x="200" y="220" text-anchor="middle" font-size="12" fill="rgba(155, 163, 175, 0.6)">Week 5</text>
+                                <text x="240" y="220" text-anchor="middle" font-size="12" fill="rgba(155, 163, 175, 0.6)">Week 6</text>
+                                <text x="280" y="220" text-anchor="middle" font-size="12" fill="rgba(155, 163, 175, 0.6)">Week 7</text>
+                                <text x="320" y="220" text-anchor="middle" font-size="12" fill="rgba(155, 163, 175, 0.6)">Week 8</text>
+                                <text x="360" y="220" text-anchor="middle" font-size="12" fill="rgba(155, 163, 175, 0.6)">Week 9</text>
+                            </svg>
+
+                            <div class="chart-legend">
+                                <div class="chart-legend-item">
+                                    <div class="legend-dot legend-dot-cyan"></div>
+                                    <span>Success Path</span>
+                                </div>
+                                <div class="chart-legend-item">
+                                    <div class="legend-dot legend-dot-purple"></div>
+                                    <span>Growth Trend</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Sidebar active state
+        document.querySelectorAll('.sidebar-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+            });
+        });
+
+        // Command input focus
+        const commandInput = document.querySelector('.command-input');
+        commandInput.addEventListener('focus', function() {
+            this.parentElement.style.boxShadow = '0 0 20px rgba(0, 229, 255, 0.3)';
+        });
+        commandInput.addEventListener('blur', function() {
+            this.parentElement.style.boxShadow = 'none';
+        });
+
+        // Execute button
+        document.querySelector('.execute-button').addEventListener('click', function() {
+            const inputValue = commandInput.value;
+            if (inputValue.trim()) {
+                console.log('Command executed:', inputValue);
+                commandInput.value = '';
+            }
+        });
+
+        // Module card hover effect
+        document.querySelectorAll('.module-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-4px)';
+            });
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body>
+</html>
