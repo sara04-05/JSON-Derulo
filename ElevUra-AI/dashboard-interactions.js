@@ -122,7 +122,6 @@ class ElevUraDashboard {
       position: absolute;
       width: ${size}px;
       height: ${size}px;
-      background: rgba(0, 229, 255, 0.4);
       border-radius: 50%;
       transform: scale(0);
       animation: rippleAnimation 0.6s ease-out;
@@ -148,11 +147,8 @@ class ElevUraDashboard {
 
     card.style.transform = 'translateY(-4px) scale(1.01)';
     card.style.boxShadow = `
-      0 0 40px rgba(0, 229, 255, 0.2),
-      inset 0 0 40px rgba(0, 229, 255, 0.08),
-      ${x}px ${y}px 20px rgba(0, 229, 255, 0.1)
+     
     `;
-    card.style.borderColor = 'rgba(0, 229, 255, 0.6)';
   }
 
   /**
@@ -177,20 +173,7 @@ class ElevUraDashboard {
   commandInputFocus(isFocused) {
     const wrapper = this.commandInput.parentElement;
     
-    if (isFocused) {
-      wrapper.style.boxShadow = `
-        0 0 25px rgba(0, 229, 255, 0.3),
-        inset 0 2px 8px rgba(0, 0, 0, 0.4)
-      `;
-      wrapper.style.borderColor = 'rgba(0, 229, 255, 0.8)';
-      this.commandInput.style.color = '#00E5FF';
-      this.commandInput.style.textShadow = '0 0 8px rgba(0, 229, 255, 0.3)';
-    } else {
-      wrapper.style.boxShadow = 'none';
-      wrapper.style.borderColor = 'rgba(255, 255, 255, 0.08)';
-      this.commandInput.style.color = '#F5F7FA';
-      this.commandInput.style.textShadow = 'none';
-    }
+    
   }
 
   /**

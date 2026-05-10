@@ -12,66 +12,34 @@
             box-sizing: border-box;
         }
 
-        :root {
-  /* BACKGROUND — match reference */
-  --bg-primary: #0a0c10;
-  --bg-secondary: #0d0f14;
-  --bg-card: rgba(12, 14, 18, 0.88);
-  --bg-card-solid: #0e1016;
+       :root {
+    --bg-primary: #181818;
+    --bg-secondary: #171f21;
+    --bg-card: #1d1f24;
 
-  /* TEXT */
-  --text-primary: #ffffff;
-  --text-secondary: #9ca3af;
-  --text-muted: #6b7280;
+    --text-primary: #f3f4f6;
+    --text-secondary: #9ca3af;
 
-  /* ACCENTS */
-  --accent-cyan: #00f2ff;
-  --accent-cyan-soft: rgba(0, 242, 255, 0.12);
-
-  --accent-purple: #a855f7;
-  --accent-purple-soft: rgba(168, 85, 247, 0.14);
-
-  /* BORDERS */
-  --border-primary: rgba(255,255,255,0.07);
-  --border-soft: rgba(255,255,255,0.04);
-
-  /* GLOWS */
-  --glow-cyan:
-    0 0 20px rgba(0,229,255,0.10),
-    0 0 40px rgba(0,229,255,0.04);
-
-  --glow-purple:
-    0 0 20px rgba(167,139,250,0.10);
-
-  /* RADII */
-  --radius-sm: 10px;
-  --radius-md: 16px;
-  --radius-lg: 22px;
+    --accent-cyan: #00e7ff;
+    --accent-blue: #59b8ff;
+    --accent-purple: #b08cff;
 }
         html {
             scroll-behavior: smooth;
             font-size: 14px;
         }
 body {
-  background-color: #020203;
-  color: var(--text-primary);
-  font-family: 'Inter', sans-serif;
-  background-image:
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0, 242, 255, 0.07), transparent 55%),
-    radial-gradient(ellipse 60% 40% at 100% 100%, rgba(168, 85, 247, 0.06), transparent 50%),
-    url('https://www.transparenttextures.com/patterns/cubes.png');
+     background-attachment: fixed;
+    background-color: rgb(18, 18, 18);
+    background-image: url('https://www.transparenttextures.com/patterns/cubes.png');
 
-  background-size:
-    auto,
-    auto,
-    360px;
 
-  background-attachment: fixed;
 }
 
 /* Background pattern removed - handled by body background-image */
 body::before {
     display: none;
+    
 }
 
 body::after {
@@ -92,7 +60,7 @@ body::after {
             width: 190px;
             min-width: 190px;
             height: 100vh;
-            background: rgba(6, 7, 10, 0.97);
+            background: rgba(16, 16, 16, 0.97);
             backdrop-filter: blur(14px);
             border-right: 1px solid rgba(255,255,255,0.05);
             display: flex;
@@ -111,8 +79,9 @@ body::after {
             display: flex;
             align-items: center;
             gap: 11px;
-            padding: 22px 16px 18px;
             border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding: 22px 16px 18px;
+            height: 60px;
             flex-shrink: 0;
         }
 
@@ -276,7 +245,7 @@ body::after {
 
         /* ==================== MAIN CONTENT ==================== */
         .main-content {
-            margin-left: 218px;
+            margin-left: 180px;
             width: calc(100% - 218px);
             display: flex;
             flex-direction: column;
@@ -292,24 +261,16 @@ body::after {
         /* ==================== TOP HEADER ==================== */
         .top-header {
             height: 60px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            background: rgba(8, 9, 12, 0.78);
+            width: 1347px;
+            background-color:rgba(28, 28, 28, 0.97);
+            border: 1px solid rgba(247, 247, 247, 0.064);
             backdrop-filter: blur(20px);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 32px;
             position: sticky;
-            top: 0;
             z-index: 50;
             box-shadow: none;
-        }
-
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            min-width: 0;
         }
 
         .header-left-meta {
@@ -317,20 +278,7 @@ body::after {
             align-items: center;
             gap: 20px;
             flex-wrap: wrap;
-        }
-
-        .version-badge {
-            height: 30px;
-            padding: 0 12px;
-            background: rgba(15, 17, 21, 0.8);
-            border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 10px;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            font-weight: 600;
-            color: var(--text-secondary);
-            letter-spacing: 0.5px;
+            padding: 30px;
         }
 
         .environment-text {
@@ -393,13 +341,6 @@ body::after {
             background: #111;
         }
 
-        .user-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
         .user-meta {
             display: flex;
             flex-direction: column;
@@ -419,7 +360,7 @@ body::after {
         }
 
         .header-fullscreen {
-            width: 36px;
+            width: 40px;
             height: 36px;
             border-radius: 8px;
             border: 1px solid rgba(255,255,255,0.1);
@@ -446,95 +387,43 @@ body::after {
             stroke-width: 1.75;
         }
 
-        .fab-help {
-            position: fixed;
-            right: 26px;
-            bottom: 26px;
-            width: 52px;
-            height: 52px;
-            border-radius: 50%;
-            border: 1px solid rgba(168,85,247,0.5);
-            background: radial-gradient(circle at 30% 30%, rgba(168,85,247,0.4), rgba(76,29,149,0.55));
-            box-shadow:
-              0 0 24px rgba(168,85,247,0.5),
-              0 0 48px rgba(0,242,255,0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 90;
-            color: #E9D5FF;
-            transition: transform 0.25s ease, box-shadow 0.25s ease;
-        }
-
-        .fab-help:hover {
-            transform: scale(1.06);
-            box-shadow:
-              0 0 32px rgba(168,85,247,0.55),
-              0 0 64px rgba(0,242,255,0.15);
-        }
-
-        .fab-help svg {
-            width: 22px;
-            height: 22px;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 1.75;
-        }
-
         /* ==================== CONTENT AREA ==================== */
         .content-area {
-            padding: 28px;
-            margin: 0;
-            border: 0;
+            padding: 34px 38px 60px;
             flex: 1;
             overflow-y: auto;
             position: relative;
             z-index: 1;
-            max-width: 1280px;
-            width: 100%;
-        }
 
-        /* ==================== HERO SECTION ==================== */
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* centers everything */
+
+            width: 100%;
+           }
+
+
+            /* ==================== HERO SECTION ==================== */
         .hero-panel {
-            background: linear-gradient(
-              165deg,
-              rgba(14, 16, 22, 0.94) 0%,
-              rgba(8, 9, 12, 0.92) 100%
-            );
-            border: 1px solid rgba(0, 242, 255, 0.14);
+            background-color: #151717;
+            border: 1px solid rgba(247, 247, 247, 0.064);
             border-radius: 16px;
-            width: 930px;
-            max-width: 100%;
-            height: 390px;
-            padding: 42px 38px 34px;
-            margin-top: 24px;
-            margin-left: 18px;
+
+            max-width: 900px;
+
+            padding: 15px 20px;
+
             margin-bottom: 0;
+
             display: grid;
             grid-template-columns: 1.15fr 0.85fr;
-            gap: 24px;
             align-items: center;
+
             position: relative;
             overflow: hidden;
-            box-shadow:
-              0 0 0 1px rgba(0, 0, 0, 0.35),
-              0 0 40px rgba(0, 242, 255, 0.08),
-              inset 0 1px 0 rgba(255, 255, 255, 0.04);
         }
 
-        .hero-panel::before {
-            display: none;
-        }
 
-        .hero-panel::after {
-            display: none;
-        }
-
-        @keyframes glowShift {
-            0%, 100% { opacity: 0.8; transform: translateY(0px); }
-            50% { opacity: 1; transform: translateY(20px); }
-        }
 
         .hero-left {
             position: relative;
@@ -562,8 +451,8 @@ body::after {
         }
 
         .hero-title {
-            font-size: clamp(36px, 4.2vw, 56px);
-            font-weight: 800;
+            font-size: 48px;
+            font-weight: 700;
             line-height: 1.02;
             margin-bottom: 18px;
             letter-spacing: -0.04em;
@@ -698,64 +587,91 @@ body::after {
             width: 100%;
             min-height: 240px;
         }
-
+        
+        
         .hero-wireframe {
-            width: 100%;
-            max-width: 320px;
-            animation: heroFloat 7s ease-in-out infinite;
-            filter: drop-shadow(0 0 28px rgba(0, 242, 255, 0.25)) drop-shadow(0 0 40px rgba(168, 85, 247, 0.2));
-        }
+            width: 320px;
+            height: 320px;
 
-        .hero-wireframe svg {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        @keyframes heroFloat {
-            0%, 100% { transform: translateY(0) rotate(-1deg); }
-            50% { transform: translateY(-10px) rotate(1deg); }
-        }
-
-        /* ==================== MODULE GRID ==================== */
-        .module-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 28px;
-            margin-top: 28px;
-        }
-
-        .module-card {
-            background: rgba(10, 12, 16, 0.92);
-            border: 1px solid rgba(255,255,255,0.07);
-            border-radius: 16px;
-            min-height: 196px;
-            padding: 24px;
-            position: relative;
+            border-radius: 50%;
             overflow: hidden;
-            cursor: pointer;
-            transition: all 0.25s ease;
+
             display: flex;
-            flex-direction: column;
-            box-shadow: none;
+            align-items: center;
+            justify-content: center;
+
+            position: relative;
+
+        
         }
 
-        .module-card::before {
-            display: none;
-        }
+        .hero-wireframe img {
+            width: 90%;
+            height: 90%;
+            margin-bottom: 40px;
 
-        .module-card::after {
-            display: none;
-        }
+            object-fit: cover;
 
-        .module-card:hover::after {
-            display: none;
+            border-radius: 50%;
+
+            opacity: 0.55;
+
+            mix-blend-mode: screen;
+
+            mask-image: radial-gradient(
+                circle at center,
+                rgba(0,0,0,1) 28%,
+                rgba(0,0,0,0.9) 45%,
+                rgba(0,0,0,0.4) 65%,
+                transparent 100%
+            );
+
+            -webkit-mask-image: radial-gradient(
+                circle at center,
+                rgba(0,0,0,1) 28%,
+                rgba(0,0,0,0.9) 45%,
+                rgba(0,0,0,0.4) 65%,
+                transparent 100%
+            );
         }
+       
+                
+            /* ==================== MODULE GRID ==================== */
+            .module-grid {
+                width: 100%;
+                max-width: 1180px;
+
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+
+                gap: 28px;
+                margin-top: 28px;
+            }
+
+            /* ==================== MODULE CARD ==================== */
+            .module-card {
+                background-color: #151717;
+                border: 1px solid rgb(255 255 255 / 0.05);
+
+                border-radius: 16px;
+
+                position: relative;
+                overflow: hidden;
+
+                cursor: pointer;
+                transition: all 0.25s ease;
+
+                padding: 22px;
+
+                width: 100%; /* IMPORTANT */
+                height: auto;
+
+                display: flex;
+                flex-direction: column;
+            }
 
         .module-card:hover {
-            border-color: rgba(0, 242, 255, 0.22);
-            box-shadow: 0 0 28px rgba(0, 242, 255, 0.06);
-            transform: translateY(-2px);
+            border-color:  rgba(168, 85, 247, 0.4);
         }
 
         .module-header {
@@ -855,16 +771,22 @@ body::after {
             color: var(--accent-cyan);
         }
 
+       
+        /* ==================== ANALYTICS ==================== */
         .analytics-section {
+            width: 100%;
+            max-width: 1180px;
+
             display: grid;
             grid-template-columns: 300px 1fr;
+
             gap: 28px;
             margin-top: 28px;
         }
 
         .analytics-panel {
-            background: rgba(10, 12, 16, 0.92);
-            border: 1px solid rgba(255,255,255,0.07);
+            background-color: #151717;
+            border: 1px solid rgb(255 255 255 / 0.05);
             border-radius: 16px;
             padding: 24px;
             min-height: 248px;
@@ -970,26 +892,13 @@ body::after {
         }
 
         ::-webkit-scrollbar-thumb {
-            background: rgba(0, 242, 255, 0.28);
+            background: rgba(27, 27, 27, 0.28);
             border-radius: 4px;
             transition: background 0.25s ease;
         }
 
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(0, 242, 255, 0.5);
-        }
-
         /* ==================== RESPONSIVE ==================== */
-        @media (max-width: 1400px) {
-            .content-area {
-                padding: 24px;
-            }
-            
-            .hero-panel {
-                padding: 28px 28px;
-                gap: 24px;
-            }
-        }
+
 
         @media (max-width: 1024px) {
             .sidebar {
@@ -1044,20 +953,6 @@ body::after {
                 gap: 12px;
             }
 
-            .hero-panel {
-                grid-template-columns: 1fr;
-                gap: 20px;
-                padding: 22px;
-                min-height: 0;
-                width: 100%;
-                height: auto;
-                margin-left: 0;
-            }
-
-            .hero-right {
-                display: none;
-            }
-
             .module-grid {
                 grid-template-columns: 1fr;
             }
@@ -1095,10 +990,7 @@ body::after {
                 gap: 12px;
             }
 
-            .version-badge {
-                display: none;
-            }
-
+    
             .environment-text {
                 font-size: 12px;
             }
@@ -1177,7 +1069,6 @@ body::after {
             <header class="top-header">
                 <div class="header-left">
                     <div class="header-left-meta">
-                        <div class="version-badge">v2.4.0</div>
                         <div class="environment-text">
                             Environment: <span class="production">Production</span>
                         </div>
@@ -1230,36 +1121,11 @@ body::after {
                         </div>
                     </div>
 
-                    <div class="hero-right">
-                        <div class="hero-wireframe" aria-hidden="true">
-                            <svg viewBox="0 0 320 280" xmlns="http://www.w3.org/2000/svg">
-                                <defs>
-                                    <linearGradient id="wfStroke" x1="0%" y1="0%" x2="100%" y2="100%">
-                                        <stop offset="0%" stop-color="#00f2ff"/>
-                                        <stop offset="55%" stop-color="#67e8f9"/>
-                                        <stop offset="100%" stop-color="#a855f7"/>
-                                    </linearGradient>
-                                    <filter id="wfGlow" x="-40%" y="-40%" width="180%" height="180%">
-                                        <feGaussianBlur stdDeviation="2.2" result="b"/>
-                                        <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-                                    </filter>
-                                </defs>
-                                <g fill="none" stroke="url(#wfStroke)" stroke-width="1.35" stroke-linejoin="round" filter="url(#wfGlow)" opacity="0.92">
-                                    <path d="M48 88 L118 52 L188 88 L118 124 Z"/>
-                                    <path d="M188 88 L258 124 L188 160 L118 124 Z"/>
-                                    <path d="M118 124 L188 160 L118 196 L48 160 Z"/>
-                                    <path d="M118 52 L188 88 L188 160 L118 196 L48 160 L48 88 Z" opacity="0.35"/>
-                                    <path d="M188 88 L258 52 L258 124"/>
-                                    <path d="M258 124 L188 160 L258 196 L218 216"/>
-                                    <path d="M118 196 L188 232 L258 196"/>
-                                    <path d="M88 200 L118 196 M200 48 L218 36 M248 96 L272 82"/>
-                                </g>
-                                <g fill="none" stroke="#00f2ff" stroke-width="0.9" opacity="0.45">
-                                    <path d="M118 124 L118 196 M188 88 L188 232 M48 124 L88 144 M218 108 L248 124"/>
-                                </g>
-                            </svg>
-                        </div>
+                <div class="hero-right">
+                    <div class="hero-wireframe">
+                        <img src="images/image.png" alt="Hero Graphic">
                     </div>
+                </div>
                 </div>
 
                 <!-- MODULE GRID -->
