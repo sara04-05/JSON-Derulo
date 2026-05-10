@@ -94,6 +94,20 @@ class ElevUraDashboard {
 
     // Notification icon pulse
     this.setupNotificationPulse();
+    this.setupFullscreenToggle();
+  }
+
+  setupFullscreenToggle() {
+    const btn = document.querySelector('.header-fullscreen');
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      const doc = document.documentElement;
+      if (!document.fullscreenElement) {
+        doc.requestFullscreen?.().catch(() => {});
+      } else {
+        document.exitFullscreen?.().catch(() => {});
+      }
+    });
   }
 
  
@@ -173,7 +187,7 @@ class ElevUraDashboard {
       this.commandInput.style.textShadow = '0 0 8px rgba(0, 229, 255, 0.3)';
     } else {
       wrapper.style.boxShadow = 'none';
-      wrapper.style.borderColor = 'rgba(0, 229, 255, 0.15)';
+      wrapper.style.borderColor = 'rgba(255, 255, 255, 0.08)';
       this.commandInput.style.color = '#F5F7FA';
       this.commandInput.style.textShadow = 'none';
     }
@@ -188,24 +202,25 @@ class ElevUraDashboard {
     if (!value) return;
 
     // Visual feedback
-    const originalText = this.executeButton.textContent;
     this.executeButton.textContent = 'Processing...';
     this.executeButton.disabled = true;
     this.executeButton.style.opacity = '0.7';
 
     // Simulate command execution
-    setTimeout(() => {
-      this.executeButton.textContent = '✓ Executed';
-      this.executeButton.style.background = 'linear-gradient(135deg, #A78BFA 0%, #8B5CF6 100%)';
-      
       setTimeout(() => {
-        this.executeButton.textContent = 'Execute';
-        this.executeButton.disabled = false;
-        this.executeButton.style.opacity = '1';
-        this.executeButton.style.background = 'linear-gradient(135deg, #F5F7FA 0%, #E8EAEE 100%)';
-        this.commandInput.value = '';
-      }, 1500);
-    }, 800);
+        this.executeButton.innerHTML = '✓ Executed <span class="execute-key" aria-hidden="true">↵</span>';
+        this.executeButton.style.background = 'linear-gradient(135deg, #A78BFA 0%, #8B5CF6 100%)';
+        this.executeButton.style.color = '#F5F3FF';
+
+        setTimeout(() => {
+          this.executeButton.innerHTML = 'Execute <span class="execute-key" aria-hidden="true">↵</span>';
+          this.executeButton.disabled = false;
+          this.executeButton.style.opacity = '1';
+          this.executeButton.style.background = '';
+          this.executeButton.style.color = '';
+          this.commandInput.value = '';
+        }, 1500);
+      }, 800);
 
     console.log(`Command executed: ${value}`);
   }
@@ -214,28 +229,21 @@ class ElevUraDashboard {
    * Setup metrics counter animation
    */
   setupMetricsAnimation() {
-    const metricValues = document.querySelectorAll('.metric-value');
-    
-    metricValues.forEach(metric => {
-      const finalValue = metric.textContent;
-      const numericValue = parseInt(finalValue.replace(/[^0-9]/g, ''));
-      
-      if (!isNaN(numericValue)) {
-        let currentValue = 0;
-        const increment = Math.ceil(numericValue / 30);
-        const suffix = finalValue.replace(/[0-9]/g, '').trim();
+    document.querySelectorAll('.metric-value[data-count-to]').forEach((metric) => {
+      const target = parseInt(metric.getAttribute('data-count-to'), 10);
+      if (Number.isNaN(target)) return;
 
-        const counter = setInterval(() => {
-          currentValue += increment;
-          
-          if (currentValue >= numericValue) {
-            currentValue = numericValue;
-            clearInterval(counter);
-          }
-
-          metric.textContent = this.formatMetricValue(currentValue, suffix);
-        }, 50);
-      }
+      let current = 0;
+      const steps = 36;
+      const increment = Math.max(1, Math.ceil(target / steps));
+      const timer = setInterval(() => {
+        current += increment;
+        if (current >= target) {
+          current = target;
+          clearInterval(timer);
+        }
+        metric.textContent = current.toLocaleString('en-US');
+      }, 40);
     });
   }
 
