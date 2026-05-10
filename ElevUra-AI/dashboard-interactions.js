@@ -8,7 +8,8 @@ class ElevUraDashboard {
     this.init();
     this.setupInteractions();
     this.setupMetricsAnimation();
-    this.setupScrollEffects();
+    // Disabled scroll effects for better performance
+    // this.setupScrollEffects();
   }
 
   init() {
@@ -32,67 +33,39 @@ class ElevUraDashboard {
         // Remove active class from all
         document.querySelectorAll('.sidebar-item').forEach(i => {
           i.classList.remove('active');
-          i.style.transition = 'all 0.3s cubic-bezier(0.22, 1, 0.36, 1)';
         });
         
-        // Add to clicked item with delay for smooth effect
+        // Add to clicked item
         item.classList.add('active');
-        
-        // Ripple effect (optional)
-        this.createRipple(item, e);
       });
 
-      // Hover state tracking
-      item.addEventListener('mouseenter', function() {
-        this.style.transform = 'translateX(4px)';
-      });
+      // Removed hover transform for better scroll performance
+    });
+
+    // Module card interactions simplified for better performance
+    this.moduleCards.forEach(card => {
+      // Removed heavy mouseenter glow effects
       
-      item.addEventListener('mouseleave', function() {
-        if (!this.classList.contains('active')) {
-          this.style.transform = 'translateX(0)';
+      // Removed click feedback for better scroll performance
+    });
+
+    // Command input - simplified for performance
+    if (this.commandInput) {
+      this.commandInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          this.executeCommand();
         }
       });
-    });
-
-    // Module card enhanced interactions
-    this.moduleCards.forEach(card => {
-      card.addEventListener('mouseenter', (e) => {
-        this.createCardGlow(card, e);
-      });
-
-      card.addEventListener('mouseleave', () => {
-        card.style.transform = 'translateY(0) scale(1)';
-        card.style.boxShadow = card.getAttribute('data-default-shadow') || 
-          '0 0 40px rgba(0, 229, 255, 0.08)';
-      });
-
-      card.addEventListener('click', () => {
-        this.cardClickFeedback(card);
-      });
-    });
-
-    // Command input enhanced focus
-    this.commandInput.addEventListener('focus', () => {
-      this.commandInputFocus(true);
-    });
-
-    this.commandInput.addEventListener('blur', () => {
-      this.commandInputFocus(false);
-    });
+    }
 
     // Execute button with loading state
-    this.executeButton.addEventListener('click', () => {
-      this.executeCommand();
-    });
-
-    // Allow Enter key to execute
-    this.commandInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
+    if (this.executeButton) {
+      this.executeButton.addEventListener('click', () => {
         this.executeCommand();
-      }
-    });
+      });
+    }
 
-    // Notification icon pulse
+    // Notification icon
     this.setupNotificationPulse();
     this.setupFullscreenToggle();
   }
@@ -288,14 +261,8 @@ class ElevUraDashboard {
       notificationIcon.addEventListener('click', () => {
         this.showNotificationMenu();
       });
-
-      // Auto-pulse effect
-      setInterval(() => {
-        notificationIcon.style.animation = 'none';
-        setTimeout(() => {
-          notificationIcon.style.animation = 'notificationPulse 0.5s ease-out';
-        }, 10);
-      }, 5000);
+      
+      // Removed auto-pulse effect for better performance
     }
   }
 
@@ -341,14 +308,7 @@ function injectDynamicStyles() {
       }
     }
 
-    @keyframes glowPulse {
-      0%, 100% {
-        box-shadow: 0 0 20px rgba(0, 229, 255, 0.1);
-      }
-      50% {
-        box-shadow: 0 0 40px rgba(0, 229, 255, 0.2);
-      }
-    }
+   
 
     /* Smooth transitions for all interactive elements */
     button, input, a, [role="button"] {
