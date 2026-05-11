@@ -817,58 +817,97 @@ body {
     .wow-content-card h3 {
         font-size: 36px;
     }
-}/* INTERVIEW LAYOUT */
+}
+/* ==================== INTERVIEW CARD ==================== */
 
-.interview-layout {
-    grid-template-columns: 420px 1fr;
+.interview-box {
+    border-radius: 16px;
+
+    padding: 20px;
+
+    margin-bottom: 18px;
+
+    border: 1px solid rgba(255,255,255,0.06);
 }
 
-/* MAKE IT DIFFERENT FROM CV CARD */
+.interview-ai {
+    background: rgba(0,242,255,0.06);
 
-.interview-demo-card {
-    background:
-        linear-gradient(
-            180deg,
-            rgba(10,10,10,0.98),
-            rgba(18,18,18,1)
-        );
-
-    border: 1px solid rgba(255,255,255,0.07);
-
-    border-radius: 26px;
-
-    padding: 28px;
-
-    position: relative;
-
-    overflow: hidden;
-
-    box-shadow:
-        inset 0 1px 0 rgba(255,255,255,0.03),
-        0 20px 50px rgba(0,0,0,0.45);
+    border-color: rgba(0,242,255,0.2);
 }
 
-/* GLOW */
+.interview-user {
+    background: rgba(168,85,247,0.06);
 
-.interview-demo-card::before {
-    content: "";
+    border-color: rgba(168,85,247,0.2);
+}
 
-    position: absolute;
+.interview-label {
+    font-size: 12px;
 
-    top: -120px;
-    left: -120px;
+    font-family: 'JetBrains Mono', monospace;
 
-    width: 240px;
-    height: 240px;
+    margin-bottom: 12px;
 
-    background:
-        radial-gradient(
-            circle,
-            rgba(168,85,247,0.16),
-            transparent 70%
-        );
+    font-weight: 700;
 
-    pointer-events: none;
+    color: var(--accent-cyan);
+
+    letter-spacing: 0.06em;
+}
+
+.interview-user .interview-label {
+    color: var(--accent-purple);
+}
+
+.interview-text {
+    color: white;
+
+    font-size: 14px;
+
+    line-height: 1.7;
+}
+
+.user-text {
+    color: #cbd5e1;
+}
+
+/* ==================== STATS ==================== */
+
+.interview-stats {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 16px;
+}
+
+.interview-stat {
+    background: rgba(255,255,255,0.03);
+
+    border: 1px solid rgba(255,255,255,0.06);
+
+    border-radius: 16px;
+
+    padding: 18px;
+
+    text-align: center;
+}
+
+.stat-title {
+    font-size: 12px;
+
+    color: #9ca3af;
+
+    margin-bottom: 8px;
+}
+
+.stat-score {
+    font-size: 28px;
+
+    font-weight: 800;
+
+    color: var(--accent-cyan);
 }
 /* ==================== WOW ITEM ==================== */
 
@@ -1407,116 +1446,6 @@ body {
     }
 }
        
-        /* ==================== ANALYTICS ==================== */
-        .analytics-section {
-            width: 100%;
-            max-width: 900px;
-
-            display: grid;
-            grid-template-columns: 300px 1fr;
-
-            gap: 28px;
-            margin-top: 28px;
-            content-visibility: auto;
-        }
-
-        .analytics-panel {
-            background-color: #151717;
-            border: 1px solid rgb(255 255 255 / 0.05);
-            border-radius: 16px;
-            padding: 24px;
-            min-height: 248px;
-            position: relative;
-            color: white;
-        }
-
-        .analytics-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 16px;
-        }
-
-        .analytics-title {
-            font-size: 21px;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-        }
-
-        .analytics-subtitle {
-            margin-top: 4px;
-            color: #9ca3af;
-            font-size: 12px;
-        }
-
-        .metrics-grid {
-            display: grid;
-            gap: 12px;
-        }
-
-        .metric-card {
-            background: rgba(18, 22, 28, 0.62);
-            border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 10px;
-            padding: 12px 14px;
-        }
-
-        .metric-label {
-            font-family: 'JetBrains Mono', ui-monospace, monospace;
-            font-size: 9px;
-            letter-spacing: 0.12em;
-            color: #7f8797;
-            text-transform: uppercase;
-            margin-bottom: 5px;
-        }
-
-        .metric-value {
-            font-size: 33px;
-            font-weight: 700;
-            line-height: 1;
-        }
-
-        .metric-latency {
-            color: var(--accent-cyan);
-        }
-
-        .model-row {
-            margin-top: 14px;
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .model-pill {
-            font-family: 'JetBrains Mono', ui-monospace, monospace;
-            font-size: 10px;
-            padding: 4px 10px;
-            border-radius: 999px;
-            border: 1px solid rgba(0, 242, 255, 0.28);
-            color: #98f7ff;
-            background: rgba(0,242,255,0.08);
-        }
-
-        .chart-panel .analytics-header {
-            margin-bottom: 8px;
-        }
-
-        .export-button {
-            border: 1px solid rgba(255,255,255,0.14);
-            background: rgba(255,255,255,0.03);
-            color: #d1d5db;
-            border-radius: 8px;
-            font-size: 10px;
-            padding: 6px 10px;
-            font-family: 'JetBrains Mono', ui-monospace, monospace;
-        }
-
-        .chart-svg {
-            width: 100%;
-            height: 190px;
-            display: block;
-            margin-top: 4px;
-        }
         /* ==================== TESTIMONIALS ==================== */
 
 
@@ -2290,99 +2219,111 @@ body {
 
 </section>
 <!-- Mock Interview -->
-<div class="wow-item interview-layout">
+            <section class="wow-section">
 
-    <!-- LEFT SIDE = DEMO -->
-    <div class="interview-demo-card">
+    <div class="wow-layout">
 
-        <div class="interview-topbar">
-            <div class="live-indicator">
-                <span class="live-dot"></span>
-                LIVE SESSION
-            </div>
+        <!-- LEFT TEXT CARD -->
+        <div class="interview-demo-card">
 
-            <div class="session-time">
-                12:48
-            </div>
-        </div>
+            <span class="wow-badge">🎤 INTERVIEW READY</span>
 
-        <div class="chat-bubble ai-bubble">
-            <div class="bubble-header">
-                🤖 AI INTERVIEWER
-            </div>
+            <h3>
+                AI <span>Mock Interviews</span>
+            </h3>
 
             <p>
-                Tell me about a difficult challenge you faced during a project and how you solved it.
+                Practice with our AI interviewer that adapts to your responses and evaluates your confidence in real time.
             </p>
-        </div>
-
-        <div class="chat-bubble user-bubble">
-            <div class="bubble-header">
-                👤 YOUR RESPONSE
-            </div>
 
             <p>
-                I led a team project where deadlines were extremely tight, so I organized tasks and improved communication to deliver on time.
+                Get realistic interview simulations with scoring on communication, technical knowledge, professionalism, and clarity.
             </p>
+
+            <p>
+                Improve your answers instantly with personalized AI feedback and performance analysis after every session.
+            </p>
+
         </div>
 
-        <div class="analysis-panel">
+        <!-- RIGHT INTERVIEW CARD -->
+<div class="interview-demo-card">
 
-            <div class="analysis-row">
-                <span>Confidence</span>
-                <strong>92%</strong>
-            </div>
+    <!-- TOP BAR -->
+    <div class="interview-topbar">
 
-            <div class="progress-line">
-                <div class="progress-fill confidence-fill"></div>
-            </div>
+        <div class="live-indicator">
+            <span class="live-dot"></span>
+            LIVE SESSION
+        </div>
 
-            <div class="analysis-row">
-                <span>Communication</span>
-                <strong>87%</strong>
-            </div>
-
-            <div class="progress-line">
-                <div class="progress-fill communication-fill"></div>
-            </div>
-
-            <div class="analysis-row">
-                <span>Professionalism</span>
-                <strong>91%</strong>
-            </div>
-
-            <div class="progress-line">
-                <div class="progress-fill professional-fill"></div>
-            </div>
-
+        <div class="session-time">
+            12:48
         </div>
 
     </div>
 
-    <!-- RIGHT SIDE = TEXT -->
-    <div class="wow-content">
+    <!-- AI QUESTION -->
+    <div class="chat-bubble ai-bubble">
 
-        <span class="wow-badge">🎤 INTERVIEW READY</span>
-
-        <h3>
-            AI <span>Mock Interviews</span>
-        </h3>
+        <div class="bubble-header">
+            🤖 AI Interviewer
+        </div>
 
         <p>
-            Practice realistic interview scenarios with an adaptive AI interviewer that reacts to your answers in real time.
+            Tell me about a difficult challenge you faced while leading a project.
         </p>
 
-        <p>
-            Receive instant analysis on confidence, communication, professionalism, and technical accuracy.
-        </p>
+    </div>
+
+    <!-- USER RESPONSE -->
+    <div class="chat-bubble user-bubble">
+
+        <div class="bubble-header">
+            👤 You
+        </div>
 
         <p>
-            Train smarter with personalized feedback and improve your interview performance before the real thing.
+            I managed a dashboard redesign project where deadlines were extremely tight...
         </p>
+
+    </div>
+
+    <!-- ANALYSIS -->
+    <div class="analysis-panel">
+
+        <div class="analysis-row">
+            <span>Confidence Level</span>
+            <strong>92%</strong>
+        </div>
+
+        <div class="progress-line">
+            <div class="progress-fill confidence-fill"></div>
+        </div>
+
+        <div class="analysis-row">
+            <span>Communication</span>
+            <strong>8.7/10</strong>
+        </div>
+
+        <div class="progress-line">
+            <div class="progress-fill communication-fill"></div>
+        </div>
+
+        <div class="analysis-row">
+            <span>Professionalism</span>
+            <strong>91%</strong>
+        </div>
+
+        <div class="progress-line">
+            <div class="progress-fill professional-fill"></div>
+        </div>
 
     </div>
 
 </div>
+
+</section>
             
             <!-- HOW IT WORKS -->
             <section class="how-it-works" id="how-it-works">
@@ -2507,83 +2448,6 @@ body {
             </div>
         </div>
     </section>
-
-
-            <div class="analytics-section">
-                    <div class="analytics-panel">
-                        <div class="analytics-header">
-                            <h3 class="analytics-title">Live API Pulse</h3>
-                        </div>
-                        <div class="metrics-grid">
-                            <div class="metric-card">
-                                <div class="metric-label">TOKENS PROCESSED</div>
-                                <div class="metric-value">4,289,102</div>
-                            </div>
-                            <div class="metric-card">
-                                <div class="metric-label">CURRENT LATENCY</div>
-                                <div class="metric-value metric-latency">12.4 <span style="font-size:14px;">ms</span></div>
-                            </div>
-                        </div>
-                        <div class="metric-label" style="margin-top:14px;margin-bottom:8px;">ACTIVE MODELS</div>
-                        <div class="model-row">
-                            <span class="model-pill">GPT-4</span>
-                            <span class="model-pill">EX Pilot</span>
-                        </div>
-                    </div>
-
-                    <div class="analytics-panel chart-panel">
-                        <div class="analytics-header">
-                            <div>
-                                <h3 class="analytics-title">Success Path Visualization</h3>
-                                <p class="analytics-subtitle">Projected skill acquisition timeline</p>
-                            </div>
-                            <button class="export-button" type="button">EXPORT DATA</button>
-                        </div>
-                        <svg class="chart-svg" viewBox="0 0 640 240" xmlns="http://www.w3.org/2000/svg">
-                            <defs>
-                                <linearGradient id="cyanFill" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="0%" stop-color="#00f2ff" stop-opacity="0.25"/>
-                                    <stop offset="100%" stop-color="#00f2ff" stop-opacity="0.02"/>
-                                </linearGradient>
-                                <linearGradient id="purpleFill" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="0%" stop-color="#a855f7" stop-opacity="0.25"/>
-                                    <stop offset="100%" stop-color="#a855f7" stop-opacity="0.02"/>
-                                </linearGradient>
-                            </defs>
-                            <g stroke="rgba(255,255,255,0.08)" stroke-width="1">
-                                <line x1="50" y1="30" x2="620" y2="30"/>
-                                <line x1="50" y1="74" x2="620" y2="74"/>
-                                <line x1="50" y1="118" x2="620" y2="118"/>
-                                <line x1="50" y1="162" x2="620" y2="162"/>
-                                <line x1="50" y1="206" x2="620" y2="206"/>
-                            </g>
-                            <path d="M50 164 L145 144 L240 126 L335 104 L430 72 L525 54 L620 42 L620 206 L50 206 Z" fill="url(#cyanFill)"/>
-                            <path d="M50 170 L145 154 L240 132 L335 114 L430 88 L525 64 L620 46 L620 206 L50 206 Z" fill="url(#purpleFill)"/>
-                            <polyline points="50,164 145,144 240,126 335,104 430,72 525,54 620,42" fill="none" stroke="#00f2ff" stroke-width="3"/>
-                            <polyline points="50,170 145,154 240,132 335,114 430,88 525,64 620,46" fill="none" stroke="#a855f7" stroke-width="3"/>
-                            <g fill="#00f2ff">
-                                <circle cx="50" cy="164" r="4"/><circle cx="145" cy="144" r="4"/><circle cx="240" cy="126" r="4"/><circle cx="335" cy="104" r="4"/><circle cx="430" cy="72" r="4"/><circle cx="525" cy="54" r="4"/><circle cx="620" cy="42" r="4"/>
-                            </g>
-                            <g fill="#a855f7">
-                                <circle cx="50" cy="170" r="4"/><circle cx="145" cy="154" r="4"/><circle cx="240" cy="132" r="4"/><circle cx="335" cy="114" r="4"/><circle cx="430" cy="88" r="4"/><circle cx="525" cy="64" r="4"/><circle cx="620" cy="46" r="4"/>
-                            </g>
-                            <g fill="#8b93a1" font-size="11" font-family="Inter">
-                                <text x="50" y="226" text-anchor="middle">Week 1</text>
-                                <text x="145" y="226" text-anchor="middle">Week 2</text>
-                                <text x="240" y="226" text-anchor="middle">Week 3</text>
-                                <text x="335" y="226" text-anchor="middle">Week 4</text>
-                                <text x="430" y="226" text-anchor="middle">Week 5</text>
-                                <text x="525" y="226" text-anchor="middle">Week 6</text>
-                                <text x="620" y="226" text-anchor="middle">Week 7</text>
-                            </g>
-                        </svg>
-                        <div style="display:flex;gap:18px;justify-content:center;font-size:12px;color:#cbd5e1;">
-                            <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#00f2ff;margin-right:6px;"></span>Technical Skills</span>
-                            <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#a855f7;margin-right:6px;"></span>Soft Skills</span>
-                        </div>
-                        
-                    </div>
-                </div>
                     </main>
                 </div>
 
