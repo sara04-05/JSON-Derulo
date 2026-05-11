@@ -376,8 +376,10 @@ body::after {
         .content-area {
             padding-top: 25px;
             padding-left: 48px;
+
             flex: 1;
             overflow-y: auto;
+            
             position: relative;
             z-index: 1;
 
@@ -722,8 +724,10 @@ body::after {
             letter-spacing: -0.4px;
         }
 
+        
+
         .module-description {
-            font-size: 12px;
+            font-size: 16px;
             color: #9ca3af;
             line-height: 1.6;
             margin-top: 8px;
@@ -752,6 +756,123 @@ body::after {
             color: var(--accent-cyan);
         }
 
+        /* ==================== METRICS ==================== */
+
+.metrics {
+    width: calc(100% - 0px);
+
+    margin-top: 28px;
+
+    align-self: stretch;
+}
+
+.metrics-container {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    background-color: #151717;
+
+    border: 1px solid rgba(255,255,255,0.05);
+
+    border-radius: 18px;
+
+    overflow: hidden;
+}
+
+.metric-item {
+    flex: 1;
+
+    padding: 28px 18px;
+
+    text-align: center;
+
+    position: relative;
+}
+
+.metric-item:not(:last-child) {
+    border-right: 1px solid rgba(255,255,255,0.06);
+}
+
+.metric-item::before {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        radial-gradient(
+            circle at top,
+            rgba(0,242,255,0.08),
+            transparent 70%
+        );
+
+    opacity: 0;
+
+    transition: opacity 0.3s ease;
+}
+
+.metric-item:hover::before {
+    opacity: 1;
+}
+
+.metric-item h3 {
+    font-size: 34px;
+
+    font-weight: 800;
+
+    letter-spacing: -0.04em;
+
+    margin-bottom: 8px;
+
+    background: linear-gradient(
+        90deg,
+        #00f2ff 0%,
+        #67e8f9 45%,
+        #c084fc 100%
+    );
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    background-clip: text;
+
+    position: relative;
+    z-index: 2;
+}
+
+.metric-item p {
+    font-size: 13px;
+
+    color: #9ca3af;
+
+    font-weight: 500;
+
+    position: relative;
+    z-index: 2;
+}
+
+/* ==================== RESPONSIVE ==================== */
+
+@media (max-width: 768px) {
+    .metrics-container {
+        flex-direction: column;
+    }
+
+    .metric-item {
+        width: 100%;
+    }
+
+    .metric-item:not(:last-child) {
+        border-right: none;
+
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+}
        
         /* ==================== ANALYTICS ==================== */
         .analytics-section {
@@ -863,6 +984,285 @@ body::after {
             display: block;
             margin-top: 4px;
         }
+        /* ==================== TESTIMONIALS ==================== */
+
+
+.testimonials {
+    width: 100%;
+    max-width: 900px;
+
+    margin-top: 28px;
+}
+.testimonials-grid {
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 22px;
+
+    width: 100%;
+}
+
+.testimonial-card {
+    background-color: #151717;
+
+    border: 1px solid rgba(255,255,255,0.05);
+
+    border-radius: 18px;
+
+    padding: 28px 26px;
+
+    position: relative;
+
+    overflow: hidden;
+
+    transition: all 0.28s ease;
+}
+
+.testimonial-card::before {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(0,242,255,0.08),
+            transparent 70%
+        );
+
+    opacity: 0;
+
+    transition: opacity 0.3s ease;
+}
+
+.testimonial-card:hover {
+    transform: translateY(-6px);
+
+    border-color: #d1d5db;
+
+    box-shadow:
+        0 18px 40px rgba(0,0,0,0.35);
+}
+
+.testimonial-card:hover::before {
+    opacity: 1;
+}
+
+.stars {
+    font-size: 18px;
+
+    letter-spacing: 2px;
+
+    margin-bottom: 18px;
+
+    background: var(--accent-purple);
+
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    background-clip: text;
+
+    font-weight: 700;
+}
+
+.testimonial-text {
+    font-size: 15px;
+
+    line-height: 1.8;
+
+    color: #d1d5db;
+
+    margin-bottom: 24px;
+}
+
+.testimonial-author {
+    font-size: 13px;
+
+    color: var(--accent-purple);
+
+    font-weight: 600;
+
+    font-family: 'JetBrains Mono', monospace;
+
+    letter-spacing: 0.02em;
+}
+
+/* ==================== RESPONSIVE ==================== */
+
+@media (max-width: 1024px) {
+    .testimonials-grid {
+        grid-template-columns: 1fr;
+    }
+}
+        /* ==================== HOW IT WORKS ==================== */
+
+.how-it-works {
+    width: 100%;
+    max-width: 900px;
+
+    margin-top: 32px;
+
+    background-color: #151717;
+    border: 1px solid rgba(255,255,255,0.05);
+
+    border-radius: 18px;
+
+    padding: 38px 32px;
+
+    position: relative;
+    overflow: hidden;
+}
+
+.how-it-works::before {
+    content: "";
+    position: absolute;
+
+    top: -120px;
+    right: -120px;
+
+    width: 260px;
+    height: 260px;
+
+    background: radial-gradient(
+        circle,
+        rgba(0,242,255,0.12) 0%,
+        transparent 70%
+    );
+
+    pointer-events: none;
+}
+
+.section-title {
+    font-size: 34px;
+    font-weight: 700;
+
+    color: var(--text-primary);
+
+    text-align: center;
+
+    letter-spacing: -0.03em;
+
+    margin-bottom: 10px;
+}
+
+.section-subtitle {
+    text-align: center;
+
+    color: var(--text-secondary);
+
+    font-size: 15px;
+
+    margin-bottom: 42px;
+
+    line-height: 1.6;
+}
+
+.steps-container {
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 22px;
+}
+
+.step-card {
+    background: rgba(18,22,28,0.72);
+
+    border: 1px solid rgba(255,255,255,0.06);
+
+    border-radius: 18px;
+
+    padding: 28px 24px;
+
+    position: relative;
+
+    overflow: hidden;
+
+    transition: all 0.28s ease;
+}
+
+.step-card:hover {
+    transform: translateY(-6px);
+
+    border-color: rgba(0,242,255,0.25);
+
+    box-shadow:
+        0 0 0 1px rgba(0,242,255,0.08),
+        0 20px 40px rgba(0,0,0,0.35);
+}
+
+.step-number {
+    font-size: 13px;
+
+    font-family: 'JetBrains Mono', monospace;
+
+    color: var(--accent-cyan);
+
+    margin-bottom: 18px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.08em;
+}
+
+.step-card h3 {
+    font-size: 21px;
+
+    color: var(--text-primary);
+
+    margin-bottom: 14px;
+
+    font-weight: 700;
+
+    letter-spacing: -0.02em;
+}
+
+.step-card p {
+    font-size: 14px;
+
+    line-height: 1.7;
+
+    color: #9ca3af;
+
+    margin-bottom: 28px;
+}
+
+.step-animation {
+    width: 58px;
+    height: 58px;
+
+    border-radius: 16px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 26px;
+
+    background: rgba(0,242,255,0.08);
+
+    border: 1px solid rgba(0,242,255,0.2);
+}
+
+/* ==================== RESPONSIVE ==================== */
+
+@media (max-width: 900px) {
+    .steps-container {
+        grid-template-columns: 1fr;
+    }
+
+    .how-it-works {
+        padding: 28px 22px;
+    }
+
+    .section-title {
+        font-size: 28px;
+    }
+}
 
         /* ==================== SCROLLBAR ==================== */
         ::-webkit-scrollbar {
@@ -1116,9 +1516,8 @@ body::after {
                         </div>
                         <h3 class="module-title">AI Career Coach</h3>
                         <p class="module-description">
-                            Algorithmic career pathing based on current market data and personal skill vectors.
+                            Career path suggestions, interview prep, skills gap analysis, and salary predictions tailored to your profile.
                         </p>
-                        <a href="#" class="module-cta">Launch Module →</a>
                     </div>
 
                     <!-- CV Optimizer -->
@@ -1130,9 +1529,8 @@ body::after {
                         </div>
                         <h3 class="module-title">CV Optimizer</h3>
                         <p class="module-description">
-                            ATS-compliant document restructuring with semantic keyword injection.
+                            ATS score analysis, grammar fixes, keyword enhancement, and recruiter simulation for maximum impact.
                         </p>
-                        <a href="#" class="module-cta">Launch Module →</a>
                     </div>
 
                     <!-- Study Buddy -->
@@ -1144,10 +1542,9 @@ body::after {
                         </div>
                         <h3 class="module-title">Study Buddy</h3>
                         <p class="module-description">
-                            Dynamic knowledge retention protocols and automated flashcard generation.
+                            Explains complex topics, generates quizzes, creates personalized study plans, and prepares for exams.
                         </p>
-                        <a href="#" class="module-cta">Launch Module →</a>
-                    </div>
+\                    </div>
 
                     <!-- Research Assistant -->
                     <div class="module-card">
@@ -1158,13 +1555,83 @@ body::after {
                         </div>
                         <h3 class="module-title">Research Assistant</h3>
                         <p class="module-description">
-                            High-speed literature synthesis and data extraction from unstructured sources.
+                            Summarizes PDFs, generates citations, extracts key points, and provides research recommendations.
                         </p>
-                        <a href="#" class="module-cta">Launch Module →</a>
                     </div>
                 </div>
 
-                <div class="analytics-section">
+                
+
+            <!-- HOW IT WORKS -->
+            <section class="how-it-works" id="how-it-works">
+                <h2 class="section-title">How ElevUra AI Works</h2>
+
+                <div class="steps-container">
+                    <div class="step-card fade-in">
+                        <h3>Upload or Input</h3>
+                        
+                        <p>Upload your CV, share your notes, or ask your question.</p>
+                    </div>
+
+                    <div class="step-card fade-in">
+                        <h3>AI Processing</h3>
+                        <p>Our AI analyzes, understands, and optimizes your content.</p>
+                    </div>
+
+                    <div class="step-card fade-in">
+                        <h3>Smart Results</h3>
+                        <p>Get actionable insights and improved outputs instantly.</p>
+                    </div>
+                </div>
+                
+            </section>
+            <section class="metrics">
+        <div class="metrics-container">
+            <div class="metric-item">
+                <h3>12,000+</h3>
+                <p>CVs Optimized</p>
+            </div>
+            <div class="metric-item">
+                <h3>89%</h3>
+                <p>Interview Success</p>
+            </div>
+            <div class="metric-item">
+                <h3>30,000+</h3>
+                <p>Study Sessions</p>
+            </div>
+            <div class="metric-item">
+                <h3>95%</h3>
+                <p>User Satisfaction</p>
+            </div>
+        </div>
+        
+    </section>
+    
+ <!-- TESTIMONIALS -->
+    <section class="testimonials">
+        <h2 class="section-title">Student Success Stories</h2>
+        <div class="testimonials-grid">
+            <div class="testimonial-card fade-in">
+                <div class="stars">★★★★★</div>
+                <p class="testimonial-text">"ElevUra AI helped me improve my resume ATS score by 35 points. Got 3 interviews in one week!"</p>
+                <div class="testimonial-author">- Emma, Engineering Student</div>
+            </div>
+
+            <div class="testimonial-card fade-in">
+                <div class="stars">★★★★★</div>
+                <p class="testimonial-text">"The AI Study Buddy helped me understand complex algorithms. My exam score improved alot!"</p>
+                <div class="testimonial-author">- Liam, Computer Science</div>
+            </div>
+
+            <div class="testimonial-card fade-in">
+                <div class="stars">★★★★★</div>
+                <p class="testimonial-text">"The Career Coach prepared me for interviews perfectly. I landed my dream job at a top tech company!"</p>
+                <div class="testimonial-author">- Sarah, Business Graduate</div>
+            </div>
+        </div>
+    </section>
+
+            <div class="analytics-section">
                     <div class="analytics-panel">
                         <div class="analytics-header">
                             <h3 class="analytics-title">Live API Pulse</h3>
@@ -1236,16 +1703,17 @@ body::after {
                             <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#00f2ff;margin-right:6px;"></span>Technical Skills</span>
                             <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#a855f7;margin-right:6px;"></span>Soft Skills</span>
                         </div>
+                        
                     </div>
                 </div>
-            </section>
-        </main>
-    </div>
+                    </main>
+                </div>
 
-    <button type="button" class="fab-help" title="Help" aria-label="Help">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/></svg>
-    </button>
+                <button type="button" class="fab-help" title="Help" aria-label="Help">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/></svg>
+                </button>
 
+    
     <script src="dashboard-interactions.js"></script>
 </body>
 </html>
