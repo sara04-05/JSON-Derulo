@@ -12,14 +12,12 @@
             box-sizing: border-box;
         }
 
-       :root {
+        :root {
     --bg-primary: #181818;
     --bg-secondary: #171f21;
     --bg-card: #1d1f24;
-
     --text-primary: #f3f4f6;
     --text-secondary: #9ca3af;
-
     --accent-cyan: #00e7ff;
     --accent-blue: #59b8ff;
     --accent-purple: #b08cff;
@@ -31,18 +29,8 @@
 body {
     background-color: rgb(18, 18, 18);
     background-image: url('https://www.transparenttextures.com/patterns/cubes.png');
-
-
-}
-
-/* Background pattern removed - handled by body background-image */
-body::before {
-    display: none;
-    
-}
-
-body::after {
-    display: none;
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
 }
         .container-wrapper {
             position: relative;
@@ -66,11 +54,6 @@ body::after {
             padding: 0;
             z-index: 100;
             overflow-y: auto;
-            box-shadow: none;
-        }
-
-        .sidebar::before {
-            display: none;
         }
 
         .sidebar-brand {
@@ -139,7 +122,6 @@ body::after {
             background: rgba(0, 242, 255, 0.05);
             color: rgba(255,255,255,0.92);
             border-color: rgba(0, 242, 255, 0.12);
-            box-shadow: none;
         }
 
         .sidebar-item.active {
@@ -243,22 +225,17 @@ body::after {
             position: relative;
         }
 
-        .main-content::before {
-            display: none;
-        }
-
         /* ==================== TOP HEADER ==================== */
         .top-header {
             height: 60px;
             width: 1347px;
-            background-color:rgba(28, 28, 28, 0.99);
+            background-color: rgba(28, 28, 28, 0.99);
             border: 1px solid rgba(247, 247, 247, 0.064);
             display: flex;
             align-items: center;
             justify-content: space-between;
             position: sticky;
             z-index: 50;
-            box-shadow: none;
         }
 
         .header-left-meta {
@@ -506,7 +483,6 @@ body::after {
             font-size: 13px;
             font-family: 'Inter', sans-serif;
             transition: all 0.25s ease;
-            box-shadow: none;
         }
 
         .command-input::placeholder {
@@ -519,10 +495,6 @@ body::after {
         .command-input:focus {
             outline: none;
             border-color: rgba(0,229,255,0.3);
-        }
-
-        .command-input::before {
-            display: none;
         }
 
         .execute-button {
@@ -538,7 +510,6 @@ body::after {
             font-size: 13px;
             cursor: pointer;
             transition: all 0.25s ease;
-            box-shadow: none;
             letter-spacing: 0;
             position: relative;
             overflow: hidden;
@@ -546,7 +517,6 @@ body::after {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            border-left: 0;
         }
 
         .execute-button .execute-key {
@@ -755,7 +725,570 @@ body::after {
             gap: 10px;
             color: var(--accent-cyan);
         }
+/* ==================== WOW SECTION ==================== */
 
+.wow-section {
+    width: 100%;
+    max-width: 900px;
+
+    margin-top: 28px;
+}
+
+/* ==================== WOW LAYOUT ==================== */
+
+.wow-layout {
+    width: 100%;
+    max-width: 900px;
+
+    display: grid;
+    grid-template-columns: 1fr 360px;
+
+    gap: 28px;
+
+    align-items: stretch;
+
+    margin-top: 28px;
+}
+
+.wow-content-card,
+.cv-demo-card {
+    background-color: #151717;
+
+    border: 1px solid rgba(255,255,255,0.05);
+
+    border-radius: 20px;
+
+    padding: 34px;
+}
+
+/* LEFT SIDE */
+
+.wow-content-card h3 {
+    font-size: 44px;
+
+    line-height: 1.05;
+
+    font-weight: 800;
+
+    letter-spacing: -0.04em;
+
+    color: white;
+
+    margin-bottom: 20px;
+}
+
+.wow-content-card h3 span {
+    background: linear-gradient(
+        90deg,
+        #00f2ff 0%,
+        #67e8f9 45%,
+        #c084fc 100%
+    );
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.wow-content-card p {
+    font-size: 15px;
+
+    line-height: 1.8;
+
+    color: #9ca3af;
+
+    margin-bottom: 16px;
+}
+
+/* RIGHT SIDE */
+
+.cv-demo-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 900px) {
+    .wow-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .wow-content-card h3 {
+        font-size: 36px;
+    }
+}/* INTERVIEW LAYOUT */
+
+.interview-layout {
+    grid-template-columns: 420px 1fr;
+}
+
+/* MAKE IT DIFFERENT FROM CV CARD */
+
+.interview-demo-card {
+    background:
+        linear-gradient(
+            180deg,
+            rgba(10,10,10,0.98),
+            rgba(18,18,18,1)
+        );
+
+    border: 1px solid rgba(255,255,255,0.07);
+
+    border-radius: 26px;
+
+    padding: 28px;
+
+    position: relative;
+
+    overflow: hidden;
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.03),
+        0 20px 50px rgba(0,0,0,0.45);
+}
+
+/* GLOW */
+
+.interview-demo-card::before {
+    content: "";
+
+    position: absolute;
+
+    top: -120px;
+    left: -120px;
+
+    width: 240px;
+    height: 240px;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(168,85,247,0.16),
+            transparent 70%
+        );
+
+    pointer-events: none;
+}
+/* ==================== WOW ITEM ==================== */
+
+.wow-item {
+    background-color: #151717;
+
+    border: 1px solid rgba(255,255,255,0.05);
+
+    border-radius: 20px;
+
+    padding: 34px;
+
+    display: grid;
+
+    grid-template-columns: 1fr 360px;
+
+    gap: 34px;
+
+    align-items: center;
+
+    overflow: hidden;
+
+    position: relative;
+}
+
+.wow-item::before {
+    content: "";
+
+    position: absolute;
+
+    top: -120px;
+    right: -120px;
+
+    width: 260px;
+    height: 260px;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(0,242,255,0.08),
+            transparent 70%
+        );
+
+    pointer-events: none;
+}
+/* ==================== INTERVIEW DEMO CARD ==================== */
+
+.interview-demo-card {
+    background:
+        linear-gradient(
+            180deg,
+            rgba(20,20,20,0.95),
+            rgba(14,14,14,0.98)
+        );
+
+    border: 1px solid rgba(255,255,255,0.06);
+
+    border-radius: 24px;
+
+    padding: 24px;
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+/* TOPBAR */
+
+.interview-topbar {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 24px;
+}
+
+.live-indicator {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    font-size: 11px;
+
+    font-family: 'JetBrains Mono', monospace;
+
+    color: #22c55e;
+
+    letter-spacing: 0.08em;
+}
+
+.live-dot {
+    width: 8px;
+    height: 8px;
+
+    border-radius: 50%;
+
+    background: #22c55e;
+
+    box-shadow:
+        0 0 12px #22c55e;
+}
+
+.session-time {
+    font-size: 12px;
+
+    color: #9ca3af;
+
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* CHAT BUBBLES */
+
+.chat-bubble {
+    border-radius: 18px;
+
+    padding: 18px;
+
+    margin-bottom: 16px;
+
+    position: relative;
+}
+
+.ai-bubble {
+    background: rgba(0,242,255,0.07);
+
+    border: 1px solid rgba(0,242,255,0.16);
+}
+
+.user-bubble {
+    background: rgba(168,85,247,0.07);
+
+    border: 1px solid rgba(168,85,247,0.16);
+}
+
+.bubble-header {
+    font-size: 11px;
+
+    font-family: 'JetBrains Mono', monospace;
+
+    margin-bottom: 10px;
+
+    color: white;
+
+    opacity: 0.7;
+
+    letter-spacing: 0.08em;
+}
+
+.chat-bubble p {
+    font-size: 14px;
+
+    line-height: 1.7;
+
+    color: #e2e8f0;
+}
+
+/* ANALYSIS */
+
+.analysis-panel {
+    margin-top: 24px;
+
+    padding-top: 20px;
+
+    border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.analysis-row {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 10px;
+
+    font-size: 13px;
+
+    color: #cbd5e1;
+}
+
+.analysis-row strong {
+    color: white;
+}
+
+.progress-line {
+    width: 100%;
+
+    height: 8px;
+
+    background: rgba(255,255,255,0.06);
+
+    border-radius: 999px;
+
+    overflow: hidden;
+
+    margin-bottom: 18px;
+}
+
+.progress-fill {
+    height: 100%;
+
+    border-radius: 999px;
+}
+
+.confidence-fill {
+    width: 92%;
+
+    background: linear-gradient(
+        90deg,
+        #22c55e,
+        #4ade80
+    );
+}
+
+.communication-fill {
+    width: 87%;
+
+    background: linear-gradient(
+        90deg,
+        #00f2ff,
+        #67e8f9
+    );
+}
+
+.professional-fill {
+    width: 91%;
+
+    background: linear-gradient(
+        90deg,
+        #a855f7,
+        #c084fc
+    );
+}
+/* ==================== CONTENT ==================== */
+
+.wow-badge {
+    display: inline-flex;
+
+    align-items: center;
+
+    padding: 7px 14px;
+
+    border-radius: 999px;
+
+    border: 1px solid rgba(0,242,255,0.2);
+
+    background: rgba(0,242,255,0.06);
+
+    color: var(--accent-cyan);
+
+    font-size: 11px;
+
+    font-family: 'JetBrains Mono', monospace;
+
+    font-weight: 600;
+
+    letter-spacing: 0.08em;
+
+    margin-bottom: 20px;
+}
+
+.wow-content h3 {
+    font-size: 42px;
+
+    line-height: 1.05;
+
+    font-weight: 800;
+
+    letter-spacing: -0.04em;
+
+    color: var(--text-primary);
+
+    margin-bottom: 18px;
+}
+
+.wow-content h3 span {
+    background: linear-gradient(
+        90deg,
+        #00f2ff 0%,
+        #67e8f9 45%,
+        #c084fc 100%
+    );
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    background-clip: text;
+}
+
+.wow-content p {
+    font-size: 14px;
+
+    line-height: 1.8;
+
+    color: #9ca3af;
+
+    margin-bottom: 14px;
+
+    max-width: 520px;
+}
+
+/* ==================== SCORE DEMO ==================== */
+
+.cv-demo {
+    background: rgba(18,22,28,0.72);
+
+    border: 1px solid rgba(255,255,255,0.06);
+
+    border-radius: 18px;
+
+    padding: 24px;
+}
+
+/* ==================== SCORE RING ==================== */
+
+.cv-score-ring {
+    width: 170px;
+    height: 170px;
+
+    margin: 0 auto 24px;
+
+    border-radius: 50%;
+
+    background:
+        conic-gradient(
+            #00f2ff 0deg,
+            #67e8f9 220deg,
+            rgba(255,255,255,0.06) 220deg
+        );
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.score-inner {
+    width: 128px;
+    height: 128px;
+
+    border-radius: 50%;
+
+    background: #151717;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.score-num {
+    font-size: 42px;
+
+    font-weight: 800;
+
+    color: white;
+
+    line-height: 1;
+}
+
+.score-percent {
+    font-size: 12px;
+
+    color: var(--accent-cyan);
+
+    margin-top: 8px;
+
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* ==================== DETAILS ==================== */
+
+.score-details {
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 14px;
+}
+
+.detail-item {
+    background: rgba(255,255,255,0.03);
+
+    border: 1px solid rgba(255,255,255,0.05);
+
+    border-radius: 14px;
+
+    padding: 14px;
+}
+
+.detail-item h4 {
+    font-size: 12px;
+
+    color: #cbd5e1;
+
+    margin-bottom: 10px;
+
+    font-weight: 600;
+}
+
+.detail-value {
+    font-size: 22px;
+
+    font-weight: 700;
+
+    color: var(--accent-cyan);
+}
+
+/* ==================== RESPONSIVE ==================== */
+
+@media (max-width: 900px) {
+    .wow-item {
+        grid-template-columns: 1fr;
+    }
+
+    .wow-content h3 {
+        font-size: 34px;
+    }
+}
         /* ==================== METRICS ==================== */
 
 .metrics {
@@ -1246,8 +1779,138 @@ body::after {
     background: rgba(0,242,255,0.08);
 
     border: 1px solid rgba(0,242,255,0.2);
+}/* ==================== FAQ ==================== */
+
+.faq {
+    width: 100%;
+    max-width: 900px;
+
+    margin-top: 28px;
 }
 
+.faq-container {
+    background-color: #151717;
+
+    border: 1px solid rgba(255,255,255,0.05);
+
+    border-radius: 18px;
+
+    overflow: hidden;
+}
+
+.faq-item {
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+
+    transition: background 0.25s ease;
+}
+
+.faq-item:last-child {
+    border-bottom: none;
+}
+
+.faq-item:hover {
+    background: rgba(255,255,255,0.015);
+}
+
+.faq-question {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 18px 22px;
+
+    cursor: pointer;
+}
+
+.faq-question h4 {
+    font-size: 15px;
+
+    font-weight: 600;
+
+    color: var(--text-primary);
+
+    letter-spacing: -0.02em;
+}
+
+.faq-toggle {
+    color: var(--accent-cyan);
+
+    font-size: 13px;
+
+    transition: transform 0.25s ease;
+
+    flex-shrink: 0;
+}
+
+.faq-item.active .faq-toggle {
+    transform: rotate(180deg);
+}
+
+.faq-answer {
+    max-height: 0;
+
+    overflow: hidden;
+
+    transition:
+        max-height 0.3s ease,
+        padding 0.3s ease;
+
+    padding:
+        0 22px;
+
+    color: #9ca3af;
+
+    font-size: 13px;
+
+    line-height: 1.7;
+}
+
+.faq-item.active .faq-answer {
+    max-height: 180px;
+
+    padding:
+        0 22px 18px;
+}
+
+/* ==================== RESPONSIVE ==================== */
+
+@media (max-width: 768px) {
+    .faq-question {
+        padding: 16px 18px;
+    }
+
+    .faq-answer {
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+
+    .faq-item.active .faq-answer {
+        padding:
+            0 18px 16px;
+    }
+}
+/* ==================== RESPONSIVE ==================== */
+
+@media (max-width: 768px) {
+    .faq-question {
+        padding: 20px;
+    }
+
+    .faq-answer {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .faq-item.active .faq-answer {
+        padding:
+            0 20px 20px;
+    }
+
+    .faq-question h4 {
+        font-size: 15px;
+    }
+}
 /* ==================== RESPONSIVE ==================== */
 
 @media (max-width: 900px) {
@@ -1560,8 +2223,167 @@ body::after {
                     </div>
                 </div>
 
-                
+               <section class="wow-section">
 
+    <div class="wow-layout">
+
+        <!-- LEFT TEXT CARD -->
+        <div class="wow-content-card">
+
+            <span class="wow-badge">⚡ INSTANT FEEDBACK</span>
+
+            <h3>
+                Live AI CV <span>Scoring</span>
+            </h3>
+
+            <p>
+                Upload your CV and watch as our AI instantly analyzes and scores it across multiple dimensions.
+            </p>
+
+            <p>
+                Get real-time feedback, recruiter simulations, ATS scoring, and improvement suggestions instantly.
+            </p>
+
+            <p>
+                Understand exactly how employers view your CV using advanced AI heatmap analysis and optimization systems.
+            </p>
+
+        </div>
+
+        <!-- RIGHT SCORE CARD -->
+        <div class="cv-demo-card">
+
+            <div class="cv-score-ring">
+                <div class="score-inner">
+                    <div class="score-num">84</div>
+                    <div class="score-percent">ATS Score</div>
+                </div>
+            </div>
+
+            <div class="score-details">
+
+                <div class="detail-item">
+                    <h4>📝 Readability</h4>
+                    <div class="detail-value">94%</div>
+                </div>
+
+                <div class="detail-item">
+                    <h4>🎯 Keywords</h4>
+                    <div class="detail-value">88%</div>
+                </div>
+
+                <div class="detail-item">
+                    <h4>✨ Professionalism</h4>
+                    <div class="detail-value">91%</div>
+                </div>
+
+                <div class="detail-item">
+                    <h4>🏆 Overall Quality</h4>
+                    <div class="detail-value">87%</div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+<!-- Mock Interview -->
+<div class="wow-item interview-layout">
+
+    <!-- LEFT SIDE = DEMO -->
+    <div class="interview-demo-card">
+
+        <div class="interview-topbar">
+            <div class="live-indicator">
+                <span class="live-dot"></span>
+                LIVE SESSION
+            </div>
+
+            <div class="session-time">
+                12:48
+            </div>
+        </div>
+
+        <div class="chat-bubble ai-bubble">
+            <div class="bubble-header">
+                🤖 AI INTERVIEWER
+            </div>
+
+            <p>
+                Tell me about a difficult challenge you faced during a project and how you solved it.
+            </p>
+        </div>
+
+        <div class="chat-bubble user-bubble">
+            <div class="bubble-header">
+                👤 YOUR RESPONSE
+            </div>
+
+            <p>
+                I led a team project where deadlines were extremely tight, so I organized tasks and improved communication to deliver on time.
+            </p>
+        </div>
+
+        <div class="analysis-panel">
+
+            <div class="analysis-row">
+                <span>Confidence</span>
+                <strong>92%</strong>
+            </div>
+
+            <div class="progress-line">
+                <div class="progress-fill confidence-fill"></div>
+            </div>
+
+            <div class="analysis-row">
+                <span>Communication</span>
+                <strong>87%</strong>
+            </div>
+
+            <div class="progress-line">
+                <div class="progress-fill communication-fill"></div>
+            </div>
+
+            <div class="analysis-row">
+                <span>Professionalism</span>
+                <strong>91%</strong>
+            </div>
+
+            <div class="progress-line">
+                <div class="progress-fill professional-fill"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- RIGHT SIDE = TEXT -->
+    <div class="wow-content">
+
+        <span class="wow-badge">🎤 INTERVIEW READY</span>
+
+        <h3>
+            AI <span>Mock Interviews</span>
+        </h3>
+
+        <p>
+            Practice realistic interview scenarios with an adaptive AI interviewer that reacts to your answers in real time.
+        </p>
+
+        <p>
+            Receive instant analysis on confidence, communication, professionalism, and technical accuracy.
+        </p>
+
+        <p>
+            Train smarter with personalized feedback and improve your interview performance before the real thing.
+        </p>
+
+    </div>
+
+</div>
+            
             <!-- HOW IT WORKS -->
             <section class="how-it-works" id="how-it-works">
                 <h2 class="section-title">How ElevUra AI Works</h2>
@@ -1630,6 +2452,62 @@ body::after {
             </div>
         </div>
     </section>
+    <!-- FAQ -->
+    <section class="faq" id="faq">
+        <h2 class="section-title">Frequently Asked Questions</h2>
+        <div class="faq-container">
+            <div class="faq-item active">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <h4>How does ElevUra AI analyze my resume?</h4>
+                    <div class="faq-toggle">v</div>
+                </div>
+                <div class="faq-answer">
+                    ElevUra AI uses advanced NLP and machine learning to analyze your resume against industry standards, ATS systems, and job requirements. It provides actionable feedback on optimization.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <h4>Is my data secure and private?</h4>
+                    <div class="faq-toggle">v</div>
+                </div>
+                <div class="faq-answer">
+                    Yes! We use enterprise-grade encryption and comply with GDPR and privacy regulations. Your data is never shared with third parties.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <h4>Can I use ElevUra AI for multiple languages?</h4>
+                    <div class="faq-toggle">v</div>
+                </div>
+                <div class="faq-answer">
+                    Currently, we support English and Albanian. More languages are coming soon! Let us know which languages you'd like to see.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <h4>What's included in the free plan?</h4>
+                    <div class="faq-toggle">v</div>
+                </div>
+                <div class="faq-answer">
+                    Free plan includes: 5 CV analyses/month, unlimited study materials, basic AI chat (5 conversations/day), and limited research assistance.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <h4>How accurate is the Career Coach AI?</h4>
+                    <div class="faq-toggle">v</div>
+                </div>
+                <div class="faq-answer">
+                    Our AI is trained on thousands of successful career transitions and job placements. It provides insights with 90%+ accuracy based on market data.
+                </div>
+            </div>
+        </div>
+    </section>
+
 
             <div class="analytics-section">
                     <div class="analytics-panel">
@@ -1715,5 +2593,12 @@ body::after {
 
     
     <script src="dashboard-interactions.js"></script>
+    <script>
+function toggleFAQ(element) {
+    const faqItem = element.parentElement;
+
+    faqItem.classList.toggle('active');
+}
+</script>
 </body>
 </html>

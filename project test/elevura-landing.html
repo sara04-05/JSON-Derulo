@@ -1118,35 +1118,82 @@
             </div>
 
             <!-- Mock Interview -->
-            <div class="wow-item">
-                <div class="wow-content">
-                    <span class="wow-badge">🎤 INTERVIEW READY</span>
-                    <h3>AI <span>Mock Interviews</span></h3>
-                    <p>Practice with our AI interviewer that adapts to your responses, evaluates your confidence, and provides detailed feedback.</p>
-                    <p>Get a realistic assessment of your interview performance with scoring on communication, technical knowledge, and professionalism.</p>
-                </div>
-                <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; position: relative; overflow: hidden;">
-                    <div style="position: relative; z-index: 1;">
-                        <div style="background: rgba(15, 118, 110, 0.1); border: 1px solid var(--accent-teal); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem;">
-                            <div style="font-size: 0.9rem; color: var(--accent-teal); font-weight: 600; margin-bottom: 0.8rem;">🤖 AI Interviewer</div>
-                            <div style="color: var(--text-white);">"Tell me about your biggest project and how you overcame challenges."</div>
-                        </div>
-                        <div style="background: rgba(139, 30, 63, 0.1); border: 1px solid var(--accent-burgundy); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem;">
-                            <div style="font-size: 0.9rem; color: var(--accent-burgundy); font-weight: 600; margin-bottom: 0.8rem;">👤 Your Answer</div>
-                            <div style="color: var(--text-gray);">I led a team project that involved...</div>
-                        </div>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                            <div style="background: rgba(31, 111, 80, 0.1); border: 1px solid var(--accent-green); border-radius: 12px; padding: 1rem; text-align: center;">
-                                <div style="font-size: 0.85rem; color: var(--accent-green); margin-bottom: 0.5rem;">Confidence</div>
-                                <div style="font-size: 1.5rem; font-weight: 700; color: var(--accent-green);">92%</div>
-                            </div>
-                            <div style="background: rgba(212, 175, 55, 0.1); border: 1px solid var(--accent-gold); border-radius: 12px; padding: 1rem; text-align: center;">
-                                <div style="font-size: 0.85rem; color: var(--accent-gold); margin-bottom: 0.5rem;">Score</div>
-                                <div style="font-size: 1.5rem; font-weight: 700; color: var(--accent-gold);">8.7/10</div>
-                            </div>
-                        </div>
+            <!-- RIGHT INTERVIEW CARD -->
+
+            <div class="interview-demo-card">
+
+                <!-- TOP BAR -->
+                <div class="interview-topbar">
+
+                    <div class="live-indicator">
+                        <span class="live-dot"></span>
+                        LIVE SESSION
                     </div>
+
+                    <div class="session-time">
+                        12:48
+                    </div>
+
                 </div>
+
+                <!-- AI QUESTION -->
+                <div class="chat-bubble ai-bubble">
+
+                    <div class="bubble-header">
+                        🤖 AI Interviewer
+                    </div>
+
+                    <p>
+                        Tell me about a difficult challenge you faced while leading a project.
+                    </p>
+
+                </div>
+
+                <!-- USER RESPONSE -->
+                <div class="chat-bubble user-bubble">
+
+                    <div class="bubble-header">
+                        👤 You
+                    </div>
+
+                    <p>
+                        I managed a dashboard redesign project where deadlines were extremely tight...
+                    </p>
+
+                </div>
+
+                <!-- ANALYSIS -->
+                <div class="analysis-panel">
+
+                    <div class="analysis-row">
+                        <span>Confidence Level</span>
+                        <strong>92%</strong>
+                    </div>
+
+                    <div class="progress-line">
+                        <div class="progress-fill confidence-fill"></div>
+                    </div>
+
+                    <div class="analysis-row">
+                        <span>Communication</span>
+                        <strong>8.7/10</strong>
+                    </div>
+
+                    <div class="progress-line">
+                        <div class="progress-fill communication-fill"></div>
+                    </div>
+
+                    <div class="analysis-row">
+                        <span>Professionalism</span>
+                        <strong>91%</strong>
+                    </div>
+
+                    <div class="progress-line">
+                        <div class="progress-fill professional-fill"></div>
+                    </div>
+
+                </div>
+
             </div>
 
             <!-- Smart Study -->
