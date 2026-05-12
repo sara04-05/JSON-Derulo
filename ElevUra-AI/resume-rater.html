@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Rater - AI Resume Analysis</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+  /* === Base Backgrounds === */
+  --bg-primary: #05070b;
+  --bg-secondary: #0b0f14;
+  --bg-tertiary: #11161d;
+  --bg-card: rgba(12, 16, 22, 0.88);
+  --bg-sidebar: #070b10;
+  --bg-navbar: rgba(8, 12, 18, 0.95);
+
+  /* === Grid / Borders === */
+  --border-primary: rgba(0, 255, 255, 0.12);
+  --border-secondary: rgba(255, 255, 255, 0.08);
+  --border-glow: rgba(0, 238, 255, 0.35);
+
+  /* === Neon Accent Colors === */
+  --accent-cyan: #00eaff;
+  --accent-cyan-soft: #39d8ff;
+  --accent-teal: #00c2c7;
+  --accent-blue: #3b82f6;
+  --accent-purple: #a78bfa;
+
+  /* === Glow Effects === */
+  --glow-cyan: 0 0 12px rgba(0, 234, 255, 0.45);
+  --glow-purple: 0 0 10px rgba(167, 139, 250, 0.35);
+
+  /* === Text Colors === */
+  --text-primary: #f3f7fb;
+  --text-secondary: #9aa4b2;
+  --text-muted: #64748b;
+  --text-accent: #00eaff;
+
+  /* === Buttons === */
+  --btn-primary-bg: linear-gradient(
+    135deg,
+    #00eaff 0%,
+    #00c2c7 100%
+  );
+
+  --btn-secondary-bg: rgba(255,255,255,0.04);
+
+  --btn-hover: #12f7ff;
+
+  /* === Cards === */
+  --card-bg: linear-gradient(
+    180deg,
+    rgba(15, 20, 28, 0.95) 0%,
+    rgba(9, 12, 18, 0.95) 100%
+  );
+
+  --card-border: rgba(255,255,255,0.06);
+
+  /* === Shadows === */
+  --shadow-card:
+    0 0 0 1px rgba(255,255,255,0.04),
+    0 8px 40px rgba(0,0,0,0.55);
+
+  --shadow-glow:
+    0 0 25px rgba(0, 234, 255, 0.12);
+}
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: Inter, sans-serif;
+        }
+
+        /* Background Pattern - Volumetric Wireframe Grid */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url('images/bg.png');
+            background-repeat: repeat;
+            background-size: 80px 80px;
+            opacity: 0.45;
+            pointer-events: none;
+            z-index: 0;
+            filter: brightness(1.2) contrast(1.4);
+            mix-blend-mode: screen;
+        }
+
+        /* Ambient Glow Overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(
+                    ellipse 1200px 800px at 50% 20%,
+                    rgba(0, 229, 255, 0.15) 0%,
+                    rgba(0, 229, 255, 0.05) 30%,
+                    transparent 70%
+                ),
+                radial-gradient(
+                    ellipse at 50% 50%,
+                    transparent 30%,
+                    rgba(5, 6, 7, 0.4) 100%
+                ),
+                radial-gradient(
+                    ellipse 800px 400px at 50% 0%,
+                    rgba(0, 229, 255, 0.08) 0%,
+                    transparent 60%
+                );
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .container-wrapper {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .content {
+            width: 100%;
+            max-width: 900px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ==================== HEADER ==================== */
+        .header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .header-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border: 1px solid var(--accent-cyan);
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--accent-cyan);
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+        }
+
+        .header-title {
+            font-size: 56px;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 12px;
+            letter-spacing: -2px;
+            color: var(--text-primary);
+        }
+
+        .header-title-gradient {
+            background: linear-gradient(90deg, var(--accent-cyan) 0%, var(--accent-teal) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        /* ==================== UPLOAD SECTION ==================== */
+        .upload-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-secondary);
+            border-radius: 28px;
+            padding: 48px;
+            margin-bottom: 32px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            box-shadow: none;
+        }
+
+        .upload-section:hover {
+            border-color: var(--border-secondary);
+            transform: translateY(-2px);
+        }
+
+        .upload-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 40px;
+            border: 2px dashed var(--accent-cyan);
+            border-radius: 20px;
+            background: rgba(0, 229, 255, 0.04);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .upload-area:hover {
+            background: rgba(0, 229, 255, 0.08);
+            border-color: var(--accent-cyan-soft);
+        }
+
+        .upload-area.drag-over {
+            background: rgba(0, 229, 255, 0.12);
+            border-color: var(--accent-cyan-soft);
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.25);
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .upload-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .upload-subtext {
+            font-size: 14px;
+            color: var(--text-secondary);
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .upload-button {
+            padding: 12px 32px;
+            background: linear-gradient(135deg, #F5F7FA 0%, #E8EAEE 100%);
+            color: #050607;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            box-shadow: 
+                0 0 30px rgba(0, 229, 255, 0.2),
+                0 12px 30px rgba(0, 0, 0, 0.4),
+                inset 0 1px 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .upload-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 0 40px rgba(0, 229, 255, 0.35),
+                0 18px 40px rgba(0, 0, 0, 0.5),
+                inset 0 1px 10px rgba(255, 255, 255, 0.4);
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .file-info {
+            margin-top: 24px;
+            padding: 16px;
+            background: rgba(0, 229, 255, 0.1);
+            border: 1px solid var(--accent-cyan);
+            border-radius: 12px;
+            display: none;
+            position: relative;
+            z-index: 2;
+        }
+
+        .file-info.show {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            justify-content: space-between;
+        }
+
+        .file-name {
+            font-size: 14px;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .file-size {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .clear-file {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: var(--text-secondary);
+            padding: 6px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .clear-file:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--text-primary);
+        }
+
+        /* ==================== ANALYZE BUTTON ==================== */
+        .analyze-button {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-teal) 100%);
+            color: #050607;
+            border: none;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            box-shadow: 
+                0 0 30px rgba(0, 229, 255, 0.3),
+                0 12px 40px rgba(0, 0, 0, 0.4);
+            position: relative;
+            z-index: 2;
+            margin-top: 24px;
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .analyze-button:not(:disabled) {
+            opacity: 1;
+            cursor: pointer;
+        }
+
+        .analyze-button:not(:disabled):hover {
+            transform: translateY(-4px);
+            box-shadow: 
+                0 0 50px rgba(0, 229, 255, 0.5),
+                0 20px 50px rgba(0, 0, 0, 0.6);
+        }
+
+        .analyze-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* ==================== RESULTS SECTION ==================== */
+        .results-section {
+            display: none;
+            animation: slideIn 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .results-section.show {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ==================== RATING CARD ==================== */
+        .rating-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-secondary);
+            border-radius: 28px;
+            padding: 48px;
+            margin-bottom: 32px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: none;
+        }
+
+        .rating-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .rating-circle-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .rating-circle {
+            width: 240px;
+            height: 240px;
+            border-radius: 50%;
+            background: conic-gradient(
+                from 0deg,
+                var(--accent-cyan) 0deg,
+                var(--accent-purple) 180deg,
+                rgba(255, 255, 255, 0.1) 180deg
+            );
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 0 50px rgba(0, 229, 255, 0.3);
+        }
+
+        .rating-circle::before {
+            content: '';
+            position: absolute;
+            inset: 8px;
+            background: var(--bg-primary);
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .rating-inner {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .rating-score {
+            font-size: 64px;
+            font-weight: 800;
+            background: linear-gradient(90deg, var(--accent-cyan) 0%, var(--accent-purple) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+        }
+
+        .rating-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .rating-tier {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            margin-top: 12px;
+        }
+
+        /* ==================== FEEDBACK SECTION ==================== */
+        .feedback-section {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .feedback-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .feedback-item {
+            display: flex;
+            gap: 16px;
+            padding: 16px;
+            background: rgba(0, 229, 255, 0.08);
+            border-left: 3px solid var(--accent-cyan);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .feedback-item:hover {
+            background: rgba(0, 229, 255, 0.12);
+            transform: translateX(4px);
+        }
+
+        .feedback-item.strength {
+            border-left-color: #10b981;
+            background: rgba(16, 185, 129, 0.08);
+        }
+
+        .feedback-item.improvement {
+            border-left-color: #f59e0b;
+            background: rgba(245, 158, 11, 0.08);
+        }
+
+        .feedback-item.warning {
+            border-left-color: #ef4444;
+            background: rgba(239, 68, 68, 0.08);
+        }
+
+        .feedback-icon {
+            font-size: 24px;
+            min-width: 24px;
+            display: flex;
+            align-items: center;
+        }
+
+        .feedback-content {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .feedback-label {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+        }
+
+        .feedback-text {
+            font-size: 14px;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        /* ==================== LOADING STATE ==================== */
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            padding: 60px 40px;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 3px solid rgba(0, 229, 255, 0.2);
+            border-top-color: var(--accent-cyan);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 18px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* ==================== SCROLLBAR ==================== */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 229, 255, 0.3);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 229, 255, 0.6);
+        }
+
+        /* ==================== RESPONSIVE ==================== */
+        @media (max-width: 768px) {
+            .header-title {
+                font-size: 36px;
+            }
+
+            .header-subtitle {
+                font-size: 16px;
+            }
+
+            .upload-section {
+                padding: 32px 20px;
+            }
+
+            .upload-area {
+                padding: 40px 20px;
+            }
+
+            .upload-icon {
+                font-size: 36px;
+            }
+
+            .upload-text {
+                font-size: 16px;
+            }
+
+            .rating-container {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+
+            .rating-card {
+                padding: 32px 20px;
+            }
+
+            .rating-circle {
+                width: 180px;
+                height: 180px;
+            }
+
+            .rating-score {
+                font-size: 48px;
+            }
+
+            .feedback-title {
+                font-size: 20px;
+            }
+
+            .feedback-item {
+                padding: 12px;
+            }
+
+            .feedback-text {
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-wrapper">
+        <div class="content">
+            <!-- HEADER -->
+            <div class="header">
+                <div class="header-badge">AI POWERED ANALYSIS</div>
+                <h1 class="header-title">
+                    Resume
+                    <span class="header-title-gradient">Rating Engine</span>
+                </h1>
+                <p class="header-subtitle">
+                    Upload your resume and get instant AI-powered feedback with a 0-100 score
+                </p>
+            </div>
+
+            <!-- UPLOAD SECTION -->
+            <div class="upload-section">
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📄</div>
+                    <div class="upload-text">Upload Your Resume</div>
+                    <div class="upload-subtext">Drag and drop your PDF or DOC file here, or click to browse</div>
+                    <button class="upload-button" onclick="document.getElementById('fileInput').click()">
+                        Choose File
+                    </button>
+                    <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.txt" />
+                </div>
+
+                <div class="file-info" id="fileInfo">
+                    <div>
+                        <div class="file-name" id="fileName"></div>
+                        <div class="file-size" id="fileSize"></div>
+                    </div>
+                    <button class="clear-file" onclick="clearFile()">Clear</button>
+                </div>
+
+                <button class="analyze-button" id="analyzeButton" onclick="analyzeResume()" disabled>
+                    Analyze Resume
+                </button>
+            </div>
+
+            <!-- RESULTS SECTION -->
+            <div class="results-section" id="resultsSection">
+                <!-- RATING CARD -->
+                <div class="rating-card">
+                    <div class="rating-container">
+                        <div class="rating-circle-container">
+                            <div class="rating-circle">
+                                <div class="rating-inner">
+                                    <div class="rating-score" id="ratingScore">0</div>
+                                    <div class="rating-label">Score</div>
+                                </div>
+                            </div>
+                            <div class="rating-tier" id="ratingTier">Analyzing...</div>
+                        </div>
+
+                        <div class="feedback-section">
+                            <div>
+                                <div class="feedback-title">Overall Assessment</div>
+                                <div style="font-size: 14px; color: var(--text-secondary); line-height: 1.8;" id="overallAssessment">
+                                    Analyzing your resume...
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUGGESTIONS SECTION -->
+                <div class="rating-card">
+                    <div class="feedback-title" style="margin-bottom: 24px;">💡 Suggestions & Improvements</div>
+                    <div id="suggestionsContainer"></div>
+                </div>
+
+                <!-- WARNINGS SECTION -->
+                <div class="rating-card">
+                    <div class="feedback-title" style="margin-bottom: 24px;">⚠️ Areas to Address</div>
+                    <div id="warningsContainer"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedFile = null;
+
+        // Drag and drop handling
+        const uploadArea = document.getElementById('uploadArea');
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('drag-over');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('drag-over');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('drag-over');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFileSelection(files[0]);
+            }
+        });
+
+        // File input handling
+        document.getElementById('fileInput').addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFileSelection(e.target.files[0]);
+            }
+        });
+
+        function handleFileSelection(file) {
+            const validTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'text/plain'];
+            
+            if (!validTypes.includes(file.type)) {
+                alert('Please upload a valid resume file (PDF, DOC, DOCX, or TXT)');
+                return;
+            }
+
+            selectedFile = file;
+            document.getElementById('fileName').textContent = file.name;
+            document.getElementById('fileSize').textContent = (file.size / 1024).toFixed(2) + ' KB';
+            document.getElementById('fileInfo').classList.add('show');
+            document.getElementById('analyzeButton').disabled = false;
+        }
+
+        function clearFile() {
+            selectedFile = null;
+            document.getElementById('fileInput').value = '';
+            document.getElementById('fileInfo').classList.remove('show');
+            document.getElementById('analyzeButton').disabled = true;
+            document.getElementById('resultsSection').classList.remove('show');
+        }
+
+        async function analyzeResume() {
+            if (!selectedFile) {
+                alert('Please select a file first');
+                return;
+            }
+
+            const uploadSection = document.querySelector('.upload-section');
+            const resultsSection = document.getElementById('resultsSection');
+            
+            uploadSection.style.display = 'none';
+            resultsSection.classList.add('show');
+            resultsSection.innerHTML = `
+                <div class="rating-card">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <div class="loading-text">Analyzing your resume with AI...</div>
+                    </div>
+                </div>
+            `;
+
+            // Simulate AI analysis - In production, this would call your backend API
+            try {
+                const resumeText = await readFileAsText(selectedFile);
+                const analysisResult = performAIAnalysis(resumeText);
+                
+                setTimeout(() => {
+                    displayResults(analysisResult);
+                }, 2000);
+            } catch (error) {
+                console.error('Error reading file:', error);
+                resultsSection.innerHTML = `
+                    <div class="rating-card" style="text-align: center; padding: 40px;">
+                        <div style="font-size: 18px; color: #ef4444;">Error analyzing resume</div>
+                        <div style="font-size: 14px; color: var(--text-secondary); margin-top: 12px;">Please try again with a different file</div>
+                    </div>
+                `;
+            }
+        }
+
+        function readFileAsText(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (e) => resolve(e.target.result);
+                reader.onerror = () => reject(new Error('Failed to read file'));
+                reader.readAsText(file);
+            });
+        }
+
+        function performAIAnalysis(text) {
+            // Simulated AI analysis algorithm
+            let score = 50;
+            const feedback = [];
+
+            // Check for key sections
+            const hasSummary = /summary|objective|profile/i.test(text);
+            const hasExperience = /experience|employment|work/i.test(text);
+            const hasEducation = /education|degree|university|college/i.test(text);
+            const hasSkills = /skills|technical|proficiencies|competencies/i.test(text);
+
+            if (hasSummary) score += 10;
+            else feedback.push({ type: 'improvement', title: 'Add Professional Summary', text: 'Include a brief professional summary at the top of your resume to highlight your value proposition.' });
+
+            if (hasExperience) score += 15;
+            else feedback.push({ type: 'warning', title: 'Experience Section Missing', text: 'Add detailed work experience with accomplishments and responsibilities.' });
+
+            if (hasEducation) score += 10;
+            else feedback.push({ type: 'improvement', title: 'Education Section Needed', text: 'Include your educational background and certifications.' });
+
+            if (hasSkills) score += 10;
+            else feedback.push({ type: 'warning', title: 'Skills Section Missing', text: 'Add a dedicated skills section to highlight your technical abilities.' });
+
+            // Check content quality
+            const wordCount = text.split(/\s+/).length;
+            if (wordCount < 100) {
+                score -= 10;
+                feedback.push({ type: 'warning', title: 'Content Too Short', text: 'Expand your resume with more detailed information about your background.' });
+            } else if (wordCount > 1000) {
+                score -= 5;
+                feedback.push({ type: 'improvement', title: 'Consider Condensing', text: 'Your resume might be too lengthy. Aim for 1-2 pages maximum.' });
+            }
+
+            // Check for action verbs
+            const actionVerbs = /led|managed|developed|designed|implemented|created|improved|increased|reduced|achieved/i;
+            if (actionVerbs.test(text)) {
+                score += 8;
+                feedback.push({ type: 'strength', title: 'Strong Action Verbs', text: 'Great use of powerful action verbs to describe achievements.' });
+            } else {
+                feedback.push({ type: 'improvement', title: 'Use Action Verbs', text: 'Replace passive language with action verbs like "Led", "Managed", "Developed".' });
+            }
+
+            // Check for metrics
+            if (/\d+%|\$\d+|increased|reduced|saved|earned/i.test(text)) {
+                score += 8;
+                feedback.push({ type: 'strength', title: 'Quantifiable Results', text: 'Excellent use of metrics and numbers to demonstrate impact.' });
+            } else {
+                feedback.push({ type: 'improvement', title: 'Add Quantifiable Metrics', text: 'Include numbers, percentages, or dollar amounts to show concrete impact.' });
+            }
+
+            // Ensure score is between 0-100
+            score = Math.max(0, Math.min(100, score));
+
+            // Add strengths if score is good
+            if (score >= 75) {
+                feedback.unshift({ type: 'strength', title: 'Professional Formatting', text: 'Your resume is well-structured and easy to read.' });
+            }
+
+            return {
+                score: score,
+                tier: getTier(score),
+                overallAssessment: getAssessment(score),
+                feedback: feedback
+            };
+        }
+
+        function getTier(score) {
+            if (score >= 90) return '🌟 Excellent';
+            if (score >= 80) return '✨ Very Good';
+            if (score >= 70) return '👍 Good';
+            if (score >= 60) return '📈 Fair';
+            if (score >= 50) return '⚠️ Needs Work';
+            return '🔴 Poor';
+        }
+
+        function getAssessment(score) {
+            if (score >= 90) {
+                return 'Your resume is exceptional! It showcases your experience effectively with strong action verbs, quantifiable results, and proper structure. You\'re well-positioned for top opportunities.';
+            } else if (score >= 80) {
+                return 'Your resume is strong and well-crafted. Consider adding more quantifiable metrics and ensuring all key sections are clearly defined to push it to excellence.';
+            } else if (score >= 70) {
+                return 'Your resume has a solid foundation but could use some improvements. Focus on adding metrics, stronger action verbs, and ensuring all relevant sections are included.';
+            } else if (score >= 60) {
+                return 'Your resume has potential but needs significant improvements. Add missing sections, use more powerful language, and include specific examples of your achievements.';
+            } else {
+                return 'Your resume needs substantial revision. Make sure to include all key sections (summary, experience, education, skills) and expand on your accomplishments with concrete examples.';
+            }
+        }
+
+        function displayResults(result) {
+            const resultsSection = document.getElementById('resultsSection');
+            
+            // Separate feedback into categories
+            const suggestions = result.feedback.filter(item => item.type === 'improvement');
+            const warnings = result.feedback.filter(item => item.type === 'warning');
+            const strengths = result.feedback.filter(item => item.type === 'strength');
+            
+            // Create suggestions HTML
+            let suggestionsHTML = [...strengths, ...suggestions].map(item => `
+                <div class="feedback-item ${item.type}">
+                    <div class="feedback-icon">
+                        ${item.type === 'strength' ? '✅' : '💡'}
+                    </div>
+                    <div class="feedback-content">
+                        <div class="feedback-label">${item.type === 'strength' ? 'Strength' : 'Suggestion'}</div>
+                        <div class="feedback-text"><strong>${item.title}</strong></div>
+                        <div class="feedback-text">${item.text}</div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Create warnings HTML
+            let warningsHTML = warnings.map(item => `
+                <div class="feedback-item ${item.type}">
+                    <div class="feedback-icon">⚠️</div>
+                    <div class="feedback-content">
+                        <div class="feedback-label">Warning</div>
+                        <div class="feedback-text"><strong>${item.title}</strong></div>
+                        <div class="feedback-text">${item.text}</div>
+                    </div>
+                </div>
+            `).join('');
+
+            resultsSection.innerHTML = `
+                <div class="rating-card">
+                    <div class="rating-container">
+                        <div class="rating-circle-container">
+                            <div class="rating-circle">
+                                <div class="rating-inner">
+                                    <div class="rating-score" id="ratingScore">${result.score}</div>
+                                    <div class="rating-label">Score</div>
+                                </div>
+                            </div>
+                            <div class="rating-tier">${result.tier}</div>
+                        </div>
+
+                        <div class="feedback-section">
+                            <div>
+                                <div class="feedback-title">Overall Assessment</div>
+                                <div style="font-size: 14px; color: var(--text-secondary); line-height: 1.8;">
+                                    ${result.overallAssessment}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                    <div class="rating-card">
+                        <div class="feedback-title" style="margin-bottom: 24px;">💡 Suggestions & Improvements</div>
+                        <div>${suggestionsHTML || '<div style="color: var(--text-secondary);">No suggestions at this time.</div>'}</div>
+                    </div>
+
+                    <div class="rating-card">
+                        <div class="feedback-title" style="margin-bottom: 24px;">⚠️ Areas to Address</div>
+                        <div>${warningsHTML || '<div style="color: var(--text-secondary);">Great job! No critical warnings.</div>'}</div>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
