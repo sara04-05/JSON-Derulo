@@ -259,8 +259,6 @@ const ANIMATIONS = {
     // For movement
     move: `transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);`,
     
-    // For glow effects
-    glow: `transition: box-shadow 0.3s ease, border-color 0.3s ease;`,
   }
 };
 
@@ -330,7 +328,6 @@ const COMPONENTS = {
     border: '1px solid rgba(255, 255, 255, 0.06)',
     borderRadius: '20px',
     padding: '32px',
-    boxShadow: '0 0 40px rgba(0, 229, 255, 0.08), inset 0 0 40px rgba(0, 229, 255, 0.03)',
     transition: 'all 0.3s cubic-bezier(0.22, 1, 0.36, 1)',
   },
   
@@ -356,12 +353,10 @@ const cardStyle = `
   border: ${COMPONENTS.card.border};
   border-radius: ${COMPONENTS.card.borderRadius};
   padding: ${COMPONENTS.card.padding};
-  box-shadow: ${COMPONENTS.card.boxShadow};
   transition: ${ANIMATIONS.transitions.hover};
   
   &:hover {
     border-color: ${COLORS.cyan.primary};
-    box-shadow: ${EFFECTS.glows.large};
     transform: translateY(-4px);
   }
 `;
@@ -375,11 +370,9 @@ const buttonStyle = `
   font-weight: ${COMPONENTS.button.primary.fontWeight};
   font-size: ${COMPONENTS.button.primary.fontSize};
   letter-spacing: ${COMPONENTS.button.primary.letterSpacing};
-  box-shadow: ${EFFECTS.glows.small};
   
   &:hover {
     transform: translateY(-2px);
-    box-shadow: ${EFFECTS.glows.medium};
   }
 `;
 
