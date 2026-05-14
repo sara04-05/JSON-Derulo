@@ -1829,6 +1829,141 @@ body {
                 grid-template-columns: 1fr;
             }
         }
+        /* ==================== HOW STUDY BUDDY WORKS ==================== */
+        .study-buddy-works {
+            width: 100%;
+            max-width: 900px;
+            margin-top: 48px;
+            margin-bottom: 32px;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+            background-color: #151717;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 30px;
+        }
+
+        .study-buddy-title {
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 28px;
+            text-align: center;
+            letter-spacing: -0.02em;
+            position: relative;
+            z-index: 1;
+        }
+
+        .study-buddy-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .study-buddy-card {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 20px;
+            border-radius: 14px;
+            border: 1px solid rgba(0, 242, 255, 0.15);
+            background: rgba(0, 242, 255, 0.05);
+            transition: all 0.28s ease;
+        }
+
+        .study-buddy-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(0, 242, 255, 0.3);
+            box-shadow: 0 12px 28px rgba(0, 242, 255, 0.1);
+        }
+
+        .study-buddy-card.purple {
+            border-color: rgba(176, 140, 255, 0.15);
+            background: rgba(176, 140, 255, 0.05);
+        }
+
+        .study-buddy-card.purple:hover {
+            border-color: rgba(176, 140, 255, 0.3);
+            box-shadow: 0 12px 28px rgba(176, 140, 255, 0.1);
+        }
+
+        .study-buddy-card.pink {
+            border-color: rgba(244, 114, 182, 0.15);
+            background: rgba(244, 114, 182, 0.05);
+        }
+
+        .study-buddy-card.pink:hover {
+            border-color: rgba(244, 114, 182, 0.3);
+            box-shadow: 0 12px 28px rgba(244, 114, 182, 0.1);
+        }
+
+        .study-buddy-icon {
+            font-size: 28px;
+            line-height: 1;
+        }
+
+        .study-buddy-card-title {
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+
+        .study-buddy-card-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .study-buddy-btn {
+            height: auto;
+            min-height: 40px;
+            margin: 3px;
+            background: #f8fafc;
+            color: #0f172a;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 13px;
+            letter-spacing: 0;
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+            align-items: center;
+            gap: 8px;
+        }
+
+
+        .study-buddy-works h3 {
+            font-size: 44px;
+            line-height: 1.05;
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            color: white;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            margin-bottom: 28px;
+        }
+
+        .study-buddy-works h3 span {
+            background: linear-gradient(90deg, #00f2ff 0%, #67e8f9 45%, #c084fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        @media (max-width: 768px) {
+            .study-buddy-grid {
+                grid-template-columns: 1fr;
+            }
+            .study-buddy-works {
+                padding: 24px;
+            }
+        }
+
         /* ==================== HOW IT WORKS ==================== */
         .how-it-works {
             width: 100%;
@@ -2332,6 +2467,8 @@ body {
                     </div>
                 </div>
 
+       
+
         <!-- MOCKINTERVIEW SECTION --> 
 
                <section class="wow-section">
@@ -2412,7 +2549,44 @@ body {
 ">
     To use our model press here.
 </p>
-</section>
+ <!-- HOW STUDY BUDDY WORKS SECTION -->
+        <section class="study-buddy-works">
+           <span class="wow-badge">⚡ PRACTICE & INSTANT FEEDBACK</span>
+            <h3>Study <span> Buddy</span> AI</h3>
+            <div class="study-buddy-grid">
+                <div class="study-buddy-card">
+                    <div class="study-buddy-icon">💡</div>
+                    <div class="study-buddy-card-title">AI-Powered Explanations</div>
+                    <div class="study-buddy-card-desc">Enter any topic and get instant, personalized explanations tailored to your learning level with real-world examples.</div>
+                    <button class="study-buddy-btn">Execute</button>
+                </div>
+                <div class="study-buddy-card purple">
+                    <div class="study-buddy-icon">🧩</div>
+                    <div class="study-buddy-card-title">Adaptive Quizzes</div>
+                    <div class="study-buddy-card-desc">Dynamically generated questions that adjust difficulty based on your performance and aspiring learning goals.</div>
+                    <button class="study-buddy-btn">Execute</button>
+                </div>
+                <div class="study-buddy-card pink">
+                    <div class="study-buddy-icon">📅</div>
+                    <div class="study-buddy-card-title">Personalized Study Plans</div>
+                    <div class="study-buddy-card-desc">AI creates structured 4-week roadmaps aligned with your goals, intensity, and schedule for optimal learning.</div>
+                    <button class="study-buddy-btn">Execute</button>
+                </div>
+            </div>
+        </section>
+                <p style="
+    font-size: 20px;
+    line-height: 1.05;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    color: white;
+    text-align: center;
+    grid-column: 1 / -1;
+    padding-bottom: 0;
+    margin-bottom: 0;
+">
+    To use our model press here.
+</p>
             <section class="wow-section" id="mock-interview">
                 <div class="wow-layout">
                     <div class="wow-content-card">
