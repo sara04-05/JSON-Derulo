@@ -18,7 +18,9 @@
     --bg-card: #1d1f24;
     --text-primary: #f3f4f6;
     --text-secondary: #9ca3af;
+    --text-muted: #6b7280;
     --accent-cyan: #00e7ff;
+    --accent-teal: #00b8d4;
     --accent-blue: #59b8ff;
     --accent-purple: #b08cff;
 }
@@ -875,6 +877,18 @@ body {
             margin-bottom: 10px;
         }
 
+        .pill--purple {
+            background: rgba(176, 140, 255, 0.1);
+            border: 1px solid rgba(176, 140, 255, 0.35);
+            color: var(--accent-purple);
+        }
+
+        .pill--blue {
+            background: rgba(89, 184, 255, 0.1);
+            border: 1px solid rgba(89, 184, 255, 0.35);
+            color: var(--accent-blue);
+        }
+
         .results-head {
             display: flex;
             flex-wrap: wrap;
@@ -944,57 +958,163 @@ body {
             margin-top: 28px;
         }
 
-        .mi-wrap {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 34px;
-            align-items: start;
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            margin-left: 0;
-        }
-
-        .mi-wrap .card {
-            width: 100%;
+        .mi-setup {
+            margin-top: 26px;
+            padding-top: 26px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
             text-align: left;
         }
 
-        .mi-wrap .header {
-            grid-column: 1 / -1;
-            width: 100%;
-            text-align: center;
-            margin-bottom: 20px;
+        .mi-setup .pill {
+            margin-bottom: 14px;
         }
 
-        .mi-form-left {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .mi-demo-right {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        @media (max-width: 1200px) {
-            .mi-wrap {
-                grid-template-columns: 1fr;
-            }
-            .mi-wrap .header {
-                grid-column: 1;
-            }
-        }
-
-        .mi-wrap .card a {
+        .mi-setup a {
             color: var(--accent-cyan);
             text-decoration: none;
         }
 
-        .mi-wrap .card a:hover {
+        .mi-setup a:hover {
             text-decoration: underline;
+        }
+
+        .mi-btn-row {
+            margin-top: 20px;
+        }
+
+        .mi-setup #setupError {
+            margin-top: 14px;
+        }
+
+        .mi-preview-score {
+            margin-top: 20px;
+        }
+
+        .mi-preview-score .q-label {
+            margin-bottom: 4px;
+        }
+
+        .mi-demo-rail .tier {
+            font-size: 16px;
+        }
+
+        .mi-demo-rail .summary {
+            margin-top: 18px;
+            margin-bottom: 0;
+        }
+
+        .mi-demo-rail {
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+            justify-content: flex-start;
+        }
+
+        .mi-preview-panel {
+            padding: 20px;
+            border-radius: 16px;
+            background: rgba(0, 0, 0, 0.22);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .mi-preview-panel--cyan {
+            border-color: rgba(0, 231, 255, 0.18);
+            background: rgba(0, 231, 255, 0.04);
+        }
+
+        .mi-preview-panel--purple {
+            border-color: rgba(176, 140, 255, 0.22);
+            background: rgba(176, 140, 255, 0.05);
+        }
+
+        .mi-preview-panel--blue {
+            border-color: rgba(89, 184, 255, 0.2);
+            background: rgba(59, 130, 246, 0.06);
+        }
+
+        .mi-preview-panel .pill {
+            margin-bottom: 0;
+        }
+
+        .mi-preview-score .big-score {
+            font-size: 52px;
+            margin-bottom: 6px;
+        }
+
+        .mi-metric-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-top: 16px;
+        }
+
+        .mi-metric-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .mi-metric-value {
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        .mi-metric-value--green {
+            color: #22c55e;
+        }
+
+        .mi-metric-value--cyan {
+            color: var(--accent-cyan);
+        }
+
+        .mi-metric-value--purple {
+            color: var(--accent-purple);
+        }
+
+        .mi-metric-value--sky {
+            color: #67e8f9;
+        }
+
+        .mi-feedback-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .mi-feedback-item {
+            padding: 12px 12px 12px 14px;
+            border-radius: 12px;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #cbd5e1;
+            border-left: 3px solid transparent;
+        }
+
+        .mi-feedback-item strong {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .mi-feedback-item--good {
+            background: rgba(34, 197, 94, 0.1);
+            border-left-color: #22c55e;
+        }
+
+        .mi-feedback-item--good strong {
+            color: #22c55e;
+        }
+
+        .mi-feedback-item--warn {
+            background: rgba(251, 191, 36, 0.1);
+            border-left-color: #fbbf24;
+        }
+
+        .mi-feedback-item--warn strong {
+            color: #fbbf24;
         }
 
         .hint.err {
@@ -2034,7 +2154,7 @@ body {
         }
     </style>
 </head>
-<body >
+<body>
     <div class="container-wrapper">
         <!-- SIDEBAR -->
         <aside class="sidebar">
@@ -2266,106 +2386,93 @@ body {
     </div>
 
 </section>
-            <section class="wow-section">
-
-    <div class="wow-layout">
-
-        <!-- MOCK INTERVIEW SECTION -->
-        <div class="mi-wrap">
-        <header class="header">
-            <h1>Mock <span>Interview</span> Coach</h1>
-            <p class="sub">Practice your interview skills and get AI-powered feedback</p>
-        </header>
-
-        <div class="mi-form-left">
-        <!-- Setup -->
-        <section id="stepSetup" class="card">
-            <div class="pill">Step 1 — Role</div>
-            <div class="field">
-                <label for="jobTitle">Job position you are applying for *</label>
-                <input type="text" id="jobTitle" placeholder="e.g. Junior Data Analyst at a healthcare company" autocomplete="off">
-                <p class="hint">Questions are tailored using this title. Be specific about seniority and domain when you can.</p>
-            </div>
-            <div class="row">
-                <div class="field">
-                    <label for="questionCount">Number of questions</label>
-                    <select id="questionCount">
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5" selected>5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                    </select>
-                </div>
-                <div class="field">
-                    <label for="geminiKey">Gemini API key (optional)</label>
-                    <input type="password" id="geminiKey" placeholder="Paste key for smarter Q&amp;A" autocomplete="off">
-                </div>
-            </div>
-            <p class="hint">If you add a <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">Google AI Studio</a> key, questions and final scoring use Gemini. </p>
-            <div class="btn-row" style="margin-top: 20px;">
-                <button type="button" class="btn btn-primary" id="btnStart">Start mock interview</button>
-            </div>
-            <p id="setupError" class="hint err hidden" style="margin-top: 14px;"></p>
-            <p class="sub">To use our model press here.</p>
-
-        </section>
-        </div>
-
-        <div class="mi-demo-right">
-        <!-- Results Demo Card -->
-        <div class="card" style="background: rgba(0, 242, 255, 0.02); border: 1px solid rgba(0, 242, 255, 0.15);">
-            <div class="pill" style="background: rgba(0, 242, 255, 0.08); border: 1px solid rgba(0, 242, 255, 0.3); color: var(--accent-cyan); border-radius: 999px;">Your Results Preview</div>
-            
-            <div style="margin-top: 24px;">
-                <div class="q-label" style="margin-bottom: 4px;">Overall Interview Score</div>
-                <div class="big-score" style="font-size: 56px; margin-bottom: 8px;">87</div>
-                <div class="tier" style="font-size: 16px; color: var(--accent-cyan); font-weight: 700;">Strong Performance</div>
-            </div>
-
-            <p class="summary" style="margin-top: 20px; margin-bottom: 0;">You demonstrated excellent communication skills and deep technical knowledge. Your confidence level was outstanding throughout the interview.</p>
-        </div>
-
-        <!-- Performance Breakdown -->
-        <div class="card" style="background: rgba(168, 85, 247, 0.02); border: 1px solid rgba(168, 85, 247, 0.15);">
-            <div class="pill" style="background: rgba(168, 85, 247, 0.08); border: 1px solid rgba(168, 85, 247, 0.3); color: var(--accent-purple); border-radius: 999px;">Performance Metrics</div>
-            
-            <div style="margin-top: 18px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
-                <div>
-                    <div style="font-size: 12px; color: #9ca3af; margin-bottom: 6px; font-weight: 600;">Confidence</div>
-                    <div style="font-size: 24px; font-weight: 800; color: #22c55e;">92%</div>
-                </div>
-                <div>
-                    <div style="font-size: 12px; color: #9ca3af; margin-bottom: 6px; font-weight: 600;">Communication</div>
-                    <div style="font-size: 24px; font-weight: 800; color: #00f2ff;">88%</div>
-                </div>
-                <div>
-                    <div style="font-size: 12px; color: #9ca3af; margin-bottom: 6px; font-weight: 600;">Technical Knowledge</div>
-                    <div style="font-size: 24px; font-weight: 800; color: #c084fc;">91%</div>
-                </div>
-                <div>
-                    <div style="font-size: 12px; color: #9ca3af; margin-bottom: 6px; font-weight: 600;\">Professionalism</div>
-                    <div style="font-size: 24px; font-weight: 800; color: #67e8f9;\">89%</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Answer Review -->
-        <div class="card" style="background: rgba(59, 130, 246, 0.02); border: 1px solid rgba(59, 130, 246, 0.15);">
-            <div class="pill" style="background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.3); color: #3b82f6; border-radius: 999px;">Sample Answer Feedback</div>
-            
-            <div style="margin-top: 18px; padding: 12px; background: rgba(34, 197, 94, 0.1); border-radius: 12px; border-left: 3px solid #22c55e;">
-                <div style="font-size: 12px; font-weight: 600; color: #22c55e; margin-bottom: 6px;">✓ Question 1: "Tell me about yourself"</div>
-                <div style="font-size: 13px; color: #cbd5e1; line-height: 1.6;">Excellent response with clear structure and relevant details. You highlighted key achievements effectively.</div>
-            </div>
-
-            <div style="margin-top: 12px; padding: 12px; background: rgba(251, 191, 36, 0.1); border-radius: 12px; border-left: 3px solid #fbbf24;">
-                <div style="font-size: 12px; font-weight: 600; color: #fbbf24; margin-bottom: 6px;">→ Question 2: "Why this company?"</div>
-                <div style="font-size: 13px; color: #cbd5e1; line-height: 1.6;">Good answer, but could include more specific examples about the company's recent projects.</div>
-            </div>
-        </div>
-        </div>
+            <section class="wow-section" id="mock-interview">
+                <div class="wow-layout">
+                    <div class="wow-content-card">
+                        <span class="wow-badge">PRACTICE &amp; FEEDBACK</span>
+                        <h3>Mock <span>Interview</span> Coach</h3>
+                        <p>
+                            Run a focused practice session with role-specific questions. Add an optional Gemini key for smarter prompts and scoring—otherwise the flow still works with the built-in experience.
+                        </p>
+                        <div id="stepSetup" class="mi-setup">
+                            <div class="pill">Step 1 — Role</div>
+                            <div class="field">
+                                <label for="jobTitle">Job position you are applying for *</label>
+                                <input type="text" id="jobTitle" placeholder="e.g. Junior Data Analyst at a healthcare company" autocomplete="off">
+                                <p class="hint">Questions are tailored using this title. Be specific about seniority and domain when you can.</p>
+                            </div>
+                            <div class="row">
+                                <div class="field">
+                                    <label for="questionCount">Number of questions</label>
+                                    <select id="questionCount">
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5" selected>5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                    </select>
+                                </div>
+                                <div class="field">
+                                    <label for="geminiKey">Gemini API key (optional)</label>
+                                    <input type="password" id="geminiKey" placeholder="Paste key for smarter Q&amp;A" autocomplete="off">
+                                </div>
+                            </div>
+                            <p class="hint">If you add a <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">Google AI Studio</a> key, questions and final scoring can use Gemini.</p>
+                            <div class="btn-row mi-btn-row">
+                                <button type="button" class="btn btn-primary" id="btnStart">Start mock interview</button>
+                            </div>
+                            <p id="setupError" class="hint err hidden"></p>
+                        </div>
                     </div>
+
+                    <div class="cv-demo-card mi-demo-rail">
+                        <div class="mi-preview-panel mi-preview-panel--cyan">
+                            <div class="pill">Your results preview</div>
+                            <div class="mi-preview-score">
+                                <div class="q-label">Overall interview score</div>
+                                <div class="big-score">87</div>
+                                <div class="tier">Strong performance</div>
+                            </div>
+                            <p class="summary">You demonstrated excellent communication skills and deep technical knowledge. Your confidence level was strong throughout the interview.</p>
+                        </div>
+
+                        <div class="mi-preview-panel mi-preview-panel--purple">
+                            <div class="pill pill--purple">Performance metrics</div>
+                            <div class="mi-metric-grid">
+                                <div>
+                                    <div class="mi-metric-label">Confidence</div>
+                                    <div class="mi-metric-value mi-metric-value--green">92%</div>
+                                </div>
+                                <div>
+                                    <div class="mi-metric-label">Communication</div>
+                                    <div class="mi-metric-value mi-metric-value--cyan">88%</div>
+                                </div>
+                                <div>
+                                    <div class="mi-metric-label">Technical knowledge</div>
+                                    <div class="mi-metric-value mi-metric-value--purple">91%</div>
+                                </div>
+                                <div>
+                                    <div class="mi-metric-label">Professionalism</div>
+                                    <div class="mi-metric-value mi-metric-value--sky">89%</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mi-preview-panel mi-preview-panel--blue">
+                            <div class="pill pill--blue">Sample answer feedback</div>
+                            <div class="mi-feedback-stack">
+                                <div class="mi-feedback-item mi-feedback-item--good">
+                                    <strong>Question 1: &ldquo;Tell me about yourself&rdquo;</strong>
+                                    Excellent response with clear structure and relevant details. You highlighted key achievements effectively.
+                                </div>
+                                <div class="mi-feedback-item mi-feedback-item--warn">
+                                    <strong>Question 2: &ldquo;Why this company?&rdquo;</strong>
+                                    Good answer, but you could include more specific examples about the company&rsquo;s recent projects.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </section>
             
             <!-- HOW IT WORKS -->
