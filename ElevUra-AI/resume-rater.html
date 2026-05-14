@@ -335,8 +335,8 @@
 
         .rating-circle {
             --score-fill: 0;
-            width: 240px;
-            height: 240px;
+            width: 300px;
+            height: 300px;
             border-radius: 50%;
             background: conic-gradient(
                 from -90deg,
@@ -349,23 +349,77 @@
             align-items: center;
             justify-content: center;
             position: relative;
-            box-shadow: 0 0 50px rgba(0, 229, 255, 0.3);
+            box-shadow:
+                0 0 40px rgba(0, 229, 255, 0.35),
+                0 0 80px rgba(0, 229, 255, 0.15),
+                0 0 120px rgba(176, 140, 255, 0.08);
+        }
+
+        .rating-card--score .rating-circle {
+            animation: ringAmbientGlow 3.5s ease-in-out infinite alternate;
         }
 
         .rating-circle.ring-complete {
-            animation: ringPulseGlow 2.4s ease-in-out infinite alternate;
+            animation: ringPulseGlow 2.2s ease-in-out infinite alternate;
+        }
+
+        @keyframes ringAmbientGlow {
+            from {
+                box-shadow:
+                    0 0 36px rgba(0, 229, 255, 0.28),
+                    0 0 72px rgba(0, 229, 255, 0.12),
+                    0 0 100px rgba(176, 140, 255, 0.06);
+            }
+            to {
+                box-shadow:
+                    0 0 52px rgba(0, 229, 255, 0.42),
+                    0 0 100px rgba(0, 229, 255, 0.2),
+                    0 0 140px rgba(167, 139, 250, 0.14);
+            }
         }
 
         @keyframes ringPulseGlow {
             from {
                 box-shadow:
-                    0 0 40px rgba(0, 229, 255, 0.28),
-                    0 0 80px rgba(0, 229, 255, 0.12);
+                    0 0 48px rgba(0, 229, 255, 0.45),
+                    0 0 96px rgba(0, 229, 255, 0.22),
+                    0 0 140px rgba(167, 139, 250, 0.12),
+                    0 0 180px rgba(0, 229, 255, 0.06);
             }
             to {
                 box-shadow:
-                    0 0 56px rgba(0, 229, 255, 0.42),
-                    0 0 100px rgba(167, 139, 250, 0.18);
+                    0 0 72px rgba(0, 229, 255, 0.55),
+                    0 0 120px rgba(0, 229, 255, 0.28),
+                    0 0 180px rgba(176, 140, 255, 0.22),
+                    0 0 220px rgba(167, 139, 250, 0.1);
+            }
+        }
+
+        .rating-card--score .rating-circle::after {
+            content: '';
+            position: absolute;
+            inset: -22px;
+            border-radius: 50%;
+            z-index: 0;
+            background: radial-gradient(
+                closest-side,
+                transparent 52%,
+                rgba(0, 231, 255, 0.14) 72%,
+                rgba(176, 140, 255, 0.1) 100%
+            );
+            opacity: 0.75;
+            animation: ringHaloBreathe 2.6s ease-in-out infinite alternate;
+            pointer-events: none;
+        }
+
+        @keyframes ringHaloBreathe {
+            from {
+                opacity: 0.5;
+                transform: scale(0.94);
+            }
+            to {
+                opacity: 0.95;
+                transform: scale(1.06);
             }
         }
 
@@ -391,15 +445,15 @@
         @keyframes scoreCelebrate {
             0% {
                 transform: scale(1);
-                filter: brightness(1);
+                filter: brightness(1) drop-shadow(0 0 8px rgba(0, 231, 255, 0.35));
             }
             45% {
                 transform: scale(1.12);
-                filter: brightness(1.15);
+                filter: brightness(1.15) drop-shadow(0 0 22px rgba(0, 231, 255, 0.55)) drop-shadow(0 0 36px rgba(176, 140, 255, 0.35));
             }
             100% {
                 transform: scale(1);
-                filter: brightness(1);
+                filter: brightness(1) drop-shadow(0 0 14px rgba(0, 231, 255, 0.4));
             }
         }
 
@@ -422,7 +476,7 @@
         .rating-circle::before {
             content: '';
             position: absolute;
-            inset: 8px;
+            inset: 10px;
             background: var(--bg-primary);
             border-radius: 50%;
             z-index: 1;
@@ -439,7 +493,7 @@
         }
 
         .rating-score {
-            font-size: 64px;
+            font-size: 96px;
             font-weight: 800;
             background: linear-gradient(90deg, var(--accent-cyan) 0%, var(--accent-purple) 100%);
             -webkit-background-clip: text;
@@ -450,7 +504,7 @@
         }
 
         .rating-label {
-            font-size: 14px;
+            font-size: 15px;
             color: var(--text-secondary);
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -458,10 +512,86 @@
         }
 
         .rating-tier {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 700;
             color: var(--accent-cyan);
             margin-top: 12px;
+        }
+
+        .category-breakdown {
+            margin-top: 28px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-secondary);
+        }
+
+        .category-breakdown-title {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .category-row {
+            display: grid;
+            grid-template-columns: 1fr minmax(72px, auto);
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .category-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .category-row-label {
+            font-size: 13px;
+            color: var(--text-primary);
+            font-weight: 500;
+            line-height: 1.35;
+        }
+
+        .category-row-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            min-width: 0;
+        }
+
+        .category-bar-track {
+            height: 6px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.08);
+            overflow: hidden;
+        }
+
+        .category-bar-fill {
+            height: 100%;
+            border-radius: 999px;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+            width: 0%;
+            transition: width 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.15s;
+        }
+
+        .category-row-score {
+            font-size: 14px;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            color: var(--accent-cyan-soft);
+            text-align: right;
+        }
+
+        .category-average-note {
+            margin-top: 16px;
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .category-average-note strong {
+            color: var(--text-secondary);
+            font-weight: 600;
         }
 
         /* ==================== FEEDBACK SECTION ==================== */
@@ -622,12 +752,12 @@
             }
 
             .rating-circle {
-                width: 180px;
-                height: 180px;
+                width: 240px;
+                height: 240px;
             }
 
             .rating-score {
-                font-size: 48px;
+                font-size: 72px;
             }
 
             .feedback-title {
@@ -795,307 +925,7 @@
             </section>
         </main>
     </div>
-
     <script src="dashboard-interactions.js"></script>
-    <script>
-        let selectedFile = null;
-
-        // Drag and drop handling
-        const uploadArea = document.getElementById('uploadArea');
-        uploadArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadArea.classList.add('drag-over');
-        });
-
-        uploadArea.addEventListener('dragleave', () => {
-            uploadArea.classList.remove('drag-over');
-        });
-
-        uploadArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadArea.classList.remove('drag-over');
-            const files = e.dataTransfer.files;
-            if (files.length > 0) {
-                handleFileSelection(files[0]);
-            }
-        });
-
-        // File input handling
-        document.getElementById('fileInput').addEventListener('change', (e) => {
-            if (e.target.files.length > 0) {
-                handleFileSelection(e.target.files[0]);
-            }
-        });
-
-        function handleFileSelection(file) {
-            const validTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'text/plain'];
-            
-            if (!validTypes.includes(file.type)) {
-                alert('Please upload a valid resume file (PDF, DOC, DOCX, or TXT)');
-                return;
-            }
-
-            selectedFile = file;
-            document.getElementById('fileName').textContent = file.name;
-            document.getElementById('fileSize').textContent = (file.size / 1024).toFixed(2) + ' KB';
-            document.getElementById('fileInfo').classList.add('show');
-            document.getElementById('analyzeButton').disabled = false;
-        }
-
-        function clearFile() {
-            selectedFile = null;
-            document.getElementById('fileInput').value = '';
-            document.getElementById('fileInfo').classList.remove('show');
-            document.getElementById('analyzeButton').disabled = true;
-            document.getElementById('resultsSection').classList.remove('show');
-        }
-
-        async function analyzeResume() {
-            if (!selectedFile) {
-                alert('Please select a file first');
-                return;
-            }
-
-            const uploadSection = document.querySelector('.upload-section');
-            const resultsSection = document.getElementById('resultsSection');
-            
-            uploadSection.style.display = 'none';
-            resultsSection.classList.add('show');
-            resultsSection.innerHTML = `
-                <div class="rating-card">
-                    <div class="loading">
-                        <div class="spinner"></div>
-                        <div class="loading-text">Analyzing your resume with AI...</div>
-                    </div>
-                </div>
-            `;
-
-            // Simulate AI analysis - In production, this would call your backend API
-            try {
-                const resumeText = await readFileAsText(selectedFile);
-                const analysisResult = performAIAnalysis(resumeText);
-                
-                setTimeout(() => {
-                    displayResults(analysisResult);
-                }, 2000);
-            } catch (error) {
-                console.error('Error reading file:', error);
-                resultsSection.innerHTML = `
-                    <div class="rating-card" style="text-align: center; padding: 40px;">
-                        <div style="font-size: 18px; color: #ef4444;">Error analyzing resume</div>
-                        <div style="font-size: 14px; color: var(--text-secondary); margin-top: 12px;">Please try again with a different file</div>
-                    </div>
-                `;
-            }
-        }
-
-        function readFileAsText(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = (e) => resolve(e.target.result);
-                reader.onerror = () => reject(new Error('Failed to read file'));
-                reader.readAsText(file);
-            });
-        }
-
-        function performAIAnalysis(text) {
-            // Simulated AI analysis algorithm
-            let score = 50;
-            const feedback = [];
-
-            // Check for key sections
-            const hasSummary = /summary|objective|profile/i.test(text);
-            const hasExperience = /experience|employment|work/i.test(text);
-            const hasEducation = /education|degree|university|college/i.test(text);
-            const hasSkills = /skills|technical|proficiencies|competencies/i.test(text);
-
-            if (hasSummary) score += 10;
-            else feedback.push({ type: 'improvement', title: 'Add Professional Summary', text: 'Include a brief professional summary at the top of your resume to highlight your value proposition.' });
-
-            if (hasExperience) score += 15;
-            else feedback.push({ type: 'warning', title: 'Experience Section Missing', text: 'Add detailed work experience with accomplishments and responsibilities.' });
-
-            if (hasEducation) score += 10;
-            else feedback.push({ type: 'improvement', title: 'Education Section Needed', text: 'Include your educational background and certifications.' });
-
-            if (hasSkills) score += 10;
-            else feedback.push({ type: 'warning', title: 'Skills Section Missing', text: 'Add a dedicated skills section to highlight your technical abilities.' });
-
-            // Check content quality
-            const wordCount = text.split(/\s+/).length;
-            if (wordCount < 100) {
-                score -= 10;
-                feedback.push({ type: 'warning', title: 'Content Too Short', text: 'Expand your resume with more detailed information about your background.' });
-            } else if (wordCount > 1000) {
-                score -= 5;
-                feedback.push({ type: 'improvement', title: 'Consider Condensing', text: 'Your resume might be too lengthy. Aim for 1-2 pages maximum.' });
-            }
-
-            // Check for action verbs
-            const actionVerbs = /led|managed|developed|designed|implemented|created|improved|increased|reduced|achieved/i;
-            if (actionVerbs.test(text)) {
-                score += 8;
-                feedback.push({ type: 'strength', title: 'Strong Action Verbs', text: 'Great use of powerful action verbs to describe achievements.' });
-            } else {
-                feedback.push({ type: 'improvement', title: 'Use Action Verbs', text: 'Replace passive language with action verbs like "Led", "Managed", "Developed".' });
-            }
-
-            // Check for metrics
-            if (/\d+%|\$\d+|increased|reduced|saved|earned/i.test(text)) {
-                score += 8;
-                feedback.push({ type: 'strength', title: 'Quantifiable Results', text: 'Excellent use of metrics and numbers to demonstrate impact.' });
-            } else {
-                feedback.push({ type: 'improvement', title: 'Add Quantifiable Metrics', text: 'Include numbers, percentages, or dollar amounts to show concrete impact.' });
-            }
-
-            // Ensure score is between 0-100
-            score = Math.max(0, Math.min(100, score));
-
-            // Add strengths if score is good
-            if (score >= 75) {
-                feedback.unshift({ type: 'strength', title: 'Professional Formatting', text: 'Your resume is well-structured and easy to read.' });
-            }
-
-            return {
-                score: score,
-                tier: getTier(score),
-                overallAssessment: getAssessment(score),
-                feedback: feedback
-            };
-        }
-
-        function getTier(score) {
-            if (score >= 90) return '🌟 Excellent';
-            if (score >= 80) return '✨ Very Good';
-            if (score >= 70) return '👍 Good';
-            if (score >= 60) return '📈 Fair';
-            if (score >= 50) return '⚠️ Needs Work';
-            return '🔴 Poor';
-        }
-
-        function getAssessment(score) {
-            if (score >= 90) {
-                return 'Your resume is exceptional! It showcases your experience effectively with strong action verbs, quantifiable results, and proper structure. You\'re well-positioned for top opportunities.';
-            } else if (score >= 80) {
-                return 'Your resume is strong and well-crafted. Consider adding more quantifiable metrics and ensuring all key sections are clearly defined to push it to excellence.';
-            } else if (score >= 70) {
-                return 'Your resume has a solid foundation but could use some improvements. Focus on adding metrics, stronger action verbs, and ensuring all relevant sections are included.';
-            } else if (score >= 60) {
-                return 'Your resume has potential but needs significant improvements. Add missing sections, use more powerful language, and include specific examples of your achievements.';
-            } else {
-                return 'Your resume needs substantial revision. Make sure to include all key sections (summary, experience, education, skills) and expand on your accomplishments with concrete examples.';
-            }
-        }
-
-        function displayResults(result) {
-            const resultsSection = document.getElementById('resultsSection');
-            
-            // Separate feedback into categories
-            const suggestions = result.feedback.filter(item => item.type === 'improvement');
-            const warnings = result.feedback.filter(item => item.type === 'warning');
-            const strengths = result.feedback.filter(item => item.type === 'strength');
-            
-            // Create suggestions HTML
-            let suggestionsHTML = [...strengths, ...suggestions].map(item => `
-                <div class="feedback-item ${item.type}">
-                    <div class="feedback-icon">
-                        ${item.type === 'strength' ? '✅' : '💡'}
-                    </div>
-                    <div class="feedback-content">
-                        <div class="feedback-label">${item.type === 'strength' ? 'Strength' : 'Suggestion'}</div>
-                        <div class="feedback-text"><strong>${item.title}</strong></div>
-                        <div class="feedback-text">${item.text}</div>
-                    </div>
-                </div>
-            `).join('');
-
-            // Create warnings HTML
-            let warningsHTML = warnings.map(item => `
-                <div class="feedback-item ${item.type}">
-                    <div class="feedback-icon">⚠️</div>
-                    <div class="feedback-content">
-                        <div class="feedback-label">Warning</div>
-                        <div class="feedback-text"><strong>${item.title}</strong></div>
-                        <div class="feedback-text">${item.text}</div>
-                    </div>
-                </div>
-            `).join('');
-
-            resultsSection.innerHTML = `
-                <div class="rating-card rating-card--score">
-                    <div class="rating-container">
-                        <div class="rating-circle-container">
-                            <div class="rating-circle" id="ratingCircle" style="--score-fill: 0;">
-                                <div class="rating-inner">
-                                    <div class="rating-score" id="ratingScore">0</div>
-                                    <div class="rating-label">Score</div>
-                                </div>
-                            </div>
-                            <div class="rating-tier">${result.tier}</div>
-                        </div>
-
-                        <div class="feedback-section">
-                            <div>
-                                <div class="feedback-title">Overall Assessment</div>
-                                <div style="font-size: 14px; color: var(--text-secondary); line-height: 1.8;">
-                                    ${result.overallAssessment}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="feedback-columns">
-                    <div class="rating-card">
-                        <div class="feedback-title" style="margin-bottom: 24px;">💡 Suggestions & Improvements</div>
-                        <div>${suggestionsHTML || '<div style="color: var(--text-secondary);">No suggestions at this time.</div>'}</div>
-                    </div>
-
-                    <div class="rating-card">
-                        <div class="feedback-title" style="margin-bottom: 24px;">⚠️ Areas to Address</div>
-                        <div>${warningsHTML || '<div style="color: var(--text-secondary);">Great job! No critical warnings.</div>'}</div>
-                    </div>
-                </div>
-            `;
-
-            requestAnimationFrame(() => {
-                requestAnimationFrame(() => animateFinalScore(result.score));
-            });
-        }
-
-        function animateFinalScore(targetScore) {
-            const circle = document.getElementById('ratingCircle');
-            const scoreEl = document.getElementById('ratingScore');
-            if (!circle || !scoreEl) return;
-
-            scoreEl.classList.remove('score-count-done');
-            circle.classList.remove('ring-complete');
-
-            const duration = Math.min(2000, 750 + targetScore * 10);
-            const start = performance.now();
-
-            function easeOutCubic(t) {
-                return 1 - Math.pow(1 - t, 3);
-            }
-
-            function tick(now) {
-                const t = Math.min(1, (now - start) / duration);
-                const eased = easeOutCubic(t);
-                const display = Math.round(eased * targetScore);
-                scoreEl.textContent = String(display);
-                circle.style.setProperty('--score-fill', String(eased * targetScore));
-                if (t < 1) {
-                    requestAnimationFrame(tick);
-                } else {
-                    scoreEl.textContent = String(targetScore);
-                    circle.style.setProperty('--score-fill', String(targetScore));
-                    scoreEl.classList.add('score-count-done');
-                    circle.classList.add('ring-complete');
-                }
-            }
-
-            requestAnimationFrame(tick);
-        }
-    </script>
+    <script src="resume-rater.js"></script>
 </body>
 </html>
