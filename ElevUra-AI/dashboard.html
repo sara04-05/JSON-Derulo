@@ -96,10 +96,96 @@ body {
             display: flex;
             flex-direction: column;
             gap: 6px;
-            margin-bottom: auto;
+            flex: 1;
+            min-height: 0;
             position: relative;
             z-index: 2;
             padding: 14px 10px 12px;
+        }
+
+        /* f7s3qk — sidebar auth pinned to bottom */
+        .sidebar-auth {
+            margin-top: auto;
+            padding: 14px 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex-shrink: 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            z-index: 2;
+        }
+
+        .sidebar-auth-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            min-height: 44px;
+            padding: 0 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            color: rgba(255, 255, 255, 0.48);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            font-family: inherit;
+            border: 1px solid transparent;
+            background: transparent;
+        }
+
+        .sidebar-auth-btn:hover {
+            background: rgba(0, 242, 255, 0.05);
+            color: rgba(255, 255, 255, 0.92);
+            border-color: rgba(0, 242, 255, 0.12);
+        }
+
+        .sidebar-auth-btn:focus-visible {
+            outline: 2px solid var(--accent-cyan);
+            outline-offset: 2px;
+        }
+
+        .sidebar-auth-btn--primary {
+            background: rgba(0, 242, 255, 0.09);
+            border: 1px solid rgba(0, 242, 255, 0.42);
+            color: var(--text-primary);
+        }
+
+        .sidebar-auth-btn--primary:hover {
+            background: rgba(0, 242, 255, 0.14);
+            border-color: rgba(0, 242, 255, 0.55);
+            color: var(--text-primary);
+        }
+
+        .sidebar-auth-icon {
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: rgba(255, 255, 255, 0.42);
+        }
+
+        .sidebar-auth-btn--primary .sidebar-auth-icon {
+            color: var(--accent-cyan);
+        }
+
+        .sidebar-auth-icon svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.75;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .sidebar-auth-label {
+            flex: 1;
+            text-align: left;
         }
 
         .sidebar-item {
@@ -2242,6 +2328,20 @@ body {
                 padding: 8px 6px;
             }
 
+            .sidebar-auth {
+                padding: 10px 6px;
+                gap: 8px;
+            }
+
+            .sidebar-auth-btn {
+                justify-content: center;
+                padding: 0 8px;
+            }
+
+            .sidebar-auth-label {
+                display: none;
+            }
+
             .sidebar-item {
                 justify-content: center;
                 padding: 0 8px;
@@ -2303,6 +2403,11 @@ body {
                 align-items: center;
             }
 
+            .sidebar-auth {
+                padding: 8px 4px;
+                gap: 6px;
+            }
+
             .sidebar-item {
                 justify-content: center;
                 padding: 10px 8px;
@@ -2340,6 +2445,482 @@ body {
 
             .hero-panel {
                 padding: 18px;
+            }
+        }
+
+        /* ==================== AUTH MODAL (dashboard-integrated) ==================== */
+        .auth-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 5000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.35s ease, visibility 0.35s ease;
+        }
+
+        .auth-modal.is-open {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .auth-modal__backdrop {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            background: rgba(0, 0, 0, 0.72);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .auth-modal__dialog {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 420px;
+            max-height: min(90vh, 720px);
+            overflow: auto;
+            border-radius: 24px;
+            padding: 28px 28px 30px;
+            background: rgba(29, 31, 36, 0.72);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(0, 231, 255, 0.28);
+            box-shadow:
+                0 0 0 1px rgba(255, 255, 255, 0.04),
+                0 0 48px rgba(0, 231, 255, 0.12),
+                0 24px 64px rgba(0, 0, 0, 0.55);
+            transform: translateY(12px) scale(0.98);
+            opacity: 0;
+            transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease;
+        }
+
+        .auth-modal.is-open .auth-modal__dialog {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+
+        .auth-modal__close {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(5, 8, 12, 0.55);
+            color: var(--text-secondary);
+            font-size: 22px;
+            line-height: 1;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: border-color 0.2s, color 0.2s, background 0.2s;
+        }
+
+        .auth-modal__close:hover {
+            border-color: rgba(0, 242, 255, 0.35);
+            color: var(--accent-cyan);
+            background: rgba(0, 242, 255, 0.06);
+        }
+
+        .auth-modal__close:focus-visible {
+            outline: 2px solid var(--accent-cyan);
+            outline-offset: 2px;
+        }
+
+        .auth-modal__heading {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.4px;
+            margin-bottom: 6px;
+            padding-right: 40px;
+        }
+
+        .auth-modal__subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 22px;
+        }
+
+        .auth-modal__tabs {
+            display: flex;
+            gap: 8px;
+            padding: 5px;
+            border-radius: 14px;
+            background: rgba(5, 8, 12, 0.55);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            margin-bottom: 22px;
+        }
+
+        .auth-modal__tab {
+            flex: 1;
+            position: relative;
+            padding: 11px 14px;
+            border: none;
+            border-radius: 11px;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: transparent;
+            cursor: pointer;
+            transition: color 0.25s ease;
+        }
+
+        .auth-modal__tab:hover {
+            color: var(--text-secondary);
+        }
+
+        .auth-modal__tab[aria-selected="true"] {
+            color: #050607;
+        }
+
+        .auth-modal__tab-highlight {
+            position: absolute;
+            inset: 0;
+            border-radius: 11px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-teal));
+            opacity: 0;
+            transform: scale(0.94);
+            transition: opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1), transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            z-index: 0;
+            box-shadow: 0 0 20px rgba(0, 231, 255, 0.25);
+        }
+
+        .auth-modal__tab[aria-selected="true"] .auth-modal__tab-highlight {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .auth-modal__tab span:not(.auth-modal__tab-highlight) {
+            position: relative;
+            z-index: 1;
+        }
+
+        .auth-modal__tab:focus-visible {
+            outline: 2px solid var(--accent-cyan);
+            outline-offset: 2px;
+        }
+
+        .auth-modal__panel {
+            display: none;
+            animation: auth-panel-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        .auth-modal__panel.is-active {
+            display: block;
+        }
+
+        @keyframes auth-panel-in {
+            from {
+                opacity: 0;
+                transform: translateX(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .auth-field {
+            margin-bottom: 16px;
+        }
+
+        .auth-field-float {
+            position: relative;
+        }
+
+        .auth-field-float .auth-input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            color: var(--text-muted);
+            pointer-events: none;
+            z-index: 2;
+            transition: color 0.2s ease;
+        }
+
+        .auth-field-float .auth-input-icon svg {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.75;
+        }
+
+        .auth-field-float input {
+            width: 100%;
+            padding: 22px 44px 12px 44px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(5, 8, 12, 0.65);
+            color: var(--text-primary);
+            font-size: 15px;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .auth-field-float input::placeholder {
+            color: transparent;
+        }
+
+        .auth-field-float label {
+            position: absolute;
+            left: 44px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-muted);
+            pointer-events: none;
+            transition: all 0.2s ease;
+        }
+
+        .auth-field-float input:focus + label,
+        .auth-field-float input:not(:placeholder-shown) + label {
+            top: 11px;
+            transform: translateY(0) scale(0.78);
+            color: var(--accent-cyan);
+        }
+
+        .auth-field-float input:focus ~ .auth-input-icon,
+        .auth-field-float input:not(:placeholder-shown) ~ .auth-input-icon {
+            color: var(--accent-cyan);
+        }
+
+        .auth-field-float input:focus {
+            border-color: rgba(0, 234, 255, 0.45);
+            box-shadow: 0 0 0 3px rgba(0, 234, 255, 0.12);
+        }
+
+        .auth-field-float.is-invalid input {
+            border-color: rgba(248, 113, 113, 0.55);
+            box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.1);
+        }
+
+        .auth-field-float.is-success input {
+            border-color: rgba(34, 197, 94, 0.45);
+            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+        }
+
+        .auth-field-msg {
+            font-size: 12px;
+            margin-top: 6px;
+            padding-left: 4px;
+            min-height: 16px;
+            color: var(--text-muted);
+        }
+
+        .auth-field-msg--error {
+            color: #fca5a5;
+        }
+
+        .auth-field-msg--ok {
+            color: #86efac;
+        }
+
+        .auth-toggle-pass {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 38px;
+            height: 38px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s, color 0.2s;
+            z-index: 3;
+        }
+
+        .auth-toggle-pass:hover {
+            background: rgba(0, 231, 255, 0.1);
+            color: var(--accent-cyan);
+        }
+
+        .auth-toggle-pass:focus-visible {
+            outline: 2px solid var(--accent-cyan);
+            outline-offset: 2px;
+        }
+
+        .auth-toggle-pass svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.75;
+        }
+
+        .auth-row-between {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+        }
+
+        .auth-checkbox {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            font-size: 13px;
+            color: var(--text-secondary);
+            user-select: none;
+        }
+
+        .auth-checkbox input {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--accent-cyan);
+            cursor: pointer;
+        }
+
+        .auth-link {
+            font-size: 13px;
+            color: var(--text-muted);
+            text-decoration: none;
+            background: none;
+            border: none;
+            font-family: inherit;
+            cursor: pointer;
+            padding: 0;
+            transition: color 0.2s;
+        }
+
+        .auth-link:hover {
+            color: var(--accent-cyan);
+        }
+
+        .auth-btn-submit {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 15px;
+            font-family: inherit;
+            cursor: pointer;
+            color: #050607;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-teal));
+            box-shadow: 0 0 28px rgba(0, 234, 255, 0.28), 0 10px 32px rgba(0, 0, 0, 0.45);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+        }
+
+        .auth-btn-submit:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 0 36px rgba(0, 234, 255, 0.4), 0 14px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .auth-btn-submit:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+        }
+
+        .auth-btn-submit:focus-visible {
+            outline: 2px solid #fff;
+            outline-offset: 3px;
+        }
+
+        .auth-btn-submit .auth-spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(5, 6, 7, 0.25);
+            border-top-color: #050607;
+            border-radius: 50%;
+            animation: auth-spin 0.7s linear infinite;
+            display: none;
+        }
+
+        .auth-btn-submit.is-loading .auth-spinner {
+            display: block;
+        }
+
+        .auth-btn-submit.is-loading .auth-btn-text {
+            display: none;
+        }
+
+        @keyframes auth-spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .auth-strength-bars {
+            display: flex;
+            gap: 4px;
+            margin-top: 8px;
+            margin-bottom: 6px;
+        }
+
+        .auth-strength-bar {
+            flex: 1;
+            height: 4px;
+            border-radius: 99px;
+            background: rgba(255, 255, 255, 0.08);
+            transition: background 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .auth-strength-bar.is-on {
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-teal));
+            box-shadow: 0 0 10px rgba(0, 231, 255, 0.35);
+        }
+
+        .auth-strength-bar.is-warn.is-on {
+            background: linear-gradient(90deg, #fbbf24, #f97316);
+            box-shadow: 0 0 10px rgba(251, 191, 36, 0.35);
+        }
+
+        .auth-strength-bar.is-bad.is-on {
+            background: linear-gradient(90deg, #f87171, #ef4444);
+            box-shadow: 0 0 10px rgba(248, 113, 113, 0.35);
+        }
+
+        .auth-strength-label {
+            font-size: 11px;
+            font-family: 'JetBrains Mono', ui-monospace, monospace;
+            color: var(--text-muted);
+        }
+
+        .auth-modal__flash {
+            min-height: 20px;
+            margin-top: 14px;
+            font-size: 13px;
+            color: var(--accent-cyan);
+            text-align: center;
+        }
+
+        body.auth-modal-open {
+            overflow: hidden;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .auth-modal,
+            .auth-modal__dialog,
+            .auth-modal__panel {
+                animation: none !important;
+                transition-duration: 0.01ms !important;
             }
         }
     </style>
@@ -2385,7 +2966,20 @@ body {
                 </a>
             </nav>
 
-            
+            <div class="sidebar-auth" id="cw9j21">
+                <button type="button" class="sidebar-auth-btn" id="auth-open-login" aria-haspopup="dialog" aria-controls="auth-modal-root">
+                    <span class="sidebar-auth-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" x2="3" y1="12" y2="12"/></svg>
+                    </span>
+                    <span class="sidebar-auth-label">Login</span>
+                </button>
+                <button type="button" class="sidebar-auth-btn sidebar-auth-btn--primary" id="auth-open-signup" aria-haspopup="dialog" aria-controls="auth-modal-root">
+                    <span class="sidebar-auth-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
+                    </span>
+                    <span class="sidebar-auth-label">Sign up</span>
+                </button>
+            </div>
         </aside>
 
         <!-- MAIN CONTENT -->
@@ -2847,6 +3441,141 @@ body {
     </section>
             </section>
         </main>
+    </div>
+
+    <!-- Auth modal (opens from sidebar; no navigation) -->
+    <div id="auth-modal-root" class="auth-modal" aria-hidden="true" hidden>
+        <div class="auth-modal__backdrop" data-auth-close tabindex="-1" aria-hidden="true"></div>
+        <div class="auth-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="auth-modal-heading">
+            <button type="button" class="auth-modal__close" id="auth-modal-close" aria-label="Close">&times;</button>
+            <h2 class="auth-modal__heading" id="auth-modal-heading">ElevUra</h2>
+            <p class="auth-modal__subtitle" id="auth-modal-subtitle">Sign in to continue</p>
+
+            <div class="auth-modal__tabs" role="tablist" aria-label="Authentication">
+                <button type="button" class="auth-modal__tab" role="tab" id="auth-tab-login" aria-selected="true" aria-controls="auth-panel-login" tabindex="0">
+                    <span class="auth-modal__tab-highlight" aria-hidden="true"></span>
+                    <span>Login</span>
+                </button>
+                <button type="button" class="auth-modal__tab" role="tab" id="auth-tab-signup" aria-selected="false" aria-controls="auth-panel-signup" tabindex="-1">
+                    <span class="auth-modal__tab-highlight" aria-hidden="true"></span>
+                    <span>Sign up</span>
+                </button>
+            </div>
+
+            <div class="auth-modal__panels">
+                <div class="auth-modal__panel is-active" role="tabpanel" id="auth-panel-login" aria-labelledby="auth-tab-login">
+                    <form id="auth-form-login" novalidate>
+                        <div class="auth-field">
+                            <div class="auth-field-float" id="auth-wrap-login-email">
+                                <input type="email" id="auth-login-email" name="email" placeholder=" " autocomplete="email" required aria-describedby="auth-login-email-msg">
+                                <label for="auth-login-email">Email</label>
+                                <span class="auth-input-icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                                </span>
+                                <p class="auth-field-msg" id="auth-login-email-msg" role="status"></p>
+                            </div>
+                        </div>
+                        <div class="auth-field">
+                            <div class="auth-field-float" id="auth-wrap-login-password">
+                                <input type="password" id="auth-login-password" name="password" placeholder=" " autocomplete="current-password" required minlength="6" aria-describedby="auth-login-password-msg">
+                                <label for="auth-login-password">Password</label>
+                                <span class="auth-input-icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                </span>
+                                <button type="button" class="auth-toggle-pass" id="auth-toggle-login-pass" aria-label="Show password" aria-pressed="false">
+                                    <svg class="auth-icon-eye" viewBox="0 0 24 24"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                                    <svg class="auth-icon-eye-off" viewBox="0 0 24 24" style="display:none"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/></svg>
+                                </button>
+                                <p class="auth-field-msg" id="auth-login-password-msg" role="status"></p>
+                            </div>
+                        </div>
+                        <div class="auth-row-between">
+                            <label class="auth-checkbox">
+                                <input type="checkbox" name="remember" id="auth-login-remember">
+                                <span>Remember me</span>
+                            </label>
+                            <button type="button" class="auth-link" id="auth-forgot">Forgot password?</button>
+                        </div>
+                        <button type="submit" class="auth-btn-submit" id="auth-btn-login">
+                            <span class="auth-spinner" aria-hidden="true"></span>
+                            <span class="auth-btn-text">Sign in</span>
+                        </button>
+                    </form>
+                </div>
+
+                <div class="auth-modal__panel" role="tabpanel" id="auth-panel-signup" aria-labelledby="auth-tab-signup">
+                    <form id="auth-form-signup" novalidate>
+                        <div class="auth-field">
+                            <div class="auth-field-float" id="auth-wrap-signup-name">
+                                <input type="text" id="auth-signup-name" name="fullname" placeholder=" " autocomplete="name" required minlength="2" aria-describedby="auth-signup-name-msg">
+                                <label for="auth-signup-name">Full name</label>
+                                <span class="auth-input-icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                </span>
+                                <p class="auth-field-msg" id="auth-signup-name-msg" role="status"></p>
+                            </div>
+                        </div>
+                        <div class="auth-field">
+                            <div class="auth-field-float" id="auth-wrap-signup-email">
+                                <input type="email" id="auth-signup-email" name="email" placeholder=" " autocomplete="email" required aria-describedby="auth-signup-email-msg">
+                                <label for="auth-signup-email">Email</label>
+                                <span class="auth-input-icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                                </span>
+                                <p class="auth-field-msg" id="auth-signup-email-msg" role="status"></p>
+                            </div>
+                        </div>
+                        <div class="auth-field">
+                            <div class="auth-field-float" id="auth-wrap-signup-password">
+                                <input type="password" id="auth-signup-password" name="password" placeholder=" " autocomplete="new-password" required minlength="8" aria-describedby="auth-signup-password-msg auth-strength-label">
+                                <label for="auth-signup-password">Password</label>
+                                <span class="auth-input-icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                </span>
+                                <button type="button" class="auth-toggle-pass" id="auth-toggle-signup-pass" aria-label="Show password" aria-pressed="false">
+                                    <svg class="auth-icon-eye" viewBox="0 0 24 24"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                                    <svg class="auth-icon-eye-off" viewBox="0 0 24 24" style="display:none"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/></svg>
+                                </button>
+                                <p class="auth-field-msg" id="auth-signup-password-msg" role="status"></p>
+                            </div>
+                            <div aria-live="polite">
+                                <div class="auth-strength-bars" id="auth-strength-bars">
+                                    <span class="auth-strength-bar" data-bar="0"></span>
+                                    <span class="auth-strength-bar" data-bar="1"></span>
+                                    <span class="auth-strength-bar" data-bar="2"></span>
+                                    <span class="auth-strength-bar" data-bar="3"></span>
+                                </div>
+                                <p class="auth-strength-label" id="auth-strength-label">Password strength: enter a password</p>
+                            </div>
+                        </div>
+                        <div class="auth-field">
+                            <div class="auth-field-float" id="auth-wrap-signup-confirm">
+                                <input type="password" id="auth-signup-confirm" name="confirm" placeholder=" " autocomplete="new-password" required aria-describedby="auth-signup-confirm-msg">
+                                <label for="auth-signup-confirm">Confirm password</label>
+                                <span class="auth-input-icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                </span>
+                                <button type="button" class="auth-toggle-pass" id="auth-toggle-signup-confirm" aria-label="Show confirm password" aria-pressed="false">
+                                    <svg class="auth-icon-eye" viewBox="0 0 24 24"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                                    <svg class="auth-icon-eye-off" viewBox="0 0 24 24" style="display:none"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/></svg>
+                                </button>
+                                <p class="auth-field-msg" id="auth-signup-confirm-msg" role="status"></p>
+                            </div>
+                        </div>
+                        <label class="auth-checkbox" style="margin-bottom:14px;display:flex">
+                            <input type="checkbox" id="auth-signup-terms" required aria-describedby="auth-terms-msg">
+                            <span>I agree to the Terms and Privacy Policy</span>
+                        </label>
+                        <p class="auth-field-msg" id="auth-terms-msg" role="status" style="margin-top:-8px;margin-bottom:12px"></p>
+                        <button type="submit" class="auth-btn-submit" id="auth-btn-signup">
+                            <span class="auth-spinner" aria-hidden="true"></span>
+                            <span class="auth-btn-text">Create account</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <p class="auth-modal__flash" id="auth-modal-flash" role="status" aria-live="polite"></p>
+        </div>
     </div>
 
     <button type="button" class="fab-help" title="Help" aria-label="Help">
