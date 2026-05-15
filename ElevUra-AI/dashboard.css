@@ -2495,7 +2495,8 @@ body {
         .auth-modal__dialog {
             max-height: min(90vh, 720px);
             overflow: auto;
-            padding: 22px 22px 24px;
+            padding: 20px;
+            padding-bottom: 0px;
             transform: translateY(10px) scale(0.99);
             opacity: 0;
             transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease, box-shadow 0.35s ease;
@@ -2555,7 +2556,8 @@ body {
 
         .auth-modal__head {
             margin-bottom: 6px;
-            padding-right: 44px;
+            padding-right: 0px;
+            text-align: center;
         }
 
         .auth-modal__badge {
@@ -2688,16 +2690,19 @@ body {
         .auth-field-float,
         .auth-card .field-float {
             position: relative;
+            --auth-input-msg-offset: 22px; /* field-msg margin-top + min-height */
         }
 
         .auth-field-float .auth-input-icon,
         .auth-card .field-float .input-icon {
             position: absolute;
             left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
+            top: 0;
             width: 20px;
-            height: 20px;
+            height: calc(100% - var(--auth-input-msg-offset));
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: rgba(148, 163, 184, 0.75);
             pointer-events: none;
             z-index: 2;
@@ -2711,18 +2716,22 @@ body {
             stroke: currentColor;
             fill: none;
             stroke-width: 1.75;
+            display: block;
         }
 
         .auth-field-float input,
         .auth-card .field-float input {
             width: 100%;
-            padding: 22px 44px 11px 44px;
+            min-height: 50px;
+            padding: 16px 44px;
             border-radius: 12px;
             border: 1px solid rgba(255, 255, 255, 0.08);
             background: rgba(5, 8, 12, 0.95);
             color: var(--text-primary);
             font-size: 13px;
             font-family: 'Inter', sans-serif;
+            line-height: 1.25;
+            box-sizing: border-box;
             outline: none;
             transition: border-color 0.25s ease, box-shadow 0.25s ease;
         }
@@ -2808,10 +2817,9 @@ body {
         .auth-card .toggle-pass {
             position: absolute;
             right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
+            top: 0;
             width: 36px;
-            height: 36px;
+            height: calc(100% - var(--auth-input-msg-offset));
             border: none;
             border-radius: 8px;
             background: rgba(12, 14, 18, 0.45);
