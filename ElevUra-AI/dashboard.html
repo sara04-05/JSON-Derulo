@@ -18,29 +18,35 @@
                 <span class="sidebar-brand-text">ElevUra</span>
             </div>
             <nav class="sidebar-menu">
-                <a href="#" class="sidebar-item active">
+                <a href="#" class="sidebar-item active" data-view="command">
                     <span class="sidebar-item-icon sidebar-item-icon-terminal" aria-hidden="true">&gt;_</span>
                     <span>Command Center</span>
                 </a>
-                <a href="#" class="sidebar-item">
+                <a href="#" class="sidebar-item" id="sidebar-my-dashboard" hidden data-view="dashboard">
+                    <span class="sidebar-item-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                    </span>
+                    <span>My Dashboard</span>
+                </a>
+                <a href="#" class="sidebar-item" data-protected-tool="career-coach">
                     <span class="sidebar-item-icon" aria-hidden="true">
                         <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                     </span>
                     <span>AI Career Coach</span>
                 </a>
-                <a href="#" class="sidebar-item">
+                <a href="#" class="sidebar-item" data-protected-tool="cv-optimizer">
                     <span class="sidebar-item-icon" aria-hidden="true">
                         <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
                     </span>
                     <span>CV Optimizer</span>
                 </a>
-                <a href="#" class="sidebar-item">
+                <a href="#" class="sidebar-item" data-protected-tool="study-buddy">
                     <span class="sidebar-item-icon" aria-hidden="true">
                         <svg viewBox="0 0 24 24"><circle cx="9" cy="12" r="5"/><circle cx="15" cy="12" r="5"/></svg>
                     </span>
                     <span>Study Buddy</span>
                 </a>
-                <a href="#" class="sidebar-item">
+                <a href="#" class="sidebar-item" data-protected-tool="research-assistant">
                     <span class="sidebar-item-icon" aria-hidden="true">
                         <svg viewBox="0 0 24 24"><path d="M9 3h6v2H9V3z"/><path d="M10 5v5.2c0 .86-.37 1.68-1 2.26L6 16h12l-3-3.54c-.63-.58-1-1.4-1-2.26V5"/><path d="M6 16h12v2a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-2z"/></svg>
                     </span>
@@ -82,15 +88,57 @@
                         <span class="notification-dot"></span>
                     </div>
 
-                    <div class="user-info">
-                        <div class="user-avatar">
-                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=128&amp;h=128&amp;fit=crop&amp;crop=faces" width="36" height="36" alt="" loading="lazy" decoding="async">
-                        </div>
-                        <div class="user-meta">
-                            <div class="user-name">Alex Mercer</div>
-                            <div class="user-tier">Pro Tier</div>
+                    <div class="header-auth" id="header-auth-guest">
+                        <button type="button" class="header-auth-btn" data-auth-open="login">Login</button>
+                        <button type="button" class="header-auth-btn header-auth-btn--primary" data-auth-open="signup">Sign up</button>
+                    </div>
+
+                    <div class="user-profile-wrap" id="header-auth-user" hidden>
+                        <button type="button" class="user-info user-info--trigger" id="profile-trigger" aria-expanded="false" aria-haspopup="true" aria-controls="profile-dropdown">
+                            <div class="user-avatar">
+                                <img id="profile-avatar-img" src="" width="36" height="36" alt="" loading="lazy" decoding="async">
+                            </div>
+                            <div class="user-meta">
+                                <div class="user-name" id="profile-username">User</div>
+                                <div class="user-tier" id="profile-tier">Pro Tier</div>
+                            </div>
+                            <span class="profile-chevron" aria-hidden="true">
+                                <svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
+                            </span>
+                        </button>
+                        <div class="profile-dropdown" id="profile-dropdown" role="menu">
+                            <button type="button" class="profile-dropdown__item" id="profile-open-dashboard" role="menuitem">
+                                <span class="profile-dropdown__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></span>
+                                My Dashboard
+                            </button>
+                            <button type="button" class="profile-dropdown__item" data-profile-action="nav" data-ud-section="cvs" role="menuitem">
+                                <span class="profile-dropdown__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></span>
+                                My CVs
+                            </button>
+                            <button type="button" class="profile-dropdown__item" data-profile-action="nav" data-ud-section="jobs" role="menuitem">
+                                <span class="profile-dropdown__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="7" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></span>
+                                Applied Jobs
+                            </button>
+                            <button type="button" class="profile-dropdown__item" data-profile-action="nav" data-ud-section="courses" role="menuitem">
+                                <span class="profile-dropdown__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 1.1 2.7 3 6 3s6-1.9 6-3v-5"/></svg></span>
+                                Courses Completed
+                            </button>
+                            <button type="button" class="profile-dropdown__item" data-profile-action="nav" data-ud-section="interviews" role="menuitem">
+                                <span class="profile-dropdown__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v4a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/><line x1="12" x2="12" y1="19" y2="22"/></svg></span>
+                                Mock Interviews
+                            </button>
+                            <button type="button" class="profile-dropdown__item" data-profile-action="nav" data-ud-section="settings" role="menuitem">
+                                <span class="profile-dropdown__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></span>
+                                Account Settings
+                            </button>
+                            <div class="profile-dropdown__divider" role="separator"></div>
+                            <button type="button" class="profile-dropdown__item profile-dropdown__item--danger" data-profile-action="logout" role="menuitem">
+                                <span class="profile-dropdown__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg></span>
+                                Logout
+                            </button>
                         </div>
                     </div>
+
 
                     <button type="button" class="header-fullscreen" title="Fullscreen" aria-label="Toggle fullscreen">
                         <svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
@@ -99,7 +147,7 @@
             </header>
 
             <!-- CONTENT AREA -->
-            <section class="content-area">
+            <section class="content-area" id="view-command-center">
                 <!-- HERO PANEL -->
                 <div class="hero-panel">
                     <div class="hero-left">
@@ -132,7 +180,7 @@
                 <!-- MODULE GRID -->
                 <div class="module-grid">
                     <!-- AI Career Coach -->
-                    <div class="module-card">
+                    <div class="module-card" data-protected-tool="career-coach">
                         <div class="module-header">
                             <div class="module-icon module-icon-accent-purple" aria-hidden="true">
                                 <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -145,7 +193,7 @@
                     </div>
 
                     <!-- CV Optimizer -->
-                    <div class="module-card">
+                    <div class="module-card" data-protected-tool="cv-optimizer">
                         <div class="module-header">
                             <div class="module-icon module-icon-accent-cyan" aria-hidden="true">
                                 <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"></svg>
@@ -158,7 +206,7 @@
                     </div>
 
                     <!-- Study Buddy -->
-                    <div class="module-card">
+                    <div class="module-card" data-protected-tool="study-buddy">
                         <div class="module-header">
                             <div class="module-icon module-icon-accent-cyan" aria-hidden="true">
                                 <svg viewBox="0 0 24 24"><circle cx="9" cy="12" r="5"/><circle cx="15" cy="12" r="5"/></svg>
@@ -171,7 +219,7 @@
                         </div>
 
                     <!-- Research Assistant -->
-                    <div class="module-card">
+                    <div class="module-card" data-protected-tool="research-assistant">
                         <div class="module-header">
                             <div class="module-icon module-icon-accent-purple" aria-hidden="true">
                                 <svg viewBox="0 0 24 24"><path d="M9 3h6v2H9V3z"/><path d="M10 5v5.2c0 .86-.37 1.68-1 2.26L6 16h12l-3-3.54c-.63-.58-1-1.4-1-2.26V5"/><path d="M6 16h12v2a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-2z"/></svg>
@@ -254,7 +302,7 @@
         </div>
 
     </div>
-<p style="
+<p class="protected-trigger" data-protected-tool="model" style="
     font-size: 20px;
     line-height: 1.05;
     font-weight: 800;
@@ -273,27 +321,27 @@
            <span class="wow-badge">⚡ PRACTICE & INSTANT FEEDBACK</span>
             <h3>Study <span> Buddy</span> AI</h3>
             <div class="study-buddy-grid">
-                <div class="study-buddy-card">
+                <div class="study-buddy-card" data-protected-tool="study-buddy">
                     <div class="study-buddy-icon">💡</div>
                     <div class="study-buddy-card-title">AI-Powered Explanations</div>
                     <div class="study-buddy-card-desc">Enter any topic and get instant, personalized explanations tailored to your learning level with real-world examples.</div>
-                    <button class="study-buddy-btn">Execute</button>
+                    <button type="button" class="study-buddy-btn" data-protected-tool="study-buddy">Execute</button>
                 </div>
-                <div class="study-buddy-card purple">
+                <div class="study-buddy-card purple" data-protected-tool="study-buddy">
                     <div class="study-buddy-icon">🧩</div>
                     <div class="study-buddy-card-title">Adaptive Quizzes</div>
                     <div class="study-buddy-card-desc">Dynamically generated questions that adjust difficulty based on your performance and aspiring learning goals.</div>
-                    <button class="study-buddy-btn">Execute</button>
+                    <button type="button" class="study-buddy-btn" data-protected-tool="study-buddy">Execute</button>
                 </div>
-                <div class="study-buddy-card pink">
+                <div class="study-buddy-card pink" data-protected-tool="study-buddy">
                     <div class="study-buddy-icon">📅</div>
                     <div class="study-buddy-card-title">Personalized Study Plans</div>
                     <div class="study-buddy-card-desc">AI creates structured 4-week roadmaps aligned with your goals, intensity, and schedule for optimal learning.</div>
-                    <button class="study-buddy-btn">Execute</button>
+                    <button type="button" class="study-buddy-btn" data-protected-tool="study-buddy">Execute</button>
                 </div>
             </div>
         </section>
-                <p style="
+                <p class="protected-trigger" data-protected-tool="model" style="
     font-size: 20px;
     line-height: 1.05;
     font-weight: 800;
@@ -336,7 +384,7 @@
                             </div>
                             <p class="hint">If you add a <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">Google AI Studio</a> key, questions and final scoring can use Gemini.</p>
                             <div class="btn-row mi-btn-row">
-                                <button type="button" class="btn btn-primary" id="btnStart">Start mock interview</button>
+                                <button type="button" class="btn btn-primary" id="btnStart" data-protected-tool="mock-interview">Start mock interview</button>
                             </div>
                             <p id="setupError" class="hint err hidden"></p>
                         </div>
@@ -384,7 +432,7 @@
                             </div>
                         </div>
                     </div>
-<p style="
+<p class="protected-trigger" data-protected-tool="model" style="
     font-size: 20px;
     line-height: 1.05;
     font-weight: 800;
@@ -521,7 +569,101 @@
             </div>
         </div>
     </section>
+
+            <section class="content-area ud-content" id="view-user-dashboard" hidden>
+                <div class="ud-hero-panel">
+                    <div class="hero-badge">&gt; USER DASHBOARD ONLINE</div>
+                    <h1 class="hero-title">Your <span class="hero-title-gradient">Mission Control</span></h1>
+                    <p class="hero-subtitle">Track CVs, applications, learning progress, and interview analytics — all synchronized to your ElevUra profile.</p>
+                    <nav class="ud-nav" aria-label="Dashboard sections">
+                        <button type="button" class="ud-nav-btn is-active" data-ud-nav="overview">Overview</button>
+                        <button type="button" class="ud-nav-btn" data-ud-nav="cvs">My CVs</button>
+                        <button type="button" class="ud-nav-btn" data-ud-nav="jobs">Applied Jobs</button>
+                        <button type="button" class="ud-nav-btn" data-ud-nav="courses">Courses</button>
+                        <button type="button" class="ud-nav-btn" data-ud-nav="interviews">Mock Interviews</button>
+                        <button type="button" class="ud-nav-btn" data-ud-nav="settings">Settings</button>
+                    </nav>
+                </div>
+
+                <section class="ud-section" id="ud-section-cvs">
+                    <div class="ud-section-head">
+                        <h2 class="section-title">My <span>CVs</span></h2>
+                        <p class="ud-section-desc">ATS-optimized documents with live scoring.</p>
+                    </div>
+                    <div class="ud-grid" id="ud-cvs-grid"></div>
+                </section>
+
+                <section class="ud-section" id="ud-section-jobs">
+                    <div class="ud-section-head">
+                        <h2 class="section-title">Applied <span>Jobs</span></h2>
+                        <p class="ud-section-desc">Pipeline status across your active applications.</p>
+                    </div>
+                    <div class="ud-grid ud-grid--jobs" id="ud-jobs-grid"></div>
+                </section>
+
+                <section class="ud-section" id="ud-section-courses">
+                    <div class="ud-section-head">
+                        <h2 class="section-title">Courses <span>Completed</span></h2>
+                        <p class="ud-section-desc">Learning velocity and completion analytics.</p>
+                    </div>
+                    <div class="ud-grid" id="ud-courses-grid"></div>
+                </section>
+
+                <section class="ud-section" id="ud-section-interviews">
+                    <div class="ud-section-head">
+                        <h2 class="section-title">Mock Interview <span>Analytics</span></h2>
+                        <p class="ud-section-desc">AI performance insights across your practice sessions.</p>
+                    </div>
+                    <div class="ud-analytics-grid">
+                        <article class="ud-card ud-stat-card">
+                            <p class="ud-card-meta">Overall score trend</p>
+                            <div class="ud-sparkline" aria-hidden="true">
+                                <span style="--h:42%"></span><span style="--h:55%"></span><span style="--h:61%"></span><span style="--h:58%"></span><span style="--h:72%"></span><span style="--h:78%"></span><span style="--h:87%"></span>
+                            </div>
+                            <p class="ud-stat-value">87 <span class="ud-stat-delta ud-stat-delta--up">+12%</span></p>
+                        </article>
+                        <article class="ud-card ud-stat-card">
+                            <p class="ud-card-meta">Communication</p>
+                            <div class="ud-progress"><div class="ud-progress__bar" style="--progress: 88%"></div></div>
+                            <p class="ud-stat-value">88%</p>
+                        </article>
+                        <article class="ud-card ud-stat-card">
+                            <p class="ud-card-meta">Confidence</p>
+                            <div class="ud-progress"><div class="ud-progress__bar ud-progress__bar--purple" style="--progress: 92%"></div></div>
+                            <p class="ud-stat-value">92%</p>
+                        </article>
+                        <article class="ud-card ud-stat-card ud-stat-card--wide">
+                            <p class="ud-card-meta">AI feedback summary</p>
+                            <p class="ud-feedback-text">Strong structure in behavioral answers. Reduce filler words in technical explanations. Lead with metrics when discussing project impact.</p>
+                            <div class="ud-tags">
+                                <span class="ud-tag ud-tag--good">Clear storytelling</span>
+                                <span class="ud-tag ud-tag--good">Role alignment</span>
+                                <span class="ud-tag ud-tag--warn">Pacing under pressure</span>
+                                <span class="ud-tag ud-tag--warn">Technical depth</span>
+                            </div>
+                        </article>
+                    </div>
+                </section>
+
+                <section class="ud-section" id="ud-section-settings">
+                    <div class="ud-section-head">
+                        <h2 class="section-title">Account <span>Settings</span></h2>
+                        <p class="ud-section-desc">Profile preferences (demo — no backend).</p>
+                    </div>
+                    <article class="ud-card ud-settings-card">
+                        <div class="field">
+                            <label>Display name</label>
+                            <input type="text" id="settings-username" placeholder="Your name" autocomplete="name">
+                        </div>
+                        <div class="field">
+                            <label>Membership tier</label>
+                            <input type="text" id="settings-tier" readonly value="Pro">
+                        </div>
+                        <button type="button" class="ud-btn ud-btn--primary" id="settings-save-demo">Save preferences (demo)</button>
+                    </article>
+                </section>
             </section>
+
         </main>
     </div>
 
@@ -667,6 +809,10 @@
                 </button>
 
     
+    <script src="auth-state.js"></script>
+    <script src="auth-ui.js"></script>
+    <script src="protected-ui.js"></script>
+    <script src="user-dashboard.js"></script>
     <script src="dashboard-interactions.js"></script>
     <script>
         function toggleFAQ(element) {
