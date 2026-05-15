@@ -7,6 +7,7 @@
  *
  * Usage: api.php?module=study&action=chat  (POST)
  *        api.php?module=research&action=search (POST)
+ *        api.php?module=test&action=gemini (GET) — verify Gemini works
  */
 
 // CORS headers for local development
@@ -53,13 +54,64 @@ try {
         case 'research':
             handleResearch($action, $method, $input);
             break;
+        case 'test':
+            handleTest($action, $method);
+            break;
         default:
-            respond(400, ['error' => true, 'message' => 'Unknown module. Use: study, research']);
+            respond(400, ['error' => true, 'message' => 'Unknown module. Use: study, research, test']);
     }
+} catch (\PDOException $e) {
+    // Database errors — never expose connection details
+    $safeMsg = 'Database error: ' . $e->getMessage();
+    $safeMsg = preg_replace('/host=[\w.\-]+/', 'host=[REDACTED]', $safeMsg);
+    respond(500, ['error' => true, 'message' => $safeMsg]);
 } catch (\Throwable $e) {
     // Never expose internal details — sanitize the message
     $safeMsg = preg_replace('/AIza[A-Za-z0-9_\-]+/', '[REDACTED]', $e->getMessage());
     respond(500, ['error' => true, 'message' => 'Server error: ' . $safeMsg]);
+}
+
+// ─── Test Routes ─────────────────────────────────────────────
+
+function handleTest(string $action, string $method): void
+{
+    switch ($action) {
+        case 'gemini':
+            // Simple test: send a basic prompt and return raw text
+            $gemini = new \Leart\JsonDerulo\Services\GeminiService();
+            $result = $gemini->generate(
+                'Respond with exactly: "Gemini API is working." Nothing else.'
+            );
+            respond(200, [
+                'test'    => 'gemini',
+                'success' => isset($result['success']),
+                'result'  => $result,
+            ]);
+            break;
+
+        case 'db':
+            // Simple test: verify MySQL connection works
+            try {
+                $db = \Leart\JsonDerulo\Services\DatabaseService::getConnection();
+                $stmt = $db->query('SELECT 1 AS ok');
+                $row = $stmt->fetch();
+                respond(200, [
+                    'test'    => 'database',
+                    'success' => true,
+                    'result'  => 'MySQL connection successful',
+                ]);
+            } catch (\PDOException $e) {
+                respond(500, [
+                    'test'    => 'database',
+                    'success' => false,
+                    'result'  => 'MySQL connection failed: ' . $e->getMessage(),
+                ]);
+            }
+            break;
+
+        default:
+            respond(400, ['error' => true, 'message' => 'Unknown test action. Use: gemini, db']);
+    }
 }
 
 // ─── Study Buddy Routes ──────────────────────────────────────

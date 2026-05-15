@@ -1,4 +1,5 @@
 /vendor/
 ElevUra-AI/.env
+ElevUra-AI/config/service-account.json
 ElevUra-AI/data/study_sessions/*.json
 ElevUra-AI/data/research_sessions/*.json

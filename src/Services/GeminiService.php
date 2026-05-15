@@ -5,166 +5,177 @@ namespace Leart\JsonDerulo\Services;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 
+/**
+ * GeminiService — Plain REST + Guzzle
+ *
+ * Calls the Gemini generateContent endpoint using a minimal request body.
+ * API key and model name are read from .env only — never hardcoded.
+ *
+ * First working version: plain text generation only.
+ * No responseMimeType, responseSchema, or structured output configs.
+ */
 class GeminiService
 {
     private Client $client;
     private string $apiKey;
     private string $model;
-    private string $baseUrl = 'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=AIzaSyDLHenQ24HWWAgGhTVb7Cqe38j5cJ02B94';
+
+    /** Base URL without model or key — those are appended dynamically. */
+    private string $baseUrl = 'https://generativelanguage.googleapis.com/v1/models/';
 
     public function __construct()
     {
         $this->apiKey = $_ENV['GEMINI_API_KEY'] ?? '';
-        $this->model = $_ENV['GEMINI_MODEL'] ?? 'gemini-1.5-flash';
+        $this->model  = $_ENV['GEMINI_MODEL']   ?? 'gemini-1.5-flash';
         $this->client = new Client([
-            'timeout' => 90,
+            'timeout'         => 90,
             'connect_timeout' => 15,
         ]);
     }
 
     /**
-     * Generate a text response from Gemini.
+     * Build the full API endpoint URL.
+     */
+    private function buildUrl(): string
+    {
+        return $this->baseUrl . $this->model . ':generateContent?key=' . $this->apiKey;
+    }
+
+    /**
+     * Generate a plain-text response from Gemini.
      *
-     * @param string $prompt       User prompt
-     * @param string $systemPrompt System instruction
-     * @param array  $history      Prior conversation turns [{role, text}, ...]
-     * @return array {success: bool, text: string} | {error: bool, message: string}
+     * Uses the minimal request shape:
+     * { "contents": [{ "parts": [{ "text": "..." }] }] }
+     *
+     * Optionally prepends a system instruction and conversation history.
+     *
+     * @param string $prompt       The user's prompt
+     * @param string $systemPrompt Optional system instruction
+     * @param array  $history      Prior turns [{role, text}, ...]
+     * @return array {success: true, text: string} | {error: true, message: string}
      */
     public function generate(string $prompt, string $systemPrompt = '', array $history = []): array
     {
-        if (empty($this->apiKey)) {
-            return ['error' => true, 'message' => 'Gemini API key not configured. Add GEMINI_API_KEY to .env'];
-        }
-
-        $url = "{$this->baseUrl}/models/{$this->model}:generateContent?key={$this->apiKey}";
-
-        $contents = [];
-        foreach ($history as $entry) {
-            $role = ($entry['role'] === 'assistant' || $entry['role'] === 'model') ? 'model' : 'user';
-            $contents[] = [
-                'role' => $role,
-                'parts' => [['text' => $entry['text']]]
+        // ── Guard: API key must be set ──
+        if (empty($this->apiKey) || $this->apiKey === 'YOUR_GEMINI_KEY') {
+            return [
+                'error'   => true,
+                'message' => 'Gemini API key not configured. Add GEMINI_API_KEY to .env',
             ];
         }
+
+        // ── Guard: prompt must not be empty ──
+        if (empty(trim($prompt))) {
+            return [
+                'error'   => true,
+                'message' => 'Prompt cannot be empty.',
+            ];
+        }
+
+        // ── Build contents array ──
+        $contents = [];
+
+        // Add conversation history
+        foreach ($history as $entry) {
+            $role = ($entry['role'] === 'model' || $entry['role'] === 'assistant')
+                ? 'model'
+                : 'user';
+            $contents[] = [
+                'role'  => $role,
+                'parts' => [['text' => $entry['text'] ?? $entry['message'] ?? '']],
+            ];
+        }
+
+        // Add the current user prompt
         $contents[] = [
-            'role' => 'user',
-            'parts' => [['text' => $prompt]]
+            'role'  => 'user',
+            'parts' => [['text' => $prompt]],
         ];
 
+        // ── Build request body — minimal shape ──
         $body = [
             'contents' => $contents,
-            'generationConfig' => [
-                'temperature' => 0.7,
-                'maxOutputTokens' => 8192,
-            ]
         ];
 
+        // System instruction (supported field in Gemini API v1)
         if (!empty($systemPrompt)) {
             $body['systemInstruction'] = [
-                'parts' => [['text' => $systemPrompt]]
+                'parts' => [['text' => $systemPrompt]],
             ];
         }
 
+        // ── Make the API call ──
         try {
-            $response = $this->client->post($url, [
-                'json' => $body,
-                'headers' => ['Content-Type' => 'application/json']
+            $response = $this->client->post($this->buildUrl(), [
+                'json'    => $body,
+                'headers' => ['Content-Type' => 'application/json'],
             ]);
 
             $data = json_decode($response->getBody()->getContents(), true);
 
             if (json_last_error() !== JSON_ERROR_NONE) {
-                return ['error' => true, 'message' => 'Invalid JSON response from API'];
+                return ['error' => true, 'message' => 'Invalid JSON response from Gemini API.'];
             }
 
+            // Extract the generated text
             $text = $data['candidates'][0]['content']['parts'][0]['text'] ?? null;
+
             if ($text !== null) {
                 return ['success' => true, 'text' => $text];
             }
 
+            // Check if the request was blocked
             $blockReason = $data['promptFeedback']['blockReason'] ?? null;
             if ($blockReason) {
-                return ['error' => true, 'message' => "Request blocked: {$blockReason}"];
+                return ['error' => true, 'message' => "Request blocked by API: {$blockReason}"];
             }
 
-            return ['error' => true, 'message' => 'No response generated'];
+            return ['error' => true, 'message' => 'No response generated by the model.'];
+
         } catch (GuzzleException $e) {
             $msg = $e->getMessage();
             // Never leak the API key in error messages
             $msg = str_replace($this->apiKey, '[REDACTED]', $msg);
-            return ['error' => true, 'message' => 'API request failed: ' . $msg];
+            return ['error' => true, 'message' => 'Gemini API request failed: ' . $msg];
         }
     }
 
     /**
-     * Generate a structured JSON response from Gemini.
+     * Generate a response and attempt to parse it as JSON.
      *
-     * @param string $prompt       User prompt (should describe the JSON structure)
-     * @param string $systemPrompt System instruction
-     * @return array {success: bool, data: array} | {error: bool, message: string}
+     * This does NOT use responseMimeType or responseSchema.
+     * Instead, the system prompt instructs the model to reply in JSON,
+     * and we parse the resulting plain text.
+     *
+     * @param string $prompt       User prompt (should describe the JSON you want)
+     * @param string $systemPrompt System instruction (must ask for JSON output)
+     * @return array {success: true, data: array} | {error: true, message: string}
      */
     public function generateJson(string $prompt, string $systemPrompt = ''): array
     {
-        if (empty($this->apiKey)) {
-            return ['error' => true, 'message' => 'Gemini API key not configured. Add GEMINI_API_KEY to .env'];
+        $result = $this->generate($prompt, $systemPrompt);
+
+        if (isset($result['error'])) {
+            return $result;
         }
 
-        $url = "{$this->baseUrl}/models/{$this->model}:generateContent?key={$this->apiKey}";
+        $text = $result['text'] ?? '';
 
-        $body = [
-            'contents' => [
-                ['role' => 'user', 'parts' => [['text' => $prompt]]]
-            ],
-            'generationConfig' => [
-                'temperature' => 0.7,
-                'maxOutputTokens' => 8192,
-                'responseMimeType' => 'application/json'
-            ]
-        ];
-
-        if (!empty($systemPrompt)) {
-            $body['systemInstruction'] = [
-                'parts' => [['text' => $systemPrompt]]
-            ];
+        // Try to parse the full response as JSON
+        $parsed = json_decode($text, true);
+        if (json_last_error() === JSON_ERROR_NONE && $parsed !== null) {
+            return ['success' => true, 'data' => $parsed];
         }
 
-        try {
-            $response = $this->client->post($url, [
-                'json' => $body,
-                'headers' => ['Content-Type' => 'application/json']
-            ]);
-
-            $data = json_decode($response->getBody()->getContents(), true);
-
-            if (json_last_error() !== JSON_ERROR_NONE) {
-                return ['error' => true, 'message' => 'Invalid JSON response from API'];
-            }
-
-            $text = $data['candidates'][0]['content']['parts'][0]['text'] ?? null;
-            if ($text === null) {
-                return ['error' => true, 'message' => 'No response generated'];
-            }
-
-            // Parse the JSON text from the model
-            $parsed = json_decode($text, true);
+        // Fallback: extract JSON from a markdown code block
+        if (preg_match('/```(?:json)?\s*([\s\S]*?)```/', $text, $m)) {
+            $parsed = json_decode(trim($m[1]), true);
             if (json_last_error() === JSON_ERROR_NONE && $parsed !== null) {
                 return ['success' => true, 'data' => $parsed];
             }
-
-            // Fallback: try to extract JSON from markdown code block
-            if (preg_match('/```(?:json)?\s*([\s\S]*?)```/', $text, $m)) {
-                $parsed = json_decode(trim($m[1]), true);
-                if (json_last_error() === JSON_ERROR_NONE && $parsed !== null) {
-                    return ['success' => true, 'data' => $parsed];
-                }
-            }
-
-            // Return raw text if JSON parsing fails
-            return ['success' => true, 'data' => null, 'text' => $text];
-        } catch (GuzzleException $e) {
-            $msg = $e->getMessage();
-            $msg = str_replace($this->apiKey, '[REDACTED]', $msg);
-            return ['error' => true, 'message' => 'API request failed: ' . $msg];
         }
+
+        // Could not parse — return the raw text so the caller can display it
+        return ['success' => true, 'data' => null, 'text' => $text];
     }
 }

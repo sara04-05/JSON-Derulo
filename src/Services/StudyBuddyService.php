@@ -2,19 +2,30 @@
 
 namespace Leart\JsonDerulo\Services;
 
+use PDO;
+
+/**
+ * StudyBuddyService — Chat-based AI tutor
+ *
+ * Supports: chat, explain, quiz, flashcards, study plans.
+ * Stores conversation history in MySQL (study_sessions + study_messages).
+ * All AI calls use GeminiService (plain text generation).
+ */
 class StudyBuddyService
 {
     private GeminiService $gemini;
-    private StorageService $storage;
+    private PDO $db;
 
     public function __construct()
     {
         $this->gemini = new GeminiService();
-        $this->storage = new StorageService('study_sessions');
+        $this->db     = DatabaseService::getConnection();
     }
 
+    // ─── Chat ────────────────────────────────────────────────
+
     /**
-     * Chat with AI study buddy. Maintains conversation history.
+     * Chat with the AI study buddy. Saves messages to MySQL.
      */
     public function chat(string $sessionId, string $message): array
     {
@@ -24,32 +35,33 @@ class StudyBuddyService
             . "Format your responses with markdown for readability. "
             . "Keep responses concise but complete.";
 
-        // Load existing conversation
-        $session = $this->storage->load($sessionId);
-        $history = $session['messages'] ?? [];
+        // Ensure the session exists
+        $this->ensureSession($sessionId);
 
-        // Build history for Gemini (last 20 messages for context window)
-        $contextHistory = array_slice($history, -20);
+        // Load the last 20 messages for context
+        $history = $this->loadMessages($sessionId, 20);
 
-        $result = $this->gemini->generate($message, $system, $contextHistory);
+        // Call Gemini
+        $result = $this->gemini->generate($message, $system, $history);
 
         if (isset($result['error'])) {
             return $result;
         }
 
-        // Save messages to history
-        $this->storage->append($sessionId, 'messages', [
-            'role' => 'user',
-            'text' => $message,
-            'time' => date('c')
-        ]);
-        $this->storage->append($sessionId, 'messages', [
-            'role' => 'model',
-            'text' => $result['text'],
-            'time' => date('c')
-        ]);
+        // Save user message
+        $this->saveMessage($sessionId, 'user', $message);
 
-        return ['success' => true, 'text' => $result['text'], 'sessionId' => $sessionId];
+        // Save model reply
+        $this->saveMessage($sessionId, 'model', $result['text']);
+
+        // Touch session updated_at
+        $this->touchSession($sessionId);
+
+        return [
+            'success'   => true,
+            'text'      => $result['text'],
+            'sessionId' => $sessionId,
+        ];
     }
 
     /**
@@ -57,13 +69,15 @@ class StudyBuddyService
      */
     public function getChatHistory(string $sessionId): array
     {
-        $session = $this->storage->load($sessionId);
+        $messages = $this->loadMessages($sessionId, 200);
         return [
-            'success' => true,
-            'messages' => $session['messages'] ?? [],
-            'sessionId' => $sessionId
+            'success'   => true,
+            'messages'  => $messages,
+            'sessionId' => $sessionId,
         ];
     }
+
+    // ─── Explain ─────────────────────────────────────────────
 
     /**
      * Generate a topic explanation.
@@ -88,14 +102,17 @@ class StudyBuddyService
         return $this->gemini->generate($prompt, $system);
     }
 
+    // ─── Quiz ────────────────────────────────────────────────
+
     /**
-     * Generate quiz questions (returns structured JSON).
+     * Generate quiz questions. Returns structured JSON via prompt-based parsing.
      */
     public function generateQuiz(string $topic, int $count = 5, string $difficulty = 'intermediate', array $types = ['multiple_choice']): array
     {
         $typeStr = implode(', ', $types);
+
         $system = "You are a quiz generator. Create engaging, educational quiz questions. "
-            . "Return valid JSON only with this exact structure:\n"
+            . "You MUST return ONLY valid JSON with this exact structure (no other text, no markdown):\n"
             . '{"quiz_title":"...","topic":"...","difficulty":"...","questions":[{"id":1,"type":"multiple_choice","question":"...","options":["A)...","B)...","C)...","D)..."],"correct_answer":"B","explanation":"..."}]}' . "\n"
             . "For true_false type, options should be [\"True\",\"False\"]. "
             . "For fill_blank type, omit options and add \"answer\":\"...\". "
@@ -104,7 +121,8 @@ class StudyBuddyService
         $prompt = "Generate a quiz with exactly {$count} questions about: \"{$topic}\"\n"
             . "Difficulty: {$difficulty}\n"
             . "Question types: {$typeStr}\n"
-            . "Make questions progressively challenging.";
+            . "Make questions progressively challenging.\n"
+            . "Reply with valid JSON only.";
 
         $result = $this->gemini->generateJson($prompt, $system);
 
@@ -116,22 +134,26 @@ class StudyBuddyService
             return ['success' => true, 'quiz' => $result['data']];
         }
 
-        return ['error' => true, 'message' => 'Failed to generate structured quiz'];
+        // Fallback: return raw text if JSON parsing failed
+        return ['success' => true, 'quiz' => null, 'text' => $result['text'] ?? 'Failed to generate structured quiz'];
     }
 
+    // ─── Flashcards ──────────────────────────────────────────
+
     /**
-     * Generate flashcards (returns structured JSON).
+     * Generate flashcards. Returns structured JSON via prompt-based parsing.
      */
     public function generateFlashcards(string $topic, int $count = 10, string $difficulty = 'intermediate'): array
     {
         $system = "You are a flashcard generator for effective spaced-repetition learning. "
-            . "Return valid JSON only with this exact structure:\n"
+            . "You MUST return ONLY valid JSON with this exact structure (no other text, no markdown):\n"
             . '{"title":"...","topic":"...","card_count":10,"cards":[{"id":1,"front":"Question or concept","back":"Answer or explanation","hint":"Optional hint","difficulty":"easy|medium|hard","category":"..."}]}' . "\n"
             . "Front should be a clear question or concept. Back should be a concise, memorable answer.";
 
         $prompt = "Generate exactly {$count} flashcards about: \"{$topic}\"\n"
             . "Difficulty level: {$difficulty}\n"
-            . "Mix of difficulties within cards. Cover key concepts comprehensively.";
+            . "Mix of difficulties within cards. Cover key concepts comprehensively.\n"
+            . "Reply with valid JSON only.";
 
         $result = $this->gemini->generateJson($prompt, $system);
 
@@ -143,23 +165,25 @@ class StudyBuddyService
             return ['success' => true, 'flashcards' => $result['data']];
         }
 
-        return ['error' => true, 'message' => 'Failed to generate flashcards'];
+        return ['success' => true, 'flashcards' => null, 'text' => $result['text'] ?? 'Failed to generate flashcards'];
     }
 
+    // ─── Study Plan ──────────────────────────────────────────
+
     /**
-     * Generate a study plan (returns structured JSON).
+     * Generate a study plan. Returns structured JSON via prompt-based parsing.
      */
     public function generateStudyPlan(string $goal, string $intensity = 'focused', string $topics = '', int $weeks = 4): array
     {
         $intensityMap = [
-            'casual' => '30 minutes per day, relaxed pace',
-            'focused' => '90 minutes per day, steady progress',
-            'intensive' => '3+ hours per day, accelerated learning'
+            'casual'    => '30 minutes per day, relaxed pace',
+            'focused'   => '90 minutes per day, steady progress',
+            'intensive' => '3+ hours per day, accelerated learning',
         ];
         $paceDesc = $intensityMap[$intensity] ?? $intensityMap['focused'];
 
         $system = "You are a study plan architect. Create detailed, actionable study plans. "
-            . "Return valid JSON only with this exact structure:\n"
+            . "You MUST return ONLY valid JSON with this exact structure (no other text, no markdown):\n"
             . '{"plan_title":"...","goal":"...","total_weeks":4,"intensity":"...","daily_time":"...","weeks":[{"week":1,"title":"...","focus":"...","days":[{"day":1,"topic":"...","duration":"90 min","activities":["Read chapter...","Practice..."]}]}]}' . "\n"
             . "Each week should have 5-6 study days. Activities should be specific and actionable.";
 
@@ -167,7 +191,8 @@ class StudyBuddyService
             . "Goal: {$goal}\n"
             . "Intensity: {$intensity} ({$paceDesc})\n"
             . (!empty($topics) ? "Topics to cover: {$topics}\n" : "")
-            . "Make it progressive, building from fundamentals to advanced concepts.";
+            . "Make it progressive, building from fundamentals to advanced concepts.\n"
+            . "Reply with valid JSON only.";
 
         $result = $this->gemini->generateJson($prompt, $system);
 
@@ -179,6 +204,63 @@ class StudyBuddyService
             return ['success' => true, 'plan' => $result['data']];
         }
 
-        return ['error' => true, 'message' => 'Failed to generate study plan'];
+        return ['success' => true, 'plan' => null, 'text' => $result['text'] ?? 'Failed to generate study plan'];
+    }
+
+    // ─── MySQL Helpers ───────────────────────────────────────
+
+    /**
+     * Ensure a study session row exists.
+     */
+    private function ensureSession(string $sessionId): void
+    {
+        $sql = "INSERT IGNORE INTO `study_sessions` (id, created_at, updated_at)
+                VALUES (:id, NOW(), NOW())";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([':id' => $sessionId]);
+    }
+
+    /**
+     * Update the session's updated_at timestamp.
+     */
+    private function touchSession(string $sessionId): void
+    {
+        $sql  = "UPDATE `study_sessions` SET updated_at = NOW() WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([':id' => $sessionId]);
+    }
+
+    /**
+     * Save a chat message to the study_messages table.
+     */
+    private function saveMessage(string $sessionId, string $role, string $message): void
+    {
+        $sql = "INSERT INTO `study_messages` (session_id, role, message, created_at)
+                VALUES (:sid, :role, :msg, NOW())";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            ':sid'  => $sessionId,
+            ':role' => $role,
+            ':msg'  => $message,
+        ]);
+    }
+
+    /**
+     * Load messages for a session, ordered chronologically.
+     *
+     * @return array  Each entry: ['role' => '...', 'text' => '...', 'time' => '...']
+     */
+    private function loadMessages(string $sessionId, int $limit = 20): array
+    {
+        $sql = "SELECT role, message AS text, created_at AS time
+                FROM `study_messages`
+                WHERE session_id = :sid
+                ORDER BY id ASC
+                LIMIT :lim";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':sid', $sessionId, \PDO::PARAM_STR);
+        $stmt->bindValue(':lim', $limit, \PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll();
     }
 }
