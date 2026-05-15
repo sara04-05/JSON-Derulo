@@ -147,18 +147,6 @@ body {
             outline-offset: 2px;
         }
 
-        .sidebar-auth-btn--primary {
-            background: rgba(0, 242, 255, 0.09);
-            border: 1px solid rgba(0, 242, 255, 0.42);
-            color: var(--text-primary);
-        }
-
-        .sidebar-auth-btn--primary:hover {
-            background: rgba(0, 242, 255, 0.14);
-            border-color: rgba(0, 242, 255, 0.55);
-            color: var(--text-primary);
-        }
-
         .sidebar-auth-icon {
             width: 22px;
             height: 22px;
@@ -169,13 +157,9 @@ body {
             color: rgba(255, 255, 255, 0.42);
         }
 
-        .sidebar-auth-btn--primary .sidebar-auth-icon {
-            color: var(--accent-cyan);
-        }
-
         .sidebar-auth-icon svg {
-            width: 18px;
-            height: 18px;
+            width: 20px;
+            height: 20px;
             stroke: currentColor;
             fill: none;
             stroke-width: 1.75;
@@ -186,6 +170,26 @@ body {
         .sidebar-auth-label {
             flex: 1;
             text-align: left;
+        }
+
+        .sidebar-auth-btn--primary {
+            background: #f8fafc;
+            color: #0f172a;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            font-weight: 600;
+        }
+
+        .sidebar-auth-btn--primary:hover {
+            background: #ffffff;
+            color: #0f172a;
+            border-color: rgba(255, 255, 255, 0.22);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+        }
+
+        .sidebar-auth-btn--primary .sidebar-auth-icon {
+            color: #0f172a;
+            opacity: 0.85;
         }
 
         .sidebar-item {
@@ -2448,7 +2452,7 @@ body {
             }
         }
 
-        /* ==================== AUTH MODAL (dashboard-integrated) ==================== */
+        /* ==================== AUTH MODAL (matches hero / command / execute UI) ==================== */
         .auth-modal {
             position: fixed;
             inset: 0;
@@ -2460,7 +2464,7 @@ body {
             opacity: 0;
             visibility: hidden;
             pointer-events: none;
-            transition: opacity 0.35s ease, visibility 0.35s ease;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
         }
 
         .auth-modal.is-open {
@@ -2473,31 +2477,38 @@ body {
             position: absolute;
             inset: 0;
             z-index: 0;
-            background: rgba(0, 0, 0, 0.72);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            background: rgba(8, 10, 14, 0.78);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
         }
 
         .auth-modal__dialog {
             position: relative;
             z-index: 1;
             width: 100%;
-            max-width: 420px;
+            max-width: 400px;
             max-height: min(90vh, 720px);
             overflow: auto;
-            border-radius: 24px;
-            padding: 28px 28px 30px;
-            background: rgba(29, 31, 36, 0.72);
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
-            border: 1px solid rgba(0, 231, 255, 0.28);
-            box-shadow:
-                0 0 0 1px rgba(255, 255, 255, 0.04),
-                0 0 48px rgba(0, 231, 255, 0.12),
-                0 24px 64px rgba(0, 0, 0, 0.55);
-            transform: translateY(12px) scale(0.98);
+            border-radius: 16px;
+            padding: 22px 22px 24px;
+            background-color: #151717;
+            border: 1px solid rgba(247, 247, 247, 0.064);
+            box-shadow: 0 24px 56px rgba(0, 0, 0, 0.55);
+            transform: translateY(10px) scale(0.99);
             opacity: 0;
-            transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease;
+            transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease, box-shadow 0.35s ease;
+        }
+
+        .auth-modal__dialog::before {
+            content: '';
+            position: absolute;
+            left: 18px;
+            right: 18px;
+            top: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0, 242, 255, 0.35), transparent);
+            opacity: 0.85;
+            pointer-events: none;
         }
 
         .auth-modal.is-open .auth-modal__dialog {
@@ -2507,27 +2518,27 @@ body {
 
         .auth-modal__close {
             position: absolute;
-            top: 14px;
-            right: 14px;
-            width: 38px;
-            height: 38px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            background: rgba(5, 8, 12, 0.55);
-            color: var(--text-secondary);
-            font-size: 22px;
+            top: 12px;
+            right: 12px;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(12, 14, 18, 0.55);
+            color: rgba(255, 255, 255, 0.55);
+            font-size: 20px;
             line-height: 1;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: border-color 0.2s, color 0.2s, background 0.2s;
+            transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
         }
 
         .auth-modal__close:hover {
-            border-color: rgba(0, 242, 255, 0.35);
             color: var(--accent-cyan);
-            background: rgba(0, 242, 255, 0.06);
+            border-color: rgba(0, 229, 255, 0.35);
+            background: rgba(0, 229, 255, 0.06);
         }
 
         .auth-modal__close:focus-visible {
@@ -2535,63 +2546,88 @@ body {
             outline-offset: 2px;
         }
 
-        .auth-modal__heading {
-            font-size: 20px;
-            font-weight: 800;
-            letter-spacing: -0.4px;
+        .auth-modal__head {
             margin-bottom: 6px;
-            padding-right: 40px;
+            padding-right: 44px;
+        }
+
+        .auth-modal__badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border: 1px solid rgba(0, 242, 255, 0.35);
+            border-radius: 999px;
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--accent-cyan);
+            letter-spacing: 0.07em;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            width: fit-content;
+            background: rgba(0, 242, 255, 0.06);
+            font-family: 'JetBrains Mono', ui-monospace, monospace;
+        }
+
+        .auth-modal__heading {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.04em;
+            line-height: 1.1;
+            margin-bottom: 0;
+            color: var(--text-primary);
         }
 
         .auth-modal__subtitle {
             font-size: 14px;
-            color: var(--text-secondary);
-            margin-bottom: 22px;
+            color: #e2e8f0;
+            line-height: 1.55;
+            margin-bottom: 20px;
+            margin-top: 8px;
+            font-weight: 400;
         }
 
         .auth-modal__tabs {
             display: flex;
-            gap: 8px;
-            padding: 5px;
-            border-radius: 14px;
-            background: rgba(5, 8, 12, 0.55);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            margin-bottom: 22px;
+            gap: 4px;
+            padding: 4px;
+            border-radius: 12px;
+            background: rgba(5, 8, 12, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            margin-bottom: 20px;
         }
 
         .auth-modal__tab {
             flex: 1;
             position: relative;
-            padding: 11px 14px;
+            padding: 10px 12px;
             border: none;
-            border-radius: 11px;
+            border-radius: 10px;
             font-family: inherit;
             font-size: 13px;
             font-weight: 600;
-            color: var(--text-muted);
+            color: rgba(255, 255, 255, 0.48);
             background: transparent;
             cursor: pointer;
-            transition: color 0.25s ease;
+            transition: color 0.2s ease;
         }
 
         .auth-modal__tab:hover {
-            color: var(--text-secondary);
+            color: rgba(255, 255, 255, 0.88);
         }
 
         .auth-modal__tab[aria-selected="true"] {
-            color: #050607;
+            color: #0f172a;
         }
 
         .auth-modal__tab-highlight {
             position: absolute;
             inset: 0;
-            border-radius: 11px;
-            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-teal));
+            border-radius: 10px;
+            background: #f8fafc;
             opacity: 0;
-            transform: scale(0.94);
-            transition: opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1), transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            transform: scale(0.96);
+            transition: opacity 0.25s cubic-bezier(0.22, 1, 0.36, 1), transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
             z-index: 0;
-            box-shadow: 0 0 20px rgba(0, 231, 255, 0.25);
+            box-shadow: none;
         }
 
         .auth-modal__tab[aria-selected="true"] .auth-modal__tab-highlight {
@@ -2605,13 +2641,13 @@ body {
         }
 
         .auth-modal__tab:focus-visible {
-            outline: 2px solid var(--accent-cyan);
+            outline: 2px solid rgba(0, 229, 255, 0.5);
             outline-offset: 2px;
         }
 
         .auth-modal__panel {
             display: none;
-            animation: auth-panel-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            animation: auth-panel-in 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
         }
 
         .auth-modal__panel.is-active {
@@ -2621,7 +2657,7 @@ body {
         @keyframes auth-panel-in {
             from {
                 opacity: 0;
-                transform: translateX(8px);
+                transform: translateX(6px);
             }
             to {
                 opacity: 1;
@@ -2630,7 +2666,7 @@ body {
         }
 
         .auth-field {
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
 
         .auth-field-float {
@@ -2644,7 +2680,7 @@ body {
             transform: translateY(-50%);
             width: 20px;
             height: 20px;
-            color: var(--text-muted);
+            color: rgba(148, 163, 184, 0.75);
             pointer-events: none;
             z-index: 2;
             transition: color 0.2s ease;
@@ -2660,15 +2696,15 @@ body {
 
         .auth-field-float input {
             width: 100%;
-            padding: 22px 44px 12px 44px;
-            border-radius: 14px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            background: rgba(5, 8, 12, 0.65);
+            padding: 22px 44px 11px 44px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(5, 8, 12, 0.95);
             color: var(--text-primary);
-            font-size: 15px;
-            font-family: inherit;
+            font-size: 13px;
+            font-family: 'Inter', sans-serif;
             outline: none;
-            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            transition: border-color 0.25s ease, box-shadow 0.25s ease;
         }
 
         .auth-field-float input::placeholder {
@@ -2680,17 +2716,18 @@ body {
             left: 44px;
             top: 50%;
             transform: translateY(-50%);
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 500;
-            color: var(--text-muted);
+            color: #64748b;
             pointer-events: none;
             transition: all 0.2s ease;
         }
 
         .auth-field-float input:focus + label,
         .auth-field-float input:not(:placeholder-shown) + label {
-            top: 11px;
+            top: 10px;
             transform: translateY(0) scale(0.78);
+            transform-origin: left top;
             color: var(--accent-cyan);
         }
 
@@ -2700,18 +2737,19 @@ body {
         }
 
         .auth-field-float input:focus {
-            border-color: rgba(0, 234, 255, 0.45);
-            box-shadow: 0 0 0 3px rgba(0, 234, 255, 0.12);
+            outline: none;
+            border-color: rgba(0, 229, 255, 0.35);
+            box-shadow: 0 0 0 1px rgba(0, 229, 255, 0.12);
         }
 
         .auth-field-float.is-invalid input {
             border-color: rgba(248, 113, 113, 0.55);
-            box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.1);
+            box-shadow: 0 0 0 1px rgba(248, 113, 113, 0.15);
         }
 
         .auth-field-float.is-success input {
             border-color: rgba(34, 197, 94, 0.45);
-            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+            box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.12);
         }
 
         .auth-field-msg {
@@ -2732,26 +2770,28 @@ body {
 
         .auth-toggle-pass {
             position: absolute;
-            right: 12px;
+            right: 10px;
             top: 50%;
             transform: translateY(-50%);
-            width: 38px;
-            height: 38px;
+            width: 36px;
+            height: 36px;
             border: none;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.04);
-            color: var(--text-secondary);
+            border-radius: 8px;
+            background: rgba(12, 14, 18, 0.45);
+            color: rgba(255, 255, 255, 0.5);
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background 0.2s, color 0.2s;
+            transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
             z-index: 3;
+            border: 1px solid transparent;
         }
 
         .auth-toggle-pass:hover {
-            background: rgba(0, 231, 255, 0.1);
             color: var(--accent-cyan);
+            border-color: rgba(0, 229, 255, 0.25);
+            background: rgba(0, 229, 255, 0.06);
         }
 
         .auth-toggle-pass:focus-visible {
@@ -2772,7 +2812,7 @@ body {
             align-items: center;
             justify-content: space-between;
             gap: 12px;
-            margin-bottom: 18px;
+            margin-bottom: 16px;
             flex-wrap: wrap;
         }
 
@@ -2813,24 +2853,30 @@ body {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
             width: 100%;
-            padding: 15px 20px;
+            min-height: 48px;
+            padding: 0 22px;
             border: none;
-            border-radius: 14px;
-            font-weight: 700;
-            font-size: 15px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 13px;
             font-family: inherit;
             cursor: pointer;
-            color: #050607;
-            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-teal));
-            box-shadow: 0 0 28px rgba(0, 234, 255, 0.28), 0 10px 32px rgba(0, 0, 0, 0.45);
-            transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+            color: #0f172a;
+            background: #f8fafc;
+            box-shadow: none;
+            transition: transform 0.25s ease, background 0.25s ease, opacity 0.2s ease;
+            letter-spacing: 0;
         }
 
         .auth-btn-submit:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 0 36px rgba(0, 234, 255, 0.4), 0 14px 40px rgba(0, 0, 0, 0.5);
+            background: #ffffff;
+        }
+
+        .auth-btn-submit:active:not(:disabled) {
+            transform: translateY(0);
         }
 
         .auth-btn-submit:disabled {
@@ -2839,15 +2885,15 @@ body {
         }
 
         .auth-btn-submit:focus-visible {
-            outline: 2px solid #fff;
-            outline-offset: 3px;
+            outline: 2px solid rgba(0, 229, 255, 0.55);
+            outline-offset: 2px;
         }
 
         .auth-btn-submit .auth-spinner {
-            width: 20px;
-            height: 20px;
-            border: 2px solid rgba(5, 6, 7, 0.25);
-            border-top-color: #050607;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(15, 23, 42, 0.2);
+            border-top-color: #0f172a;
             border-radius: 50%;
             animation: auth-spin 0.7s linear infinite;
             display: none;
@@ -2878,23 +2924,23 @@ body {
             flex: 1;
             height: 4px;
             border-radius: 99px;
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.06);
             transition: background 0.25s ease, box-shadow 0.25s ease;
         }
 
         .auth-strength-bar.is-on {
-            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-teal));
-            box-shadow: 0 0 10px rgba(0, 231, 255, 0.35);
+            background: linear-gradient(90deg, #00f2ff 0%, #67e8f9 40%, #c084fc 100%);
+            box-shadow: 0 0 10px rgba(0, 242, 255, 0.2);
         }
 
         .auth-strength-bar.is-warn.is-on {
             background: linear-gradient(90deg, #fbbf24, #f97316);
-            box-shadow: 0 0 10px rgba(251, 191, 36, 0.35);
+            box-shadow: 0 0 8px rgba(251, 191, 36, 0.25);
         }
 
         .auth-strength-bar.is-bad.is-on {
             background: linear-gradient(90deg, #f87171, #ef4444);
-            box-shadow: 0 0 10px rgba(248, 113, 113, 0.35);
+            box-shadow: 0 0 8px rgba(248, 113, 113, 0.25);
         }
 
         .auth-strength-label {
@@ -2905,9 +2951,10 @@ body {
 
         .auth-modal__flash {
             min-height: 20px;
-            margin-top: 14px;
+            margin-top: 12px;
             font-size: 13px;
             color: var(--accent-cyan);
+            font-weight: 500;
             text-align: center;
         }
 
@@ -3448,7 +3495,9 @@ body {
         <div class="auth-modal__backdrop" data-auth-close tabindex="-1" aria-hidden="true"></div>
         <div class="auth-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="auth-modal-heading">
             <button type="button" class="auth-modal__close" id="auth-modal-close" aria-label="Close">&times;</button>
-            <h2 class="auth-modal__heading" id="auth-modal-heading">ElevUra</h2>
+            <div class="auth-modal__head">
+                <h2 class="auth-modal__heading" id="auth-modal-heading">Elev<span class="hero-title-gradient">Ura</span></h2>
+            </div>
             <p class="auth-modal__subtitle" id="auth-modal-subtitle">Sign in to continue</p>
 
             <div class="auth-modal__tabs" role="tablist" aria-label="Authentication">
