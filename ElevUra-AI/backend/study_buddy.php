@@ -51,7 +51,7 @@ if (empty($apiKey)) {
     json_error('Gemini API key is missing. Please provide it in the form.');
 }
 
-$apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" . $apiKey;
+$apiUrl = "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=" . $apiKey;
 
 $payload = [
     "contents" => [
