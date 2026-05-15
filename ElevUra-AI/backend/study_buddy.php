@@ -23,139 +23,107 @@ if (empty($jobTitle)) {
     json_error('Job title is required to generate study materials.');
 }
 
-// Hugging Face Inference Providers API Call
+// Hugging Face Inference API Call
 $hfKey = !empty($geminiKey) ? $geminiKey : getenv('HF_API_KEY');
 
 if (empty($hfKey)) {
     json_error('Hugging Face API key is missing. Please provide it in the form.');
 }
 
-// Model fallback chain — full repository names, all publicly available on HF Inference
-$modelCandidates = [
-    'mistralai/Mistral-7B-Instruct-v0.3',
-    'HuggingFaceH4/zephyr-7b-beta',
-    'Qwen/Qwen2.5-7B-Instruct',
-    'mistralai/Mistral-7B-Instruct-v0.2',
-    'meta-llama/Llama-3.2-3B-Instruct',
-];
+// Guaranteed supported model on HF serverless inference
+$model  = 'google/flan-t5-large';
+$apiUrl = 'https://api-inference.huggingface.co/models/' . $model;
 
-// Build the system + user messages (OpenAI chat-completions format)
-$systemMessage = "You are an expert career coach and interviewer. You ALWAYS respond with valid JSON only. No markdown, no explanations, no preamble — just a single JSON object.";
-
-$userMessage = "Generate a high-quality interview preparation " . $type . " for the following role:
-Role: " . $jobTitle . "
-Level: " . $jobLevel . "
-Industry: " . $industry . "
-Skills/Keywords: " . $skills . "
-Context: " . $jobContext . "
-
-Rules:
-- For 'quiz': Return exactly 5 MCQs. Each item: {\"question\": \"...\", \"options\": [\"A\",\"B\",\"C\",\"D\"], \"correct_index\": 0}
-- For 'flashcard': Return exactly 8 cards. Each item: {\"front\": \"...\", \"back\": \"...\"}
-- Output ONLY this JSON structure, nothing else:
-{\"type\": \"" . $type . "\", \"job_title\": \"" . $jobTitle . "\", \"items\": [...]}";
-
-/**
- * Attempt inference against each candidate model.
- * Uses the HF Inference Providers router (OpenAI-compatible chat/completions).
- * Retries once on 503 (model loading) after a short delay.
- */
-function hf_call(string $apiUrl, array $payload, string $hfKey, int $retries = 1): array
-{
-    for ($attempt = 0; $attempt <= $retries; $attempt++) {
-        $ch = curl_init($apiUrl);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Content-Type: application/json',
-            'Authorization: Bearer ' . $hfKey,
-        ]);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 120);
-
-        $response = curl_exec($ch);
-        $err      = curl_error($ch);
-        $httpCode = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-
-        if ($err) {
-            return ['ok' => false, 'error' => 'CURL error: ' . $err, 'code' => 0];
-        }
-
-        // 503 = model is loading — wait and retry once
-        if ($httpCode === 503 && $attempt < $retries) {
-            $body = json_decode($response, true);
-            $wait = (int) ($body['estimated_time'] ?? 20);
-            sleep(min($wait, 30));
-            continue;
-        }
-
-        if ($httpCode === 200) {
-            return ['ok' => true, 'body' => $response, 'code' => 200];
-        }
-
-        // Any other error — return it so caller can try next model
-        $body = json_decode($response, true);
-        return [
-            'ok'    => false,
-            'error' => $body['error'] ?? ($body['message'] ?? 'HTTP ' . $httpCode),
-            'code'  => $httpCode,
-        ];
-    }
-
-    return ['ok' => false, 'error' => 'Exhausted retries', 'code' => 503];
+// Build a direct instruction prompt (no chat roles)
+if ($type === 'flashcard') {
+    $prompt = "Generate 8 interview flashcards for a " . $jobLevel . " " . $jobTitle . " role in " . $industry . "."
+        . " Skills: " . $skills . "."
+        . " Return ONLY valid JSON: {\"type\": \"flashcard\", \"job_title\": \"" . $jobTitle . "\", \"items\": [{\"front\": \"question\", \"back\": \"answer\"}, ...]}";
+} else {
+    $prompt = "Generate 5 multiple-choice interview questions for a " . $jobLevel . " " . $jobTitle . " role in " . $industry . "."
+        . " Skills: " . $skills . "."
+        . " Return ONLY valid JSON: {\"type\": \"quiz\", \"job_title\": \"" . $jobTitle . "\", \"items\": [{\"question\": \"text\", \"options\": [\"A\",\"B\",\"C\",\"D\"], \"correct_index\": 0}, ...]}";
 }
 
-$aiContent  = null;
-$lastError  = '';
-$usedModel  = '';
+$payload = [
+    'inputs'     => $prompt,
+    'parameters' => [
+        'max_new_tokens' => 500,
+        'temperature'    => 0.7,
+    ],
+];
 
-foreach ($modelCandidates as $model) {
-    // HF Inference Providers — OpenAI-compatible chat/completions endpoint
-    $apiUrl = "https://router.huggingface.co/hf-inference/models/" . $model . "/v1/chat/completions";
+// Send request (with one retry for 503 / model loading)
+$aiContent = null;
+$maxRetries = 1;
 
-    $payload = [
-        "model"    => $model,
-        "messages"  => [
-            ["role" => "system", "content" => $systemMessage],
-            ["role" => "user",   "content" => $userMessage],
-        ],
-        "max_tokens"  => 2048,
-        "temperature" => 0.4,
-    ];
+for ($attempt = 0; $attempt <= $maxRetries; $attempt++) {
+    $ch = curl_init($apiUrl);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json',
+        'Authorization: Bearer ' . $hfKey,
+    ]);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 120);
 
-    $result = hf_call($apiUrl, $payload, $hfKey);
+    $response = curl_exec($ch);
+    $curlErr  = curl_error($ch);
+    $httpCode = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
 
-    if ($result['ok']) {
-        $resData = json_decode($result['body'], true);
-        $aiContent = $resData['choices'][0]['message']['content'] ?? null;
-        if ($aiContent) {
-            $usedModel = $model;
-            break;
-        }
+    if ($curlErr) {
+        json_error('AI Service Error: ' . $curlErr);
     }
 
-    $lastError = $result['error'] ?? 'No content returned';
+    // 503 = model is cold-starting — wait then retry once
+    if ($httpCode === 503 && $attempt < $maxRetries) {
+        $body = json_decode($response, true);
+        $wait = (int) ($body['estimated_time'] ?? 20);
+        sleep(min($wait, 30));
+        continue;
+    }
+
+    if ($httpCode !== 200) {
+        $body = json_decode($response, true);
+        $msg  = $body['error'] ?? ('HTTP ' . $httpCode);
+        json_error('Hugging Face API Error: ' . $msg);
+    }
+
+    // Parse successful response
+    $resData = json_decode($response, true);
+
+    // HF text-generation returns an array: [{"generated_text": "..."}]
+    if (isset($resData[0]['generated_text'])) {
+        $aiContent = $resData[0]['generated_text'];
+    }
+    // text2text-generation (flan-t5) may also return this shape
+    elseif (isset($resData['generated_text'])) {
+        $aiContent = $resData['generated_text'];
+    }
+
+    if ($aiContent) {
+        break;
+    }
 }
 
 if (!$aiContent) {
-    json_error('All AI models failed. Last error: ' . $lastError);
+    json_error('AI returned empty content. Response: ' . substr($response, 0, 200));
 }
 
 // ── Clean AI output ───────────────────────────────────────────────
 $aiContent = trim($aiContent);
-
-// Strip markdown code fences if present
 if (strpos($aiContent, '```') !== false) {
     $aiContent = preg_replace('/^```(?:json)?\s*/i', '', $aiContent);
     $aiContent = preg_replace('/\s*```\s*$/', '', $aiContent);
     $aiContent = trim($aiContent);
 }
 
-// ── Backend Validation: strict JSON check ─────────────────────────
+// ── Backend Validation ────────────────────────────────────────────
 $decodedContent = json_decode($aiContent, true);
 if (json_last_error() !== JSON_ERROR_NONE || !isset($decodedContent['items'])) {
-    // Fallback: try to extract JSON object from surrounding text
+    // Try to extract JSON from surrounding text
     $jsonStart = strpos($aiContent, '{');
     $jsonEnd   = strrpos($aiContent, '}');
     if ($jsonStart !== false && $jsonEnd !== false && $jsonEnd > $jsonStart) {
