@@ -51,7 +51,52 @@ if (empty($apiKey)) {
     json_error('Gemini API key is missing. Please provide it in the form.');
 }
 
-$apiUrl = "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=" . $apiKey;
+// Fetch available models to avoid 404 errors with hardcoded model names
+$modelsUrl = "https://generativelanguage.googleapis.com/v1/models?key=" . $apiKey;
+$chModels = curl_init($modelsUrl);
+curl_setopt($chModels, CURLOPT_RETURNTRANSFER, true);
+$modelsResponse = curl_exec($chModels);
+$modelsErr = curl_error($chModels);
+curl_close($chModels);
+
+if ($modelsErr) {
+    json_error('Failed to retrieve available models: ' . $modelsErr);
+}
+
+$modelsData = json_decode($modelsResponse, true);
+$availableModels = [];
+if (isset($modelsData['models'])) {
+    foreach ($modelsData['models'] as $m) {
+        $availableModels[] = $m['name'];
+    }
+}
+
+if (empty($availableModels)) {
+    json_error('No Gemini models are available for this API key. Please check your project settings.');
+}
+
+// Fallback logic: 1.5-flash > 1.5-pro > 1.0-pro
+$selectedModel = null;
+$preferences = [
+    'models/gemini-1.5-flash',
+    'models/gemini-1.5-pro',
+    'models/gemini-1.0-pro',
+    'models/gemini-pro' // extra fallback
+];
+
+foreach ($preferences as $pref) {
+    if (in_array($pref, $availableModels)) {
+        $selectedModel = $pref;
+        break;
+    }
+}
+
+// Last resort: use the first available model if none of our preferences matched
+if (!$selectedModel) {
+    $selectedModel = $availableModels[0];
+}
+
+$apiUrl = "https://generativelanguage.googleapis.com/v1/" . $selectedModel . ":generateContent?key=" . $apiKey;
 
 $payload = [
     "contents" => [
