@@ -332,46 +332,39 @@
     }
 
     /* ====== PDF DOWNLOAD ====== */
-    function downloadPDF() {
-        const page = $('#resumePage');
-        const accent = $('#accentColor').value;
-        const name = ($('#fullName').value.trim() || 'Resume');
+    async function downloadPDF() {
+    const { jsPDF } = window.jspdf;
 
-        // Open a clean print window with just the resume
-        const printWin = window.open('', '_blank');
-        printWin.document.write(`<!DOCTYPE html>
-<html><head>
-<title>${name} - Resume</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Georgia&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="CVwriter.css">
-<style>
-    body { margin: 0; padding: 0; background: #fff; }
-    .resume-page {
-        width: 210mm;
-        min-height: 297mm;
-        margin: 0 auto;
-        background: #fff;
-        --resume-accent: ${accent};
-    }
-    @media print {
-        body { margin: 0; }
-        .resume-page { width: 100%; min-height: auto; padding: 44px 40px; }
-        @page { size: A4; margin: 0; }
-    }
-</style>
-</head><body>
-<div class="resume-page ${page.className.replace('resume-page', '').trim()}" style="--resume-accent:${accent}">
-${page.innerHTML}
-</div>
-<script>
-    window.onload = function() {
-        setTimeout(function() { window.print(); }, 400);
-    };
-</script>
-</body></html>`);
-        printWin.document.close();
+    const page = document.querySelector('#resumePage');
+
+    const doc = new jsPDF({
+        unit: 'pt',
+        format: 'a4'
+    });
+
+    const name = ($('#fullName').value.trim() || 'Resume');
+
+    // IMPORTANT: convert HTML → text first (ATS friendly structure preserved)
+    const text = page.innerText;
+
+    const lines = doc.splitTextToSize(text, 520);
+
+    let y = 40;
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(11);
+
+    for (let i = 0; i < lines.length; i++) {
+        if (y > 800) {
+            doc.addPage();
+            y = 40;
+        }
+        doc.text(lines[i], 40, y);
+        y += 14;
     }
 
+    doc.save(`${name}-resume.pdf`);
+}   
     /* ====== EVENT WIRING ====== */
     function init() {
         // Step navigation buttons
