@@ -23,92 +23,51 @@ if (empty($jobTitle)) {
     json_error('Job title is required to generate study materials.');
 }
 
-// Prepare AI Prompt
-$prompt = "You are an expert career coach and interviewer. 
+
+
+// Hugging Face API Call
+$hfKey = !empty($geminiKey) ? $geminiKey : getenv('HF_API_KEY');
+
+if (empty($hfKey)) {
+    json_error('Hugging Face API key is missing. Please provide it in the form.');
+}
+
+// Stable Instruct Model
+$model = "mistralai/Mistral-7B-Instruct-v0.2";
+$apiUrl = "https://api-inference.huggingface.co/models/" . $model;
+
+/**
+ * Prompt optimization for Mistral Instruct:
+ * We use the [INST] tokens to guide the model.
+ */
+$prompt = "<s>[INST] You are an expert career coach and interviewer. 
 Generate a high-quality interview preparation " . $type . " for the following role:
 Role: " . $jobTitle . "
 Level: " . $jobLevel . "
 Industry: " . $industry . "
 Skills/Keywords: " . $skills . "
-Context/Job Description: " . $jobContext . "
 
 Instructions:
-- For 'quiz': Generate 5 multiple-choice questions. Each should have 'question', 'options' (array of 4), and 'correct_index'.
+- For 'quiz': Generate 5 multiple-choice questions. Each should have 'question', 'options' (array of 4), and 'correct_index' (0-3).
 - For 'flashcard': Generate 8 question-answer pairs. Each should have 'front' and 'back'.
-- Output MUST be valid JSON only. Do not include any markdown or extra text.
+- Output MUST be ONLY valid JSON. No markdown, no preamble.
 
-Format:
+JSON Schema:
 {
   \"type\": \"" . $type . "\",
   \"job_title\": \"" . $jobTitle . "\",
   \"items\": [...]
-}";
-
-// Gemini API Call
-$apiKey = !empty($geminiKey) ? $geminiKey : getenv('GEMINI_API_KEY');
-
-if (empty($apiKey)) {
-    json_error('Gemini API key is missing. Please provide it in the form.');
-}
-
-// Fetch available models to avoid 404 errors with hardcoded model names
-$modelsUrl = "https://generativelanguage.googleapis.com/v1/models?key=" . $apiKey;
-$chModels = curl_init($modelsUrl);
-curl_setopt($chModels, CURLOPT_RETURNTRANSFER, true);
-$modelsResponse = curl_exec($chModels);
-$modelsErr = curl_error($chModels);
-curl_close($chModels);
-
-if ($modelsErr) {
-    json_error('Failed to retrieve available models: ' . $modelsErr);
-}
-
-$modelsData = json_decode($modelsResponse, true);
-$availableModels = [];
-if (isset($modelsData['models'])) {
-    foreach ($modelsData['models'] as $m) {
-        $availableModels[] = $m['name'];
-    }
-}
-
-if (empty($availableModels)) {
-    json_error('No Gemini models are available for this API key. Please check your project settings.');
-}
-
-// Fallback logic: 1.5-flash > 1.5-pro > 1.0-pro
-$selectedModel = null;
-$preferences = [
-    'models/gemini-1.5-flash',
-    'models/gemini-1.5-pro',
-    'models/gemini-1.0-pro',
-    'models/gemini-pro' // extra fallback
-];
-
-foreach ($preferences as $pref) {
-    if (in_array($pref, $availableModels)) {
-        $selectedModel = $pref;
-        break;
-    }
-}
-
-// Last resort: use the first available model if none of our preferences matched
-if (!$selectedModel) {
-    $selectedModel = $availableModels[0];
-}
-
-$apiUrl = "https://generativelanguage.googleapis.com/v1/" . $selectedModel . ":generateContent?key=" . $apiKey;
+} [/INST]";
 
 $payload = [
-    "contents" => [
-        [
-            "parts" => [
-                ["text" => $prompt]
-            ]
-        ]
+    "inputs" => $prompt,
+    "parameters" => [
+        "max_new_tokens" => 2048,
+        "temperature" => 0.4,
+        "return_full_text" => false
     ],
-    "generationConfig" => [
-        "temperature" => 0.7,
-        "maxOutputTokens" => 2048
+    "options" => [
+        "wait_for_model" => true
     ]
 ];
 
@@ -116,24 +75,34 @@ $ch = curl_init($apiUrl);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_POST, true);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
-curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Content-Type: application/json',
+    'Authorization: Bearer ' . $hfKey
+]);
 
 $response = curl_exec($ch);
 $err = curl_error($ch);
+$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 curl_close($ch);
 
 if ($err) {
-    json_error('AI Service Error: ' . $err);
+    json_error('AI Service Error (CURL): ' . $err);
+}
+
+if ($httpCode !== 200) {
+    $errorData = json_decode($response, true);
+    $errorMsg = $errorData['error'] ?? 'Unknown Hugging Face error';
+    json_error('Hugging Face API Error (' . $httpCode . '): ' . $errorMsg);
 }
 
 $resData = json_decode($response, true);
-$aiContent = $resData['candidates'][0]['content']['parts'][0]['text'] ?? null;
+$aiContent = $resData[0]['generated_text'] ?? null;
 
 if (!$aiContent) {
     json_error('Failed to generate content from AI. Response: ' . $response);
 }
 
-// Clean AI output (Gemini often wraps JSON in ```json blocks)
+// Clean AI output (remove potential markdown wrappers)
 $aiContent = trim($aiContent);
 if (strpos($aiContent, '```') !== false) {
     $aiContent = preg_replace('/^```(?:json)?\n?/i', '', $aiContent);
@@ -141,9 +110,20 @@ if (strpos($aiContent, '```') !== false) {
     $aiContent = trim($aiContent);
 }
 
+// Backend Validation: Ensure valid JSON
 $decodedContent = json_decode($aiContent, true);
-if (!$decodedContent) {
-    json_error('AI returned invalid JSON format. Raw: ' . $aiContent);
+if (json_last_error() !== JSON_ERROR_NONE || !isset($decodedContent['items'])) {
+    // If it fails, try one more time to find JSON within the text
+    $jsonStart = strpos($aiContent, '{');
+    $jsonEnd = strrpos($aiContent, '}');
+    if ($jsonStart !== false && $jsonEnd !== false) {
+        $aiContent = substr($aiContent, $jsonStart, $jsonEnd - $jsonStart + 1);
+        $decodedContent = json_decode($aiContent, true);
+    }
+    
+    if (json_last_error() !== JSON_ERROR_NONE || !isset($decodedContent['items'])) {
+        json_error('AI returned invalid format. Please try again. Raw: ' . substr($aiContent, 0, 100) . '...');
+    }
 }
 
 // Save to Database
