@@ -23,7 +23,7 @@
 
                 <div class="hero-right">
                     <div class="hero-wireframe">
-                        <img src="images/image.png" alt="Hero Graphic" loading="lazy" decoding="async">
+                        <img src="images/image.png" alt="3D data network visualization" loading="lazy" decoding="async">
                     </div>
                 </div>
                 </div>
@@ -167,7 +167,9 @@
 ">
     To use our model press here.
 </p>
- <!-- HOW STUDY BUDDY WORKS SECTION -->
+               </section>
+
+        <!-- HOW STUDY BUDDY WORKS SECTION -->
         <section class="study-buddy-works">
            <span class="wow-badge">PRACTICE &amp; INSTANT FEEDBACK</span>
             <h3>Study <span> Buddy</span> AI</h3>
@@ -483,4 +485,5 @@
             </div>
         </div>
     </section>
+            </section>
 

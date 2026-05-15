@@ -371,19 +371,6 @@
     initAuthModal();
     window.addEventListener(AUTH_EVENT, syncAuthChrome);
 
-    const settingsName = document.getElementById('settings-username');
-    const settingsTier = document.getElementById('settings-tier');
-    const settingsEmail = document.getElementById('settings-email');
-
-    const fillSettings = () => {
-      const user = window.ElevUraAuth?.getUser();
-      if (settingsName && user) settingsName.value = user.username;
-      if (settingsTier && user) settingsTier.value = user.tier;
-      if (settingsEmail && user) settingsEmail.value = user.email;
-    };
-    fillSettings();
-
-    window.addEventListener('elevura:auth-change', fillSettings);
   }
 
   if (document.readyState === 'loading') {
