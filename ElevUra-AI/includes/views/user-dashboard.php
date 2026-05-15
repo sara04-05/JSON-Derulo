@@ -2,7 +2,7 @@
                 <div class="ud-hero-panel">
                     <div class="hero-badge">&gt; USER DASHBOARD ONLINE</div>
                     <h1 class="hero-title">Your <span class="hero-title-gradient">Mission Control</span></h1>
-                    <p class="hero-subtitle">Track CVs, applications, learning progress, and interview analytics — all synchronized to your ElevUra profile.</p>
+                    <p class="hero-subtitle">Track CVs, applications, learning progress, and interview analytics ? all synchronized to your ElevUra profile.</p>
                     <nav class="ud-nav" aria-label="Dashboard sections">
                         <a href="#my-cvs" class="ud-nav-btn" data-ud-nav="cvs">My CVs</a>
                         <a href="#applied-jobs" class="ud-nav-btn" data-ud-nav="jobs">Applied Jobs</a>
@@ -47,17 +47,17 @@
                             <div class="ud-sparkline" aria-hidden="true">
                                 <span style="--h:42%"></span><span style="--h:55%"></span><span style="--h:61%"></span><span style="--h:58%"></span><span style="--h:72%"></span><span style="--h:78%"></span><span style="--h:87%"></span>
                             </div>
-                            <p class="ud-stat-value">—</p>
+                            <p class="ud-stat-value">?</p>
                         </article>
                         <article class="ud-card ud-stat-card">
                             <p class="ud-card-meta">Communication</p>
                             <div class="ud-progress"><div class="ud-progress__bar" style="--progress: 0%"></div></div>
-                            <p class="ud-stat-value">—</p>
+                            <p class="ud-stat-value">?</p>
                         </article>
                         <article class="ud-card ud-stat-card">
                             <p class="ud-card-meta">Confidence</p>
                             <div class="ud-progress"><div class="ud-progress__bar ud-progress__bar--purple" style="--progress: 0%"></div></div>
-                            <p class="ud-stat-value">—</p>
+                            <p class="ud-stat-value">?</p>
                         </article>
                         <article class="ud-card ud-stat-card ud-stat-card--wide">
                             <p class="ud-card-meta">AI feedback summary</p>
@@ -87,7 +87,7 @@
                         </div>
                         <div class="field">
                             <label for="settings-password">New password</label>
-                            <input type="password" id="settings-password" placeholder="••••••••" autocomplete="new-password" disabled>
+                            <input type="password" id="settings-password" placeholder="New password" autocomplete="new-password" disabled>
                             <p class="ud-card-meta">Password change coming soon.</p>
                         </div>
                         <div class="field">

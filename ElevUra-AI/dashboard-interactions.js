@@ -74,12 +74,12 @@ class ElevUraDashboard {
     this.executeButton.style.opacity = '0.7';
 
     setTimeout(() => {
-      this.executeButton.innerHTML = '✓ Executed <span class="execute-key" aria-hidden="true">↵</span>';
+      this.executeButton.innerHTML = 'Executed <span class="execute-key" aria-hidden="true">Enter</span>';
       this.executeButton.style.background = 'linear-gradient(135deg, #A78BFA 0%, #8B5CF6 100%)';
       this.executeButton.style.color = '#F5F3FF';
 
       setTimeout(() => {
-        this.executeButton.innerHTML = 'Execute <span class="execute-key" aria-hidden="true">↵</span>';
+        this.executeButton.innerHTML = 'Execute <span class="execute-key" aria-hidden="true">Enter</span>';
         this.executeButton.disabled = false;
         this.executeButton.style.opacity = '1';
         this.executeButton.style.background = '';

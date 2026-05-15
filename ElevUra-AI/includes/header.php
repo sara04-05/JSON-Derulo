@@ -7,17 +7,9 @@
                     </div>
                 </div>
 
-                <div class="header-right">
-                    <div class="notification-icon" title="Notifications" aria-label="Notifications">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
-                        <span class="notification-dot"></span>
-                    </div>
-
                     <div class="user-profile-wrap" id="header-auth-user"<?= $loggedIn ? '' : ' hidden' ?>>
                         <button type="button" class="user-info user-info--trigger" id="profile-trigger" aria-expanded="false" aria-haspopup="true" aria-controls="profile-dropdown">
-                            <div class="user-avatar">
-                                <img id="profile-avatar-img" src="<?= e($currentUser['avatar'] ?? '') ?>" width="36" height="36" alt="<?= e(($currentUser['username'] ?? 'User') . ' avatar') ?>" loading="lazy" decoding="async">
-                            </div>
+                            
                             <div class="user-meta">
                                 <div class="user-name" id="profile-username"><?= e($currentUser['username'] ?? 'User') ?></div>
                                 <div class="user-tier" id="profile-tier"><?= e(($currentUser['tier'] ?? 'Free') . ' Tier') ?></div>

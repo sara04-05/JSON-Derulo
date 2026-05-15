@@ -1,6 +1,4 @@
-﻿    <button type="button" class="fab-help" title="Help" aria-label="Help">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/></svg>
-    </button>
+﻿ 
 
     <script>
         window.__ELEVURA_INITIAL__ = <?= json_encode($initialPayload, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;

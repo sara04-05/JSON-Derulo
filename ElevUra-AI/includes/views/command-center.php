@@ -17,7 +17,7 @@
                                 placeholder="Prompt the command center... (e.g. 'Analyze my CV against...')"
                                 autocomplete="off"
                             />
-                            <button type="button" class="execute-button">Execute <span class="execute-key" aria-hidden="true">â†µ</span></button>
+                            <button type="button" class="execute-button">Execute <span class="execute-key" aria-hidden="true">Enter</span></button>
                         </div>
                     </div>
 
@@ -94,7 +94,7 @@
         <!-- LEFT TEXT CARD -->
         <div class="wow-content-card">
 
-            <span class="wow-badge">âš¡ INSTANT FEEDBACK</span>
+            <span class="wow-badge">INSTANT FEEDBACK</span>
 
             <h3>
                 Live AI CV <span>Scoring</span>
@@ -129,22 +129,22 @@
             <div class="score-details">
 
                 <div class="detail-item">
-                    <h4>ðŸ“ Readability</h4>
+                    <h4>Readability</h4>
                     <div class="detail-value">94%</div>
                 </div>
 
                 <div class="detail-item">
-                    <h4>ðŸŽ¯ Keywords</h4>
+                    <h4>Keywords</h4>
                     <div class="detail-value">88%</div>
                 </div>
 
                 <div class="detail-item">
-                    <h4>âœ¨ Professionalism</h4>
+                    <h4>Professionalism</h4>
                     <div class="detail-value">91%</div>
                 </div>
 
                 <div class="detail-item">
-                    <h4>ðŸ† Overall Quality</h4>
+                    <h4>Overall Quality</h4>
                     <div class="detail-value">87%</div>
                 </div>
 
@@ -169,23 +169,23 @@
 </p>
  <!-- HOW STUDY BUDDY WORKS SECTION -->
         <section class="study-buddy-works">
-           <span class="wow-badge">âš¡ PRACTICE & INSTANT FEEDBACK</span>
+           <span class="wow-badge">PRACTICE &amp; INSTANT FEEDBACK</span>
             <h3>Study <span> Buddy</span> AI</h3>
             <div class="study-buddy-grid">
                 <div class="study-buddy-card" data-protected-tool="study-buddy">
-                    <div class="study-buddy-icon">ðŸ’¡</div>
+                    <div class="study-buddy-icon" aria-hidden="true"></div>
                     <div class="study-buddy-card-title">AI-Powered Explanations</div>
                     <div class="study-buddy-card-desc">Enter any topic and get instant, personalized explanations tailored to your learning level with real-world examples.</div>
                     <button type="button" class="study-buddy-btn" data-protected-tool="study-buddy">Execute</button>
                 </div>
                 <div class="study-buddy-card purple" data-protected-tool="study-buddy">
-                    <div class="study-buddy-icon">ðŸ§©</div>
+                    <div class="study-buddy-icon" aria-hidden="true"></div>
                     <div class="study-buddy-card-title">Adaptive Quizzes</div>
                     <div class="study-buddy-card-desc">Dynamically generated questions that adjust difficulty based on your performance and aspiring learning goals.</div>
                     <button type="button" class="study-buddy-btn" data-protected-tool="study-buddy">Execute</button>
                 </div>
                 <div class="study-buddy-card pink" data-protected-tool="study-buddy">
-                    <div class="study-buddy-icon">ðŸ“…</div>
+                    <div class="study-buddy-icon" aria-hidden="true"></div>
                     <div class="study-buddy-card-title">Personalized Study Plans</div>
                     <div class="study-buddy-card-desc">AI creates structured 4-week roadmaps aligned with your goals, intensity, and schedule for optimal learning.</div>
                     <button type="button" class="study-buddy-btn" data-protected-tool="study-buddy">Execute</button>
@@ -211,7 +211,7 @@
                         <span class="wow-badge">PRACTICE &amp; FEEDBACK</span>
                         <h3>Mock <span>Interview</span> Coach</h3>
                         <div id="stepSetup" class="mi-setup">
-                            <div class="pill">Step 1 â€” Role</div>
+                            <div class="pill">Step 1 - Role</div>
                             <div class="field">
                                 <label for="jobTitle">Job position you are applying for *</label>
                                 <input type="text" id="jobTitle" placeholder="e.g. Junior Data Analyst at a healthcare company" autocomplete="off">
@@ -347,19 +347,19 @@
         <h2 class="section-title">Student Success Stories</h2>
         <div class="testimonials-grid">
             <div class="testimonial-card fade-in">
-                <div class="stars">â˜…â˜…â˜…â˜…â˜…</div>
+                <div class="stars" aria-label="5 out of 5 stars">5/5</div>
                 <p class="testimonial-text">"ElevUra AI helped me improve my resume ATS score by 35 points. Got 3 interviews in one week!"</p>
                 <div class="testimonial-author">- Emma, Engineering Student</div>
             </div>
 
             <div class="testimonial-card fade-in">
-                <div class="stars">â˜…â˜…â˜…â˜…â˜…</div>
+                <div class="stars" aria-label="5 out of 5 stars">5/5</div>
                 <p class="testimonial-text">"The AI Study Buddy helped me understand complex algorithms. My exam score improved alot!"</p>
                 <div class="testimonial-author">- Liam, Computer Science</div>
             </div>
 
             <div class="testimonial-card fade-in">
-                <div class="stars">â˜…â˜…â˜…â˜…â˜…</div>
+                <div class="stars" aria-label="5 out of 5 stars">5/5</div>
                 <p class="testimonial-text">"The Career Coach prepared me for interviews perfectly. I landed my dream job at a top tech company!"</p>
                 <div class="testimonial-author">- Sarah, Business Graduate</div>
             </div>
