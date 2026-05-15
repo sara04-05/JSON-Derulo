@@ -6,6 +6,7 @@
     <title>Resume Rater - AI Resume Analysis</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="elevura-layout.css">
+    <link rel="stylesheet" href="resume-rater.css">
     <style>
         * {
             margin: 0;
@@ -854,13 +855,13 @@
         <div class="content">
             <!-- HEADER -->
             <div class="header">
-                <div class="header-badge">AI POWERED ANALYSIS</div>
+                <div class="header-badge">ATS POWERED ANALYSIS</div>
                 <h1 class="header-title">
                     Resume
-                    <span class="header-title-gradient">Rating Engine</span>
+                    <span class="header-title-gradient">ATS Analyzer</span>
                 </h1>
                 <p class="header-subtitle">
-                    Upload your resume and get instant AI-powered feedback with a 0-100 score
+                    Professional ATS scoring, keyword matching, skills detection, and recruiter-ready feedback
                 </p>
             </div>
 
@@ -869,11 +870,19 @@
                 <div class="upload-area" id="uploadArea">
                     <div class="upload-icon">📄</div>
                     <div class="upload-text">Upload Your Resume</div>
-                    <div class="upload-subtext">Drag and drop your PDF or DOC file here, or click to browse</div>
+                    <div class="upload-subtext">Drag and drop PDF, DOCX, or TXT — or click to browse</div>
                     <button class="upload-button" onclick="document.getElementById('fileInput').click()">
                         Choose File
                     </button>
-                    <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.txt" />
+                    <input type="file" id="fileInput" accept=".pdf,.docx,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain" />
+                </div>
+
+                <div class="job-description-block">
+                    <label for="jobDescription">
+                        Target job description
+                        <span class="label-hint">(optional — improves keyword match &amp; ATS alignment)</span>
+                    </label>
+                    <textarea id="jobDescription" placeholder="Paste the job posting here to compare your resume keywords against role requirements…" rows="5"></textarea>
                 </div>
 
                 <div class="file-info" id="fileInfo">
@@ -885,7 +894,7 @@
                 </div>
 
                 <button class="analyze-button" id="analyzeButton" onclick="analyzeResume()" disabled>
-                    Analyze Resume
+                    Run ATS Analysis
                 </button>
             </div>
 
@@ -931,7 +940,19 @@
             </section>
         </main>
     </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>
+        if (window.pdfjsLib) {
+            pdfjsLib.GlobalWorkerOptions.workerSrc =
+                'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
     <script src="dashboard-interactions.js"></script>
+    <script src="resume-rater-extract.js"></script>
+    <script src="resume-rater-analyzer.js"></script>
+    <script src="resume-rater-ui.js"></script>
     <script src="resume-rater.js"></script>
 </body>
 </html>
