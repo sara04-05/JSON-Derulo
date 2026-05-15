@@ -334,24 +334,42 @@
     /* ====== PDF DOWNLOAD ====== */
     function downloadPDF() {
         const page = $('#resumePage');
-        const name = ($('#fullName').value.trim() || 'Resume').replace(/\s+/g, '_');
+        const accent = $('#accentColor').value;
+        const name = ($('#fullName').value.trim() || 'Resume');
 
-        const opt = {
-            margin: 0,
-            filename: `${name}_Resume.pdf`,
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2, useCORS: true, letterRendering: true },
-            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-        };
-
-        // Temporarily ensure clean white background for PDF
-        const orig = page.style.cssText;
-        page.style.background = '#ffffff';
-        page.style.padding = '44px 40px';
-
-        html2pdf().set(opt).from(page).save().then(() => {
-            page.style.cssText = orig;
-        });
+        // Open a clean print window with just the resume
+        const printWin = window.open('', '_blank');
+        printWin.document.write(`<!DOCTYPE html>
+<html><head>
+<title>${name} - Resume</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Georgia&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="CVwriter.css">
+<style>
+    body { margin: 0; padding: 0; background: #fff; }
+    .resume-page {
+        width: 210mm;
+        min-height: 297mm;
+        margin: 0 auto;
+        background: #fff;
+        --resume-accent: ${accent};
+    }
+    @media print {
+        body { margin: 0; }
+        .resume-page { width: 100%; min-height: auto; padding: 44px 40px; }
+        @page { size: A4; margin: 0; }
+    }
+</style>
+</head><body>
+<div class="resume-page ${page.className.replace('resume-page', '').trim()}" style="--resume-accent:${accent}">
+${page.innerHTML}
+</div>
+<script>
+    window.onload = function() {
+        setTimeout(function() { window.print(); }, 400);
+    };
+</script>
+</body></html>`);
+        printWin.document.close();
     }
 
     /* ====== EVENT WIRING ====== */
