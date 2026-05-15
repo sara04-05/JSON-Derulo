@@ -3525,11 +3525,29 @@ body {
         }
 
         /* ==================== PROTECTED TOOLS ==================== */
+        [data-protected-block] {
+            position: relative;
+        }
+
+        a.profile-dropdown__item {
+            text-decoration: none;
+            color: inherit;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        a.ud-nav-btn {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        [data-protected-block].is-protected-locked,
         .module-card.is-protected-locked,
         .study-buddy-card.is-protected-locked {
             filter: blur(0.4px);
         }
 
+        [data-protected-block].is-protected-locked::after,
         .module-card.is-protected-locked::after,
         .study-buddy-card.is-protected-locked::after {
             content: '';
@@ -3541,11 +3559,13 @@ body {
             transition: opacity 0.35s ease;
         }
 
+        .tools-unlocked [data-protected-block].is-protected-locked,
         .tools-unlocked .module-card.is-protected-locked,
         .tools-unlocked .study-buddy-card.is-protected-locked {
             filter: none;
         }
 
+        .tools-unlocked [data-protected-block].is-protected-locked::after,
         .tools-unlocked .module-card.is-protected-locked::after,
         .tools-unlocked .study-buddy-card.is-protected-locked::after {
             opacity: 0;

@@ -31,7 +31,7 @@
                 <!-- MODULE GRID -->
                 <div class="module-grid">
                     <!-- AI Career Coach -->
-                    <div class="module-card" data-protected-tool="career-coach">
+                    <div class="module-card" id="module-career-coach" data-protected-tool="career-coach">
                         <div class="module-header">
                             <div class="module-icon module-icon-accent-purple" aria-hidden="true">
                                 <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -44,7 +44,7 @@
                     </div>
 
                     <!-- CV Optimizer -->
-                    <div class="module-card" data-protected-tool="cv-optimizer">
+                    <div class="module-card" id="module-cv-optimizer" data-protected-tool="cv-optimizer">
                         <div class="module-header">
                             <div class="module-icon module-icon-accent-cyan" aria-hidden="true">
                                 <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"></svg>
@@ -57,7 +57,7 @@
                     </div>
 
                     <!-- Study Buddy -->
-                    <div class="module-card" data-protected-tool="study-buddy">
+                    <div class="module-card" id="module-study-buddy" data-protected-tool="study-buddy">
                         <div class="module-header">
                             <div class="module-icon module-icon-accent-cyan" aria-hidden="true">
                                 <svg viewBox="0 0 24 24"><circle cx="9" cy="12" r="5"/><circle cx="15" cy="12" r="5"/></svg>
@@ -70,7 +70,7 @@
                         </div>
 
                     <!-- Research Assistant -->
-                    <div class="module-card" data-protected-tool="research-assistant">
+                    <div class="module-card" id="module-research-assistant" data-protected-tool="research-assistant">
                         <div class="module-header">
                             <div class="module-icon module-icon-accent-purple" aria-hidden="true">
                                 <svg viewBox="0 0 24 24"><path d="M9 3h6v2H9V3z"/><path d="M10 5v5.2c0 .86-.37 1.68-1 2.26L6 16h12l-3-3.54c-.63-.58-1-1.4-1-2.26V5"/><path d="M6 16h12v2a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-2z"/></svg>
@@ -87,7 +87,7 @@
 
         <!-- MOCKINTERVIEW SECTION --> 
 
-               <section class="wow-section">
+               <section class="wow-section" data-protected-block="cv-scoring" id="cv-scoring-section">
 
     <div class="wow-layout">
 
@@ -205,7 +205,7 @@
 ">
     To use our model press here.
 </p>
-            <section class="wow-section" id="mock-interview">
+            <section class="wow-section" id="mock-interview" data-protected-block="mock-interview">
                 <div class="wow-layout">
                     <div class="wow-content-card">
                         <span class="wow-badge">PRACTICE &amp; FEEDBACK</span>

@@ -1,5 +1,5 @@
 /**
- * ElevUra — user dashboard view (data from PHP / MySQL)
+ * ElevUra — user dashboard page (separate from homepage)
  */
 (function () {
   const STATUS_CLASS = {
@@ -9,6 +9,19 @@
     Rejected: 'job-status--red',
   };
 
+  const SECTION_MAP = {
+    cvs: 'my-cvs',
+    jobs: 'applied-jobs',
+    courses: 'courses-completed',
+    interviews: 'mock-interviews',
+    settings: 'account-settings',
+    overview: null,
+  };
+
+  function isDashboardPage() {
+    return document.body.dataset.page === 'user-dashboard';
+  }
+
   function scoreClass(score) {
     if (score >= 90) return 'ats-score--excellent';
     if (score >= 80) return 'ats-score--good';
@@ -17,6 +30,12 @@
 
   function emptyCard(message) {
     return `<article class="ud-card ud-empty-card"><p class="ud-card-meta">${message}</p></article>`;
+  }
+
+  function escapeHtml(str) {
+    const d = document.createElement('div');
+    d.textContent = str ?? '';
+    return d.innerHTML;
   }
 
   function renderCVs(container, items) {
@@ -96,20 +115,23 @@
   }
 
   function renderAnalytics(analytics, interviews) {
-    const overall = document.querySelector('#ud-section-interviews .ud-stat-value');
-    const commBar = document.querySelector('#ud-section-interviews .ud-stat-card:nth-child(2) .ud-progress__bar');
-    const confBar = document.querySelector('#ud-section-interviews .ud-stat-card:nth-child(3) .ud-progress__bar');
-    const feedback = document.querySelector('#ud-section-interviews .ud-feedback-text');
-    const sparkline = document.querySelector('#ud-section-interviews .ud-sparkline');
+    const section = document.getElementById('mock-interviews');
+    if (!section || !analytics) return;
 
-    if (!analytics) return;
+    const overall = section.querySelector('.ud-stat-value');
+    const commBar = section.querySelector('.ud-stat-card:nth-child(2) .ud-progress__bar');
+    const confBar = section.querySelector('.ud-stat-card:nth-child(3) .ud-progress__bar');
+    const feedback = section.querySelector('.ud-feedback-text');
+    const sparkline = section.querySelector('.ud-sparkline');
 
     if (overall) {
       overall.innerHTML = `${analytics.overall_score || 0} <span class="ud-stat-delta ud-stat-delta--up">latest</span>`;
     }
     if (commBar) commBar.style.setProperty('--progress', `${analytics.communication_score || 0}%`);
     if (confBar) confBar.style.setProperty('--progress', `${analytics.confidence_score || 0}%`);
-    if (feedback) feedback.textContent = analytics.ai_feedback || 'Complete a mock interview to receive AI feedback.';
+    if (feedback) {
+      feedback.textContent = analytics.ai_feedback || 'Complete a mock interview to receive AI feedback.';
+    }
 
     if (sparkline && interviews?.length) {
       const trend = interviews.slice(0, 7).reverse();
@@ -118,12 +140,6 @@
         .map((i) => `<span style="--h:${Math.round((i.interview_score / max) * 100)}%"></span>`)
         .join('');
     }
-  }
-
-  function escapeHtml(str) {
-    const d = document.createElement('div');
-    d.textContent = str ?? '';
-    return d.innerHTML;
   }
 
   function refreshFromAuth() {
@@ -135,72 +151,72 @@
     renderAnalytics(data.analytics, data.mock_interviews);
   }
 
-  function showCommandCenter() {
-    const cc = document.getElementById('view-command-center');
-    const ud = document.getElementById('view-user-dashboard');
-    if (cc) cc.hidden = false;
-    if (ud) ud.hidden = true;
-    document.querySelector('.sidebar-item[data-view="command"]')?.classList.add('active');
-    document.getElementById('sidebar-my-dashboard')?.classList.remove('active');
-  }
-
-  function showUserDashboard(section) {
-    if (!window.ElevUraAuth?.isLoggedIn()) {
-      window.ElevUraAuthUI?.openAuth('login');
+  function scrollToSection(navKey) {
+    const id = SECTION_MAP[navKey] || null;
+    if (!id) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
-    refreshFromAuth();
-    const cc = document.getElementById('view-command-center');
-    const ud = document.getElementById('view-user-dashboard');
-    if (cc) cc.hidden = true;
-    if (ud) {
-      ud.hidden = false;
-      ud.scrollTop = 0;
-    }
-    document.querySelector('.sidebar-item[data-view="command"]')?.classList.remove('active');
-    document.getElementById('sidebar-my-dashboard')?.classList.add('active');
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setActiveNav(navKey);
+  }
 
-    const target = section && section !== 'overview' ? document.getElementById(`ud-section-${section}`) : null;
-    if (target) {
-      setTimeout(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
-    }
-
+  function setActiveNav(navKey) {
     document.querySelectorAll('.ud-nav-btn').forEach((btn) => {
-      btn.classList.toggle('is-active', btn.getAttribute('data-ud-nav') === (section || 'overview'));
+      const key = btn.getAttribute('data-ud-nav');
+      btn.classList.toggle('is-active', key === navKey);
     });
+  }
+
+  function resolveHash() {
+    const hash = (location.hash || '').replace('#', '');
+    if (!hash) {
+      setActiveNav('cvs');
+      return;
+    }
+    const entry = Object.entries(SECTION_MAP).find(([, id]) => id === hash);
+    if (entry) {
+      scrollToSection(entry[0]);
+    } else {
+      const el = document.getElementById(hash);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   }
 
   function initNav() {
-    document.querySelector('.sidebar-item[data-view="command"]')?.addEventListener('click', (e) => {
-      e.preventDefault();
-      document.querySelectorAll('.sidebar-item').forEach((i) => i.classList.remove('active'));
-      e.currentTarget.classList.add('active');
-      showCommandCenter();
-    });
-
-    document.getElementById('sidebar-my-dashboard')?.addEventListener('click', (e) => {
-      e.preventDefault();
-      if (!window.ElevUraAuth?.isLoggedIn()) {
-        window.ElevUraAuthUI?.openAuth('login');
-        return;
-      }
-      showUserDashboard('overview');
-    });
-
     document.querySelectorAll('.ud-nav-btn').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        showUserDashboard(btn.getAttribute('data-ud-nav') || 'overview');
+      btn.addEventListener('click', (e) => {
+        const key = btn.getAttribute('data-ud-nav');
+        if (btn.getAttribute('href')?.startsWith('#')) {
+          e.preventDefault();
+          history.replaceState(null, '', btn.getAttribute('href'));
+        }
+        scrollToSection(key || 'overview');
       });
     });
+
+    window.addEventListener('hashchange', resolveHash);
   }
 
   function init() {
+    if (!isDashboardPage()) return;
+
+    if (!window.ElevUraAuth?.isLoggedIn()) {
+      window.ElevUraAuthUI?.openAuth('login');
+    }
+
     initNav();
-    window.addEventListener('elevura:auth-change', refreshFromAuth);
-    if (window.ElevUraAuth?.isLoggedIn()) refreshFromAuth();
+    resolveHash();
+    refreshFromAuth();
+    window.addEventListener('elevura:auth-change', () => {
+      refreshFromAuth();
+      if (!window.ElevUraAuth?.isLoggedIn()) {
+        window.ElevUraAuthUI?.openAuth('login');
+      }
+    });
   }
 
-  window.ElevUraViews = { showCommandCenter, showUserDashboard };
   window.ElevUraDashboardData = { refresh: refreshFromAuth };
 
   if (document.readyState === 'loading') {

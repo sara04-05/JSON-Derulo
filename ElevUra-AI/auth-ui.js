@@ -29,15 +29,11 @@
     document.body.classList.toggle('is-logged-in', loggedIn);
     document.body.classList.toggle('is-logged-out', !loggedIn);
 
-    const guest = $('#header-auth-guest');
     const profileWrap = $('#header-auth-user');
     const sidebarAuth = $('#cw9j21');
-    const sidebarDash = $('#sidebar-my-dashboard');
 
-    if (guest) guest.hidden = loggedIn;
     if (profileWrap) profileWrap.hidden = !loggedIn;
     if (sidebarAuth) sidebarAuth.hidden = loggedIn;
-    if (sidebarDash) sidebarDash.hidden = !loggedIn;
 
     if (loggedIn && user) {
       const nameEl = $('#profile-username');
@@ -72,22 +68,14 @@
       else open();
     });
 
-    menu.querySelectorAll('[data-profile-action], #profile-open-dashboard').forEach((item) => {
-      item.addEventListener('click', async (e) => {
-        e.preventDefault();
-        close();
-        const action = item.getAttribute('data-profile-action');
-        if (action === 'logout') {
-          await window.ElevUraAuth.logout();
-          showToast('Signed out successfully.');
-          window.ElevUraViews?.showCommandCenter();
-          return;
-        }
-        if (action === 'nav' || item.id === 'profile-open-dashboard') {
-          const section = item.getAttribute('data-ud-section') || 'overview';
-          window.ElevUraViews?.showUserDashboard(section);
-        }
-      });
+    menu.querySelector('[data-profile-action="logout"]')?.addEventListener('click', async (e) => {
+      e.preventDefault();
+      close();
+      await window.ElevUraAuth.logout();
+      showToast('Signed out successfully.');
+      if (document.body.dataset.page === 'user-dashboard') {
+        window.location.href = 'index.php';
+      }
     });
 
     document.addEventListener('click', (e) => {

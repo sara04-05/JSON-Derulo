@@ -1,51 +1,34 @@
 /**
- * ElevUra — protected tools: lock UI + gated navigation
+ * ElevUra — protected tools: lock UI + gated navigation (homepage only)
  */
 (function () {
-  const TOOL_SELECTORS = [
+  const LOCKABLE_SELECTOR = [
+    '[data-protected-block]',
     '.module-card[data-protected-tool]',
-    '.sidebar-item[data-protected-tool]',
     '.study-buddy-card[data-protected-tool]',
     '.study-buddy-btn[data-protected-tool]',
-    '.protected-trigger',
-    '.execute-button[data-protected-tool]',
-    '.command-input-wrapper[data-protected-tool]',
     '#btnStart[data-protected-tool]',
   ].join(',');
+
+  const CLICK_SELECTOR = [
+    LOCKABLE_SELECTOR,
+    '.protected-trigger[data-protected-tool]',
+  ].join(',');
+
+  function isHomePage() {
+    return document.body.dataset.page === 'home';
+  }
 
   function isLoggedIn() {
     return window.ElevUraAuth?.isLoggedIn();
   }
 
   function openAuth() {
-    if (window.ElevUraAuthUI?.openAuth) {
-      window.ElevUraAuthUI.openAuth('login');
-    }
+    window.ElevUraAuthUI?.openAuth('login');
   }
 
-  function handleProtectedAction(el, toolId) {
-    if (isLoggedIn()) {
-      if (toolId === 'mock-interview' || toolId === 'model') {
-        window.ElevUraViews?.showCommandCenter();
-        document.getElementById('mock-interview')?.scrollIntoView({ behavior: 'smooth' });
-      } else if (toolId === 'career-coach' || toolId === 'cv-optimizer' || toolId === 'study-buddy' || toolId === 'research-assistant') {
-        window.ElevUraViews?.showUserDashboard('overview');
-        el.classList.add('protected-unlock-flash');
-        setTimeout(() => el.classList.remove('protected-unlock-flash'), 600);
-      } else if (toolId && window.ElevUraViews) {
-        window.ElevUraViews.showUserDashboard('overview');
-      } else {
-        el.classList.add('protected-unlock-flash');
-        setTimeout(() => el.classList.remove('protected-unlock-flash'), 600);
-      }
-      return true;
-    }
-    openAuth();
-    return false;
-  }
-
-  function ensureLockOverlay(card) {
-    if (card.querySelector('.protected-lock-overlay')) return;
+  function ensureLockOverlay(el) {
+    if (el.querySelector('.protected-lock-overlay')) return;
     const overlay = document.createElement('div');
     overlay.className = 'protected-lock-overlay';
     overlay.innerHTML = `
@@ -54,81 +37,87 @@
       </span>
       <span class="protected-lock-badge">Login Required</span>
     `;
-    card.appendChild(overlay);
+    el.appendChild(overlay);
   }
 
   function syncProtectedState() {
+    if (!isHomePage()) return;
+
     const loggedIn = isLoggedIn();
     document.body.classList.toggle('tools-unlocked', loggedIn);
 
-    document.querySelectorAll('[data-protected-tool]').forEach((el) => {
+    document.querySelectorAll(LOCKABLE_SELECTOR).forEach((el) => {
       el.classList.toggle('is-protected-locked', !loggedIn);
       el.classList.toggle('is-protected-unlocked', loggedIn);
-      if (el.classList.contains('module-card') || el.classList.contains('study-buddy-card')) {
-        if (!loggedIn) ensureLockOverlay(el);
-        else el.querySelector('.protected-lock-overlay')?.remove();
-      }
+      if (!loggedIn) ensureLockOverlay(el);
+      else el.querySelector('.protected-lock-overlay')?.remove();
     });
   }
 
+  function handleProtectedClick(e, el) {
+    if (isLoggedIn()) {
+      const block = el.getAttribute('data-protected-block');
+      if (block === 'mock-interview') {
+        document.getElementById('mock-interview')?.scrollIntoView({ behavior: 'smooth' });
+      } else if (block === 'cv-scoring') {
+        document.getElementById('cv-scoring-section')?.scrollIntoView({ behavior: 'smooth' });
+      }
+      return;
+    }
+    e.preventDefault();
+    e.stopPropagation();
+    openAuth();
+  }
+
   function bindProtectedClicks() {
-    document.querySelectorAll(TOOL_SELECTORS).forEach((el) => {
+    if (!isHomePage()) return;
+
+    document.querySelectorAll(CLICK_SELECTOR).forEach((el) => {
       if (el.dataset.protectedBound) return;
       el.dataset.protectedBound = '1';
 
-      const toolId = el.getAttribute('data-protected-tool') || '';
-      const tag = el.tagName.toLowerCase();
-
-      if (tag === 'input') return;
-
       el.addEventListener('click', (e) => {
-        if (!el.hasAttribute('data-protected-tool') && !el.classList.contains('protected-trigger')) return;
         if (isLoggedIn()) return;
-        e.preventDefault();
-        e.stopPropagation();
-        openAuth();
+        handleProtectedClick(e, el);
       });
-
-      if (el.classList.contains('protected-trigger')) {
-        el.style.cursor = 'pointer';
-        el.setAttribute('role', 'button');
-        el.setAttribute('tabindex', '0');
-        el.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            handleProtectedAction(el, toolId || 'model');
-          }
-        });
-        el.addEventListener('click', (e) => {
-          e.preventDefault();
-          handleProtectedAction(el, toolId || 'model');
-        });
-      }
     });
 
-    document.querySelectorAll('.sidebar-item[data-protected-tool]').forEach((item) => {
-      item.addEventListener('click', (e) => {
-        e.preventDefault();
-        const tool = item.getAttribute('data-protected-tool');
-        if (isLoggedIn()) {
-          document.querySelectorAll('.sidebar-item').forEach((i) => i.classList.remove('active'));
-          item.classList.add('active');
-          if (window.ElevUraViews) window.ElevUraViews.showUserDashboard('overview', tool);
-        } else {
-          openAuth();
+    document.querySelectorAll('.protected-trigger').forEach((el) => {
+      if (el.dataset.protectedBound) return;
+      el.dataset.protectedBound = '1';
+      el.style.cursor = 'pointer';
+      el.setAttribute('role', 'button');
+      el.setAttribute('tabindex', '0');
+      el.addEventListener('click', (e) => handleProtectedClick(e, el));
+      el.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          handleProtectedClick(e, el);
         }
       });
     });
 
     document.querySelectorAll('.module-card[data-protected-tool]').forEach((card) => {
       card.addEventListener('click', (e) => {
-        if (!isLoggedIn()) {
-          e.preventDefault();
-          openAuth();
-          return;
-        }
-        const tool = card.getAttribute('data-protected-tool');
-        handleProtectedAction(card, tool);
+        if (isLoggedIn()) return;
+        handleProtectedClick(e, card);
+      });
+    });
+  }
+
+  function bindSidebarNav() {
+    document.querySelector('[data-sidebar-dashboard]')?.addEventListener('click', (e) => {
+      if (!isLoggedIn()) {
+        e.preventDefault();
+        openAuth();
+      }
+    });
+
+    document.querySelectorAll('[data-nav-tool]').forEach((link) => {
+      link.addEventListener('click', (e) => {
+        if (isLoggedIn()) return;
+        e.preventDefault();
+        openAuth();
       });
     });
   }
@@ -136,10 +125,11 @@
   function init() {
     syncProtectedState();
     bindProtectedClicks();
+    bindSidebarNav();
     window.addEventListener('elevura:auth-change', syncProtectedState);
   }
 
-  window.ElevUraProtected = { syncProtectedState, handleProtectedAction };
+  window.ElevUraProtected = { syncProtectedState };
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
