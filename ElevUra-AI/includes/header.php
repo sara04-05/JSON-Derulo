@@ -1,8 +1,7 @@
             <header class="top-header">
                 <div class="header-left">
                     <div class="header-left-meta">
-                        <div class="environment-text">
-                            Environment: <span class="production">Production</span>
+                        <div class="">
                         </div>
                     </div>
                 </div>

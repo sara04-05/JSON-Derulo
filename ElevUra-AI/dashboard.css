@@ -334,15 +334,8 @@ body {
             padding: 30px;
         }
 
-        .environment-text {
-            font-size: 13px;
-            color: var(--text-secondary);
-        }
+       
 
-        .environment-text .production {
-            color: var(--accent-cyan);
-            font-weight: 600;
-        }
 
         .header-right {
             display: flex;
@@ -2420,10 +2413,7 @@ body {
             }
 
     
-            .environment-text {
-                font-size: 12px;
-            }
-
+            
             .hero-title {
                 font-size: 40px;
             }
