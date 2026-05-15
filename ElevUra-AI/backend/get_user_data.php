@@ -90,6 +90,21 @@ try {
         ];
     }, $miStmt->fetchAll());
 
+    $smStmt = $pdo->prepare(
+        'SELECT id, material_type, job_title, job_level, created_at
+         FROM study_materials WHERE user_id = ? ORDER BY created_at DESC'
+    );
+    $smStmt->execute([$userId]);
+    $studyMaterials = array_map(static function (array $row): array {
+        return [
+            'id'            => (int) $row['id'],
+            'type'          => $row['material_type'],
+            'job_title'     => $row['job_title'],
+            'job_level'     => $row['job_level'],
+            'date'          => date('M j, Y', strtotime($row['created_at'])),
+        ];
+    }, $smStmt->fetchAll());
+
     $latest = $interviews[0] ?? null;
 
     json_response([
@@ -100,6 +115,7 @@ try {
         'applied_jobs'    => $jobs,
         'courses'         => $courses,
         'mock_interviews' => $interviews,
+        'study_materials' => $studyMaterials,
         'analytics'       => [
             'overall_score'       => $latest['interview_score'] ?? 0,
             'confidence_score'    => $latest['confidence_score'] ?? 0,
