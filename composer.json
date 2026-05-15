@@ -1,0 +1,14 @@
+{
+    "name": "leart/json-derulo",
+    "autoload": {
+        "psr-4": {
+            "Leart\\JsonDerulo\\": "src/"
+        }
+    },
+    "require": {
+        "google/cloud-storage": "*",
+        "google/auth": "*",
+        "vlucas/phpdotenv": "*",
+        "guzzlehttp/guzzle": "*"
+    }
+}
