@@ -1,7 +1,8 @@
 <?php
+/**
+ * ElevUra AI — Entry Point
+ * Redirects to the main dashboard.
+ */
 
-require 'vendor/autoload.php';
-
-use Leart\JsonDerulo\Test;
-
-echo Test::hello();
+header('Location: ElevUra-AI/dashboard.html');
+exit;

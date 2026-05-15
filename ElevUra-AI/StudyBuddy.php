@@ -1325,13 +1325,13 @@ input[type="range"]::-webkit-slider-thumb:hover {
                 </span>
                 <span>CV Optimizer</span>
             </a>
-            <a href="StudyBuddy.html" class="sidebar-item active">
+            <a href="StudyBuddy.php" class="sidebar-item active">
                 <span class="sidebar-item-icon" aria-hidden="true">
                     <svg viewBox="0 0 24 24"><circle cx="9" cy="12" r="5"/><circle cx="15" cy="12" r="5"/></svg>
                 </span>
                 <span>Study Buddy</span>
             </a>
-            <a href="#" class="sidebar-item">
+            <a href="ResearchAssistant.php" class="sidebar-item">
                 <span class="sidebar-item-icon" aria-hidden="true">
                     <svg viewBox="0 0 24 24"><path d="M9 3h6v2H9V3z"/><path d="M10 5v5.2c0 .86-.37 1.68-1 2.26L6 16h12l-3-3.54c-.63-.58-1-1.4-1-2.26V5"/><path d="M6 16h12v2a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-2z"/></svg>
                 </span>
@@ -1530,6 +1530,11 @@ input[type="range"]::-webkit-slider-thumb:hover {
       <span class="tab-label-accent">Interview</span>
       <span style="display:none" class="tab-label"> Prep</span>
       <span class="tab-count">48</span>
+    </button>
+    <button class="tab-btn" data-tab="flashcards">
+      <span class="tab-icon">🃏</span>
+      <span class="tab-label-accent">Flash</span>
+      <span style="display:none" class="tab-label">cards</span>
     </button>
   </div>
 
@@ -2335,81 +2340,274 @@ input[type="range"]::-webkit-slider-thumb:hover {
     </div>
   </div>
 
-</div>
+  <!-- ── TAB: Flashcards ───────────────────────────── -->
+  <div class="tab-panel" id="tab-flashcards">
+    <div class="grid-sidebar">
+      <div>
+        <div class="section-title">Flashcard Generator</div>
+        <div class="card card-glow" style="margin-bottom:16px;">
+          <div class="card-header">
+            <div style="display:flex;gap:12px;align-items:center">
+              <div class="card-icon-wrap">🃏</div>
+              <div>
+                <div class="card-title">Generate Flashcards</div>
+                <div class="card-subtitle">AI-powered spaced-repetition cards</div>
+              </div>
+            </div>
+          </div>
+          <div class="cp-grid" style="grid-template-columns:1fr 140px auto;">
+            <div class="field">
+              <label class="field-label">Topic</label>
+              <div class="input-wrap">
+                <span class="input-icon">🃏</span>
+                <input type="text" id="fc-topic" placeholder="e.g. JavaScript closures, React hooks…" />
+              </div>
+            </div>
+            <div class="field">
+              <label class="field-label">Cards</label>
+              <div class="input-wrap">
+                <span class="input-icon">#</span>
+                <select id="fc-count"><option value="5">5</option><option value="10" selected>10</option><option value="15">15</option><option value="20">20</option></select>
+              </div>
+            </div>
+            <div class="field"><label class="field-label">&nbsp;</label>
+              <button class="btn btn-primary" id="btn-gen-flashcards"><span class="btn-icon">✦</span> Generate</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="fc-container" style="display:none;">
+          <div class="section-title" id="fc-title-bar">Flashcards</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+            <button class="btn btn-ghost" id="fc-prev">← Prev</button>
+            <span id="fc-counter" style="font-family:var(--font-mono);font-size:12px;color:var(--text-muted);">1 / 10</span>
+            <button class="btn btn-ghost" id="fc-next">Next →</button>
+          </div>
+          <div class="card card-glow" id="fc-card" style="min-height:220px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;transition:transform 0.5s ease;" title="Click to flip">
+            <div id="fc-hint" style="font-size:10px;font-family:var(--font-mono);color:var(--text-muted);margin-bottom:12px;letter-spacing:0.08em;">CLICK TO FLIP</div>
+            <div id="fc-text" style="font-size:16px;font-weight:600;line-height:1.6;max-width:500px;"></div>
+            <div id="fc-diff" style="margin-top:16px;"></div>
+          </div>
+        </div>
+        <div id="fc-loading" style="display:none;" class="card" style="padding:40px;text-align:center;">
+          <div class="empty-icon">🃏</div>
+          <div class="empty-text">Generating flashcards…</div>
+          <div class="skeleton-lines" style="margin-top:16px;"><div class="sk-line w-90"></div><div class="sk-line w-75"></div><div class="sk-line w-60"></div></div>
+        </div>
+      </div>
+      <div class="widget-stack">
+        <div class="card card-glow">
+          <div class="prof-header" style="margin-bottom:12px;"><span class="prof-title">Card Stats</span></div>
+          <div id="fc-stats" style="display:flex;flex-direction:column;gap:10px;">
+            <div style="display:flex;justify-content:space-between;padding:10px 14px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);">
+              <span style="font-size:12px;color:var(--text-secondary);font-family:var(--font-mono);">Total cards</span>
+              <span id="fc-total" style="font-size:16px;font-weight:700;color:var(--cyan);">0</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:10px 14px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);">
+              <span style="font-size:12px;color:var(--text-secondary);font-family:var(--font-mono);">Reviewed</span>
+              <span id="fc-reviewed" style="font-size:16px;font-weight:700;color:var(--purple);">0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /page-wrap -->
 
         </section>
         </main>
     </div>
 
+<!-- ── Chat Widget ─────────────────────────────────── -->
+<div id="chat-toggle" style="position:fixed;bottom:28px;right:28px;z-index:9999;width:56px;height:56px;border-radius:50%;background:var(--grad-mixed);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 24px rgba(0,242,255,0.25);font-size:24px;transition:transform 0.2s ease;" title="AI Chat">💬</div>
+<div id="chat-panel" style="display:none;position:fixed;bottom:96px;right:28px;z-index:9999;width:380px;max-height:520px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-xl);box-shadow:var(--shadow-float);overflow:hidden;flex-direction:column;">
+  <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:rgba(0,242,255,0.04);">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span style="font-size:18px;">🤖</span>
+      <span style="font-size:14px;font-weight:700;">Study Buddy Chat</span>
+    </div>
+    <button id="chat-close" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:18px;">✕</button>
+  </div>
+  <div id="chat-messages" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;min-height:300px;max-height:360px;">
+    <div style="background:rgba(0,242,255,0.06);border:1px solid rgba(0,242,255,0.12);border-radius:12px 12px 12px 4px;padding:12px 16px;font-size:13px;line-height:1.6;max-width:85%;color:var(--text-secondary);">
+      Hi! I'm your Study Buddy AI. Ask me anything — concepts, problems, exam prep, or just chat about what you're learning! 🎓
+    </div>
+  </div>
+  <div style="padding:12px 16px;border-top:1px solid var(--border);display:flex;gap:8px;">
+    <input type="text" id="chat-input" placeholder="Ask anything…" style="flex:1;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-family:var(--font-display);font-size:13px;padding:10px 14px;outline:none;" />
+    <button id="chat-send" class="btn btn-primary" style="padding:10px 16px;">Send</button>
+  </div>
+</div>
+
 <script>
 (function () {
+  const API = 'api.php';
+  const chatSessionId = 'chat_' + Date.now();
+  let fcCards = [], fcIdx = 0, fcFlipped = false, fcReviewed = new Set();
 
-  // ── Tab Switching ─────────────────────────────────
-  document.querySelectorAll('.tab-btn').forEach(btn => {
+  // ── Helpers ────────────────────────────────────────
+  async function api(module, action, body = {}) {
+    const res = await fetch(`${API}?module=${module}&action=${action}`, {
+      method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body)
+    });
+    return res.json();
+  }
+  function qs(s) { return document.querySelector(s); }
+  function qsa(s) { return document.querySelectorAll(s); }
+  function getTopicInput() { return (qs('.cp-grid input[type="text"]')?.value || '').trim(); }
+  function getDifficulty() { return qs('.cp-grid select')?.value || 'Intermediate'; }
+  function getGoal() { return qsa('.cp-grid select')[1]?.value || 'Understand concepts'; }
+  function showLoading(el) { el.innerHTML = '<div class="skeleton-lines"><div class="sk-line w-90"></div><div class="sk-line w-75"></div><div class="sk-line w-85"></div><div class="sk-line w-60"></div></div>'; el.style.display = 'block'; }
+  function md(text) {
+    if (!text) return '';
+    return text.replace(/```(\w*)\n([\s\S]*?)```/g, '<pre style="background:var(--bg-input);border:1px solid var(--border);border-radius:8px;padding:14px;overflow-x:auto;font-family:var(--font-mono);font-size:12px;margin:12px 0;"><code>$2</code></pre>')
+      .replace(/## (.+)/g, '<h3 style="color:var(--cyan);margin:18px 0 8px;font-size:15px;font-weight:700;">$1</h3>')
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g, '<em>$1</em>')
+      .replace(/`([^`]+)`/g, '<code style="background:rgba(0,242,255,0.08);padding:2px 6px;border-radius:4px;font-family:var(--font-mono);font-size:12px;color:var(--cyan);">$1</code>')
+      .replace(/\n- /g, '\n• ').replace(/\n\d+\. /g, (m) => '\n' + m.trim() + ' ')
+      .replace(/\n/g, '<br>');
+  }
+
+  // ── Tab Switching ──────────────────────────────────
+  qsa('.tab-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const target = btn.dataset.tab;
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      qsa('.tab-btn').forEach(b => b.classList.remove('active'));
+      qsa('.tab-panel').forEach(p => p.classList.remove('active'));
       btn.classList.add('active');
-      document.getElementById('tab-' + target).classList.add('active');
+      document.getElementById('tab-' + target)?.classList.add('active');
     });
   });
 
   // ── Mode Toggle ───────────────────────────────────
-  document.querySelectorAll('.cp-mode-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.cp-mode-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
+  qsa('.cp-mode-btn').forEach(btn => {
+    btn.addEventListener('click', () => { qsa('.cp-mode-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); });
+  });
+
+  // ── Generate (Explain) ────────────────────────────
+  qsa('.cp-grid .btn-primary').forEach(btn => {
+    if (btn.closest('#tab-flashcards')) return;
+    btn.addEventListener('click', async () => {
+      const topic = getTopicInput();
+      if (!topic) { alert('Enter a topic first'); return; }
+      const preview = qs('#explain-content');
+      const empty = qs('#explain-empty');
+      if (empty) empty.style.display = 'none';
+      if (preview) { showLoading(preview); preview.style.display = 'block'; }
+      const tab = qs('[data-tab="explain"]');
+      if (tab) tab.click();
+      const r = await api('study', 'explain', { topic, difficulty: getDifficulty(), goal: getGoal() });
+      if (preview) {
+        if (r.success) { preview.innerHTML = '<div style="font-size:13px;line-height:1.8;color:var(--text-secondary);">' + md(r.text) + '</div>'; }
+        else { preview.innerHTML = '<div style="color:#f87171;">Error: ' + (r.message||'Unknown error') + '</div>'; }
+      }
+    });
+  });
+
+  // ── Explain button (ghost) ────────────────────────
+  qsa('.btn-ghost').forEach(btn => {
+    if (btn.textContent.includes('Explain')) {
+      btn.addEventListener('click', () => { qs('.cp-grid .btn-primary')?.click(); });
+    }
+  });
+
+  // ── Quiz Generation ───────────────────────────────
+  qsa('#tab-quiz .btn-primary').forEach(btn => {
+    if (!btn.textContent.includes('Generate Quiz')) return;
+    btn.addEventListener('click', async () => {
+      const topic = getTopicInput() || 'General programming';
+      const countSel = qs('#tab-quiz .quiz-config-grid select');
+      const count = parseInt(countSel?.value) || 10;
+      const types = [];
+      qsa('.q-type-card.selected .q-type-label').forEach(l => {
+        const t = l.textContent.trim().toLowerCase().replace(/[\s\/]+/g, '_');
+        types.push(t);
+      });
+      const previewCard = qs('#tab-quiz .quiz-preview-card') || qs('#tab-quiz .card.card-glow:last-of-type');
+      const section = qs('#tab-quiz .section-title:last-of-type');
+      if (section) section.textContent = 'Generating quiz…';
+      if (previewCard) showLoading(previewCard);
+      const r = await api('study', 'quiz', { topic, count, difficulty: getDifficulty(), types: types.length ? types : ['multiple_choice'] });
+      if (r.success && r.quiz?.questions) {
+        if (section) section.textContent = r.quiz.quiz_title || 'Quiz';
+        window._quizData = r.quiz.questions; window._quizIdx = 0;
+        renderQuizQuestion(0, previewCard);
+      } else {
+        if (section) section.textContent = 'Quiz Generation Failed';
+        if (previewCard) previewCard.innerHTML = '<div style="color:#f87171;">' + (r.message||'Failed to generate quiz') + '</div>';
+      }
+    });
+  });
+
+  window.renderQuizQuestion = function(idx, container) {
+    const q = window._quizData?.[idx]; if (!q || !container) return;
+    const total = window._quizData.length;
+    let html = '<div class="quiz-question-num">QUESTION ' + String(idx+1).padStart(2,'0') + ' / ' + total + '</div>';
+    html += '<div class="quiz-question-text">' + q.question + '</div><div class="quiz-options">';
+    (q.options||[]).forEach((opt, i) => {
+      const key = String.fromCharCode(65 + i);
+      html += '<div class="quiz-option" onclick="checkAnswer(this,\'' + key + '\',' + idx + ')"><div class="quiz-option-key">' + key + '</div>' + opt + '</div>';
+    });
+    html += '</div><div class="quiz-footer"><div class="quiz-progress-bar-wrap"><div class="quiz-progress-bar-fill" style="width:' + ((idx+1)/total*100) + '%"></div></div>';
+    html += '<div style="display:flex;gap:8px;">';
+    if (idx > 0) html += '<button class="btn btn-ghost" onclick="renderQuizQuestion(' + (idx-1) + ',this.closest(\'.card\'))">← Prev</button>';
+    if (idx < total-1) html += '<button class="btn btn-primary" onclick="renderQuizQuestion(' + (idx+1) + ',this.closest(\'.card\'))">Next →</button>';
+    html += '</div></div>';
+    container.innerHTML = html;
+  };
+  window.checkAnswer = function(el, key, idx) {
+    const q = window._quizData?.[idx]; if (!q) return;
+    const correct = (q.correct_answer||'').charAt(0).toUpperCase();
+    el.closest('.quiz-options').querySelectorAll('.quiz-option').forEach(o => o.style.pointerEvents = 'none');
+    if (key === correct) { el.classList.add('correct'); }
+    else { el.style.borderColor = 'rgba(248,113,113,0.5)'; el.style.background = 'rgba(248,113,113,0.08)'; }
+    if (q.explanation) {
+      const exp = document.createElement('div');
+      exp.style.cssText = 'margin-top:14px;padding:14px;border-top:1px solid var(--border);font-size:12px;color:var(--text-secondary);line-height:1.6;font-family:var(--font-mono);';
+      exp.innerHTML = '💡 ' + q.explanation;
+      el.closest('.quiz-options').after(exp);
+    }
+  };
+
+  // ── Study Plan ────────────────────────────────────
+  qsa('#tab-plan .btn-primary').forEach(btn => {
+    if (!btn.textContent.includes('Build')) return;
+    btn.addEventListener('click', async () => {
+      const activeGoal = qs('.goal-chip.active')?.textContent || 'Learn programming';
+      const activeIntensity = qs('.intensity-card.selected .intensity-label')?.textContent?.toLowerCase() || 'focused';
+      const topic = getTopicInput() || activeGoal;
+      const timeline = qs('#tab-plan .plan-timeline');
+      if (timeline) { timeline.innerHTML = '<div class="skeleton-lines"><div class="sk-line w-90"></div><div class="sk-line w-75"></div><div class="sk-line w-85"></div></div>'; }
+      const r = await api('study', 'plan', { goal: activeGoal, intensity: activeIntensity, topics: topic, weeks: 4 });
+      if (r.success && r.plan?.weeks && timeline) {
+        let html = '';
+        r.plan.weeks.forEach((w, wi) => {
+          html += '<div class="plan-week' + (wi===0?' open':'') + '"><div class="plan-week-header" onclick="this.closest(\'.plan-week\').classList.toggle(\'open\')">';
+          html += '<span class="plan-week-num">WEEK ' + String(w.week||wi+1).padStart(2,'0') + '</span>';
+          html += '<span class="plan-week-title">' + (w.title||w.focus||'') + '</span>';
+          html += '<span class="plan-week-meta">' + (w.days?.length||0) + ' days</span>';
+          html += '<span class="plan-week-chevron">▾</span></div><div class="plan-week-body"><div class="plan-day-list">';
+          (w.days||[]).forEach(d => {
+            html += '<div class="plan-day"><div class="plan-day-dot"></div><span>' + (d.topic||'') + '</span><div class="plan-day-duration">' + (d.duration||'') + '</div></div>';
+          });
+          html += '</div></div></div>';
+        });
+        timeline.innerHTML = html;
+        const titleEl = qs('#tab-plan .section-title:last-of-type');
+        if (titleEl) titleEl.textContent = r.plan.plan_title || 'Study Plan';
+      } else if (timeline) {
+        timeline.innerHTML = '<div style="color:#f87171;">' + (r.message||'Failed to generate plan') + '</div>';
+      }
     });
   });
 
   // ── Question Type Toggle ──────────────────────────
-  document.querySelectorAll('.q-type-card').forEach(card => {
-    card.addEventListener('click', () => card.classList.toggle('selected'));
-  });
-
-  // ── Goal Chips ────────────────────────────────────
-  document.querySelectorAll('.goal-chip').forEach(chip => {
-    chip.addEventListener('click', () => {
-      document.querySelectorAll('.goal-chip').forEach(c => c.classList.remove('active'));
-      chip.classList.add('active');
-    });
-  });
-
-  // ── Intensity Cards ───────────────────────────────
-  document.querySelectorAll('.intensity-card').forEach(card => {
-    card.addEventListener('click', () => {
-      document.querySelectorAll('.intensity-card').forEach(c => c.classList.remove('selected'));
-      card.classList.add('selected');
-    });
-  });
-
-  // ── Plan Week Accordion ───────────────────────────
-  window.toggleWeek = function (header) {
-    header.closest('.plan-week').classList.toggle('open');
-  };
-
-  // ── Interview Question Accordion ──────────────────
-  window.toggleIQ = function (card) {
-    card.classList.toggle('expanded');
-  };
-
-  // ── Role Card Selection ───────────────────────────
-  window.selectRole = function (card) {
-    document.querySelectorAll('.role-card').forEach(c => c.classList.remove('active'));
-    card.classList.add('active');
-  };
-
-  // ── Quiz Option Selection ─────────────────────────
-  window.selectOption = function (opt) {
-    document.querySelectorAll('.quiz-option').forEach(o => {
-      o.classList.remove('selected');
-      if (!o.classList.contains('correct')) o.style.pointerEvents = '';
-    });
-    if (!opt.classList.contains('correct')) {
-      opt.classList.add('selected');
-    }
-  };
+  qsa('.q-type-card').forEach(c => c.addEventListener('click', () => c.classList.toggle('selected')));
+  qsa('.goal-chip').forEach(c => c.addEventListener('click', () => { qsa('.goal-chip').forEach(x=>x.classList.remove('active')); c.classList.add('active'); }));
+  qsa('.intensity-card').forEach(c => c.addEventListener('click', () => { qsa('.intensity-card').forEach(x=>x.classList.remove('selected')); c.classList.add('selected'); }));
+  qsa('.role-card').forEach(c => c.addEventListener('click', () => { qsa('.role-card').forEach(x=>x.classList.remove('active')); c.classList.add('active'); }));
 
   // ── Depth Slider ──────────────────────────────────
   const slider = document.getElementById('depth-slider');
@@ -2418,64 +2616,158 @@ input[type="range"]::-webkit-slider-thumb:hover {
     slider.addEventListener('input', () => {
       document.getElementById('depth-val').textContent = depthLabels[slider.value - 1];
       const pct = ((slider.value - 1) / 3 * 100).toFixed(0);
-      slider.style.background = `linear-gradient(90deg, var(--cyan) ${pct}%, rgba(255,255,255,0.1) ${pct}%)`;
+      slider.style.background = 'linear-gradient(90deg, var(--cyan) ' + pct + '%, rgba(255,255,255,0.1) ' + pct + '%)';
     });
   }
 
-  // ── Explain Toggle (demo) ─────────────────────────
-  let explainVisible = false;
-  document.querySelectorAll('.btn-primary, .btn-ghost').forEach(btn => {
-    if (btn.textContent.includes('Explain')) {
-      btn.addEventListener('click', () => {
-        explainVisible = !explainVisible;
-        document.getElementById('explain-empty').style.display = explainVisible ? 'none' : 'flex';
-        document.getElementById('explain-content').style.display = explainVisible ? 'block' : 'none';
-      });
-    }
-  });
-
   // ── Suggest Chip → Input ──────────────────────────
-  document.querySelectorAll('.suggest-chip').forEach(chip => {
+  qsa('.suggest-chip').forEach(chip => {
     chip.addEventListener('click', () => {
-      const input = document.querySelector('input[type="text"]');
-      if (input) {
-        input.value = chip.textContent.replace('→ ', '');
-        input.focus();
+      const input = qs('.cp-grid input[type="text"]');
+      if (input) { input.value = chip.textContent.replace('→ ', ''); input.focus(); }
+    });
+  });
+  qsa('.concept-tag').forEach(tag => tag.addEventListener('click', () => tag.classList.toggle('active')));
+
+  // ── Flashcards ────────────────────────────────────
+  qs('#btn-gen-flashcards')?.addEventListener('click', async () => {
+    const topic = qs('#fc-topic')?.value?.trim();
+    if (!topic) { alert('Enter a topic'); return; }
+    const count = parseInt(qs('#fc-count')?.value) || 10;
+    qs('#fc-container').style.display = 'none';
+    qs('#fc-loading').style.display = 'block';
+    const r = await api('study', 'flashcards', { topic, count, difficulty: getDifficulty() });
+    qs('#fc-loading').style.display = 'none';
+    if (r.success && r.flashcards?.cards) {
+      fcCards = r.flashcards.cards; fcIdx = 0; fcFlipped = false; fcReviewed = new Set();
+      qs('#fc-container').style.display = 'block';
+      qs('#fc-title-bar').textContent = r.flashcards.title || 'Flashcards';
+      qs('#fc-total').textContent = fcCards.length;
+      renderFC();
+    } else { alert(r.message || 'Failed to generate flashcards'); }
+  });
+  function renderFC() {
+    const c = fcCards[fcIdx]; if (!c) return;
+    fcFlipped = false;
+    qs('#fc-counter').textContent = (fcIdx+1) + ' / ' + fcCards.length;
+    qs('#fc-text').innerHTML = c.front;
+    qs('#fc-hint').textContent = 'CLICK TO FLIP';
+    qs('#fc-diff').innerHTML = '<span class="badge ' + (c.difficulty==='easy'?'cyan':c.difficulty==='hard'?'pink':'purple') + '">' + (c.difficulty||'medium') + '</span>';
+    qs('#fc-card').style.transform = '';
+    qs('#fc-reviewed').textContent = fcReviewed.size;
+  }
+  qs('#fc-card')?.addEventListener('click', () => {
+    const c = fcCards[fcIdx]; if (!c) return;
+    fcFlipped = !fcFlipped;
+    qs('#fc-text').innerHTML = fcFlipped ? c.back : c.front;
+    qs('#fc-hint').textContent = fcFlipped ? 'ANSWER' : 'CLICK TO FLIP';
+    qs('#fc-card').style.transform = fcFlipped ? 'scale(1.02)' : '';
+    if (fcFlipped) { fcReviewed.add(fcIdx); qs('#fc-reviewed').textContent = fcReviewed.size; }
+  });
+  qs('#fc-prev')?.addEventListener('click', () => { if (fcIdx > 0) { fcIdx--; renderFC(); } });
+  qs('#fc-next')?.addEventListener('click', () => { if (fcIdx < fcCards.length-1) { fcIdx++; renderFC(); } });
+
+  // ── Chat Widget ───────────────────────────────────
+  qs('#chat-toggle')?.addEventListener('click', () => {
+    const p = qs('#chat-panel');
+    const vis = p.style.display === 'flex';
+    p.style.display = vis ? 'none' : 'flex';
+    qs('#chat-toggle').style.transform = vis ? '' : 'scale(0.9)';
+    if (!vis) qs('#chat-input')?.focus();
+  });
+  qs('#chat-close')?.addEventListener('click', () => {
+    qs('#chat-panel').style.display = 'none';
+    qs('#chat-toggle').style.transform = '';
+  });
+  function addChatMsg(text, isUser) {
+    const msgs = qs('#chat-messages');
+    const div = document.createElement('div');
+    div.style.cssText = isUser
+      ? 'background:rgba(176,140,255,0.1);border:1px solid rgba(176,140,255,0.15);border-radius:12px 12px 4px 12px;padding:12px 16px;font-size:13px;line-height:1.6;max-width:85%;align-self:flex-end;'
+      : 'background:rgba(0,242,255,0.06);border:1px solid rgba(0,242,255,0.12);border-radius:12px 12px 12px 4px;padding:12px 16px;font-size:13px;line-height:1.6;max-width:85%;color:var(--text-secondary);';
+    div.innerHTML = isUser ? text : md(text);
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+    return div;
+  }
+  async function sendChat() {
+    const input = qs('#chat-input');
+    const msg = input?.value?.trim(); if (!msg) return;
+    input.value = '';
+    addChatMsg(msg, true);
+    const loading = addChatMsg('Thinking…', false);
+    const r = await api('study', 'chat', { sessionId: chatSessionId, message: msg });
+    loading.remove();
+    addChatMsg(r.success ? r.text : ('Error: ' + (r.message||'Unknown')), false);
+  }
+  qs('#chat-send')?.addEventListener('click', sendChat);
+  qs('#chat-input')?.addEventListener('keypress', e => { if (e.key === 'Enter') sendChat(); });
+
+  // ── Interview Prep ───────────────────────────────
+  qsa('#tab-interview .btn-primary').forEach(btn => {
+    if (!btn.textContent.includes('Start Prep')) return;
+    btn.addEventListener('click', async () => {
+      const role = qs('.role-card.active .role-title')?.textContent || 'Software Engineer';
+      const company = qsa('#tab-interview select')[0]?.value || 'Any company';
+      const round = qsa('#tab-interview select')[1]?.value || 'Technical';
+      const topic = getTopicInput() || role;
+      const container = qs('.interview-question-wrap');
+      const section = qs('#tab-interview .section-title:last-of-type');
+      
+      if (section) section.textContent = 'Preparing interview questions...';
+      if (container) showLoading(container);
+      
+      // We use the quiz API with interview context
+      const r = await api('study', 'quiz', { 
+        topic: `Interview for ${role} at ${company} (${round} round) focusing on ${topic}`, 
+        count: 5, 
+        difficulty: getDifficulty(),
+        types: ['open_ended'] 
+      });
+      
+      if (r.success && r.quiz?.questions) {
+        if (section) section.textContent = `Practice Questions — ${role} · ${round}`;
+        let html = '';
+        r.quiz.questions.forEach((q, i) => {
+          html += `<div class="iq-card ${i===0?'expanded':''}" onclick="toggleIQ(this)">
+            <div class="iq-header">
+              <span class="iq-difficulty ${i%3===0?'hard':i%2===0?'med':'easy'}">${(q.type||'QUESTION').toUpperCase()}</span>
+              <span class="iq-text">${q.question}</span>
+              <span class="iq-chevron">▾</span>
+            </div>
+            <div class="iq-answer">
+              ${q.answer || q.explanation || 'Think about your answer, then click to see tips.'}
+              <div class="iq-tags">
+                <span class="iq-tag">${role}</span>
+                <span class="iq-tag">${round}</span>
+              </div>
+            </div>
+          </div>`;
+        });
+        container.innerHTML = html;
+      } else {
+        if (container) container.innerHTML = '<div style="color:#f87171;">' + (r.message||'Failed to prepare questions') + '</div>';
       }
     });
   });
 
-  // ── Concept Tag Highlight ─────────────────────────
-  document.querySelectorAll('.concept-tag').forEach(tag => {
-    tag.addEventListener('click', () => tag.classList.toggle('active'));
+  // ── Card hover ────────────────────────────────────
+  qsa('.card[style*="cursor:pointer"]').forEach(card => {
+    card.addEventListener('mouseenter', () => card.style.transform = 'translateY(-3px)');
+    card.addEventListener('mouseleave', () => card.style.transform = '');
   });
 
-  // ── Quiz Progress Demo ────────────────────────────
-  const bar = document.getElementById('quiz-bar');
-  if (bar) {
-    let prog = 30;
-    document.querySelectorAll('.quiz-footer .btn-primary').forEach(btn => {
-      btn.addEventListener('click', () => {
-        prog = Math.min(100, prog + 10);
-        bar.style.width = prog + '%';
-      });
-    });
-  }
-
-  // ── Smooth card hover lift ────────────────────────
-  document.querySelectorAll('.card').forEach(card => {
-    card.addEventListener('mouseenter', () => {
-      if (!card.style.cursor || card.style.cursor !== 'pointer') return;
-      card.style.transform = 'translateY(-3px)';
-    });
-    card.addEventListener('mouseleave', () => {
-      card.style.transform = '';
-    });
-  });
-
+  // ── Interview IQ toggle ───────────────────────────
+  window.toggleIQ = function(card) { card.classList.toggle('expanded'); };
+  window.toggleWeek = function(header) { header.closest('.plan-week').classList.toggle('open'); };
+  window.selectRole = function(card) { qsa('.role-card').forEach(c=>c.classList.remove('active')); card.classList.add('active'); };
+  window.selectOption = function(opt) {
+    opt.closest('.quiz-options')?.querySelectorAll('.quiz-option').forEach(o => o.classList.remove('selected'));
+    opt.classList.add('selected');
+  };
 })();
 </script>
 
 <script src="dashboard-interactions.js"></script>
 </body>
-</html>
+</html>
