@@ -30,27 +30,31 @@ if (empty($hfKey)) {
     json_error('Hugging Face API key is missing. Please provide it in the form.');
 }
 
-// Guaranteed supported model on HF serverless inference
-$model  = 'google/flan-t5-large';
-$apiUrl = 'https://api-inference.huggingface.co/models/' . $model;
+// Model: confirmed "warm" on HF Inference (verified via HF Hub API)
+$model  = 'mistralai/Mistral-7B-Instruct-v0.2';
 
-// Build a direct instruction prompt (no chat roles)
+// Current working endpoint — the old api-inference.huggingface.co is deprecated
+$apiUrl = 'https://router.huggingface.co/hf-inference/models/' . $model . '/v1/chat/completions';
+
+// Build prompt for the requested type
 if ($type === 'flashcard') {
-    $prompt = "Generate 8 interview flashcards for a " . $jobLevel . " " . $jobTitle . " role in " . $industry . "."
+    $userPrompt = "Generate 8 interview flashcards for a " . $jobLevel . " " . $jobTitle . " role in " . $industry . "."
         . " Skills: " . $skills . "."
-        . " Return ONLY valid JSON: {\"type\": \"flashcard\", \"job_title\": \"" . $jobTitle . "\", \"items\": [{\"front\": \"question\", \"back\": \"answer\"}, ...]}";
+        . " Return ONLY valid JSON with no extra text: {\"type\": \"flashcard\", \"job_title\": \"" . $jobTitle . "\", \"items\": [{\"front\": \"question\", \"back\": \"answer\"}, ...]}";
 } else {
-    $prompt = "Generate 5 multiple-choice interview questions for a " . $jobLevel . " " . $jobTitle . " role in " . $industry . "."
+    $userPrompt = "Generate 5 multiple-choice interview questions for a " . $jobLevel . " " . $jobTitle . " role in " . $industry . "."
         . " Skills: " . $skills . "."
-        . " Return ONLY valid JSON: {\"type\": \"quiz\", \"job_title\": \"" . $jobTitle . "\", \"items\": [{\"question\": \"text\", \"options\": [\"A\",\"B\",\"C\",\"D\"], \"correct_index\": 0}, ...]}";
+        . " Return ONLY valid JSON with no extra text: {\"type\": \"quiz\", \"job_title\": \"" . $jobTitle . "\", \"items\": [{\"question\": \"text\", \"options\": [\"A\",\"B\",\"C\",\"D\"], \"correct_index\": 0}, ...]}";
 }
 
 $payload = [
-    'inputs'     => $prompt,
-    'parameters' => [
-        'max_new_tokens' => 500,
-        'temperature'    => 0.7,
+    'model'       => $model,
+    'messages'    => [
+        ['role' => 'system', 'content' => 'You are a helpful assistant. You ONLY respond with valid JSON. No markdown, no explanations.'],
+        ['role' => 'user',   'content' => $userPrompt],
     ],
+    'max_tokens'  => 1024,
+    'temperature' => 0.7,
 ];
 
 // Send request (with one retry for 503 / model loading)
@@ -87,21 +91,13 @@ for ($attempt = 0; $attempt <= $maxRetries; $attempt++) {
 
     if ($httpCode !== 200) {
         $body = json_decode($response, true);
-        $msg  = $body['error'] ?? ('HTTP ' . $httpCode);
-        json_error('Hugging Face API Error: ' . $msg);
+        $msg  = $body['error'] ?? ($body['message'] ?? 'HTTP ' . $httpCode);
+        json_error('Hugging Face API Error (' . $httpCode . '): ' . $msg);
     }
 
-    // Parse successful response
+    // Parse OpenAI-compatible chat response
     $resData = json_decode($response, true);
-
-    // HF text-generation returns an array: [{"generated_text": "..."}]
-    if (isset($resData[0]['generated_text'])) {
-        $aiContent = $resData[0]['generated_text'];
-    }
-    // text2text-generation (flan-t5) may also return this shape
-    elseif (isset($resData['generated_text'])) {
-        $aiContent = $resData['generated_text'];
-    }
+    $aiContent = $resData['choices'][0]['message']['content'] ?? null;
 
     if ($aiContent) {
         break;
@@ -109,7 +105,7 @@ for ($attempt = 0; $attempt <= $maxRetries; $attempt++) {
 }
 
 if (!$aiContent) {
-    json_error('AI returned empty content. Response: ' . substr($response, 0, 200));
+    json_error('AI returned empty content. Response: ' . substr($response ?? '', 0, 200));
 }
 
 // ── Clean AI output ───────────────────────────────────────────────
