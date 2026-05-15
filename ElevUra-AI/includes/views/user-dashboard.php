@@ -81,15 +81,15 @@
                     <article class="ud-card ud-settings-card">
                         <div class="field">
                             <label>Username</label>
-                            <input type="text" id="settings-username" readonly autocomplete="username">
+                            <input type="text" id="settings-username" readonly autocomplete="username" value="<?= e($currentUser['username'] ?? '') ?>">
                         </div>
                         <div class="field">
                             <label>Email</label>
-                            <input type="email" id="settings-email" readonly autocomplete="email">
+                            <input type="email" id="settings-email" readonly autocomplete="email" value="<?= e($currentUser['email'] ?? '') ?>">
                         </div>
                         <div class="field">
                             <label>Membership tier</label>
-                            <input type="text" id="settings-tier" readonly>
+                            <input type="text" id="settings-tier" readonly value="<?= e($currentUser['tier'] ?? 'Free') ?>">
                         </div>
                     </article>
                 </section>

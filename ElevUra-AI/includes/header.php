@@ -1,4 +1,4 @@
-﻿            <header class="top-header">
+            <header class="top-header">
                 <div class="header-left">
                     <div class="header-left-meta">
                         <div class="environment-text">
@@ -13,19 +13,19 @@
                         <span class="notification-dot"></span>
                     </div>
 
-                    <div class="header-auth" id="header-auth-guest">
+                    <div class="header-auth" id="header-auth-guest"<?= $loggedIn ? ' hidden' : '' ?>>
                         <button type="button" class="header-auth-btn" data-auth-open="login">Login</button>
                         <button type="button" class="header-auth-btn header-auth-btn--primary" data-auth-open="signup">Sign up</button>
                     </div>
 
-                    <div class="user-profile-wrap" id="header-auth-user" hidden>
+                    <div class="user-profile-wrap" id="header-auth-user"<?= $loggedIn ? '' : ' hidden' ?>>
                         <button type="button" class="user-info user-info--trigger" id="profile-trigger" aria-expanded="false" aria-haspopup="true" aria-controls="profile-dropdown">
                             <div class="user-avatar">
-                                <img id="profile-avatar-img" src="" width="36" height="36" alt="" loading="lazy" decoding="async">
+                                <img id="profile-avatar-img" src="<?= e($currentUser['avatar'] ?? '') ?>" width="36" height="36" alt="<?= e(($currentUser['username'] ?? 'User') . ' avatar') ?>" loading="lazy" decoding="async">
                             </div>
                             <div class="user-meta">
-                                <div class="user-name" id="profile-username">User</div>
-                                <div class="user-tier" id="profile-tier">Pro Tier</div>
+                                <div class="user-name" id="profile-username"><?= e($currentUser['username'] ?? 'User') ?></div>
+                                <div class="user-tier" id="profile-tier"><?= e(($currentUser['tier'] ?? 'Free') . ' Tier') ?></div>
                             </div>
                             <span class="profile-chevron" aria-hidden="true">
                                 <svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
@@ -63,7 +63,6 @@
                             </button>
                         </div>
                     </div>
-
 
                     <button type="button" class="header-fullscreen" title="Fullscreen" aria-label="Toggle fullscreen">
                         <svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>

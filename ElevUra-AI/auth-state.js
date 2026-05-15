@@ -141,9 +141,37 @@
     getDashboardData,
   };
 
+  function hydrateFromServer() {
+    const initial = global.__ELEVURA_INITIAL__;
+    if (!initial) return false;
+    if (initial.logged_in && initial.user) {
+      currentUser = normalizeUser(initial.user);
+      dashboardCache = initial.dashboard
+        ? {
+            cvs: initial.dashboard.cvs || [],
+            applied_jobs: initial.dashboard.applied_jobs || [],
+            courses: initial.dashboard.courses || [],
+            mock_interviews: initial.dashboard.mock_interviews || [],
+            analytics: initial.dashboard.analytics || {},
+          }
+        : null;
+    } else {
+      currentUser = null;
+      dashboardCache = null;
+    }
+    dispatchChange();
+    return true;
+  }
+
+  function initAuth() {
+    if (!hydrateFromServer()) {
+      refreshSession();
+    }
+  }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => refreshSession());
+    document.addEventListener('DOMContentLoaded', initAuth);
   } else {
-    refreshSession();
+    initAuth();
   }
 })(window);
