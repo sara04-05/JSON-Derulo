@@ -62,7 +62,8 @@ $payload = [
         ]
     ],
     "generationConfig" => [
-        "response_mime_type" => "application/json"
+        "temperature" => 0.7,
+        "maxOutputTokens" => 2048
     ]
 ];
 
@@ -87,10 +88,17 @@ if (!$aiContent) {
     json_error('Failed to generate content from AI. Response: ' . $response);
 }
 
-// Clean AI output if necessary (though response_mime_type should handle it)
+// Clean AI output (Gemini often wraps JSON in ```json blocks)
+$aiContent = trim($aiContent);
+if (strpos($aiContent, '```') !== false) {
+    $aiContent = preg_replace('/^```(?:json)?\n?/i', '', $aiContent);
+    $aiContent = preg_replace('/\n?```$/', '', $aiContent);
+    $aiContent = trim($aiContent);
+}
+
 $decodedContent = json_decode($aiContent, true);
 if (!$decodedContent) {
-    json_error('AI returned invalid JSON format.');
+    json_error('AI returned invalid JSON format. Raw: ' . $aiContent);
 }
 
 // Save to Database
