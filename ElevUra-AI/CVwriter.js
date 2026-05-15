@@ -331,40 +331,161 @@
         return sidebar + main;
     }
 
-    /* ====== PDF DOWNLOAD ====== */
-    async function downloadPDF() {
-    const { jsPDF } = window.jspdf;
-
-    const page = document.querySelector('#resumePage');
-
-    const doc = new jsPDF({
-        unit: 'pt',
-        format: 'a4'
-    });
-
-    const name = ($('#fullName').value.trim() || 'Resume');
-
-    // IMPORTANT: convert HTML → text first (ATS friendly structure preserved)
-    const text = page.innerText;
-
-    const lines = doc.splitTextToSize(text, 520);
-
-    let y = 40;
-
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(11);
-
-    for (let i = 0; i < lines.length; i++) {
-        if (y > 800) {
-            doc.addPage();
-            y = 40;
-        }
-        doc.text(lines[i], 40, y);
-        y += 14;
+    /* ====== PDF EXPORT ====== */
+    function getExportBaseName() {
+        const raw = ($('#fullName').value.trim() || 'Resume').replace(/[^\w\s-]/g, '').trim();
+        return raw || 'Resume';
     }
 
-    doc.save(`${name}-resume.pdf`);
-}   
+    /**
+     * Extra export: print dialog (Save as PDF) — styled document matching preview.
+     */
+    function downloadPrintPDF() {
+        renderPreview();
+
+        const page = $('#resumePage');
+        const accent = $('#accentColor').value;
+        const name = getExportBaseName();
+        const templateExtra = page.className.replace(/\bresume-page\b/g, '').trim();
+
+        const printWin = window.open('', '_blank');
+        if (!printWin) {
+            alert('Pop-up blocked. Allow pop-ups for this site to print or save as PDF.');
+            return;
+        }
+
+        const safeTitle = name.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const safeAccent = /^#[0-9A-Fa-f]{3,8}$/.test(accent) ? accent : '#0ea5e9';
+
+        printWin.document.write(`<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<title>${safeTitle} - Resume</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Georgia&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="CVwriter.css">
+<style>
+  body { margin: 0; padding: 0; background: #fff; }
+  .resume-page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    background: #fff;
+    --resume-accent: ${safeAccent};
+  }
+  @media print {
+    body { margin: 0; }
+    .resume-page { width: 100%; min-height: auto; padding: 44px 40px; }
+    @page { size: A4; margin: 0; }
+  }
+</style>
+</head><body>
+<div class="resume-page ${templateExtra}" style="--resume-accent:${safeAccent}">
+${page.innerHTML}
+</div>
+<script>
+  window.onload = function() {
+    setTimeout(function() { window.print(); }, 400);
+  };
+</script>
+</body></html>`);
+
+        printWin.document.close();
+    }
+
+    /**
+     * ATS export: true text-based PDF (selectable, structured sections).
+     */
+    function downloadATSPDF() {
+        if (!window.jspdf) {
+            alert('PDF library not loaded. Refresh the page or use Print / Save as PDF.');
+            return;
+        }
+
+        const { jsPDF } = window.jspdf;
+        const data = collectData();
+        const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+        const margin = 48;
+        const maxW = 595.28 - margin * 2;
+        let y = margin;
+
+        function newPageIf(need) {
+            if (y + need > 800) {
+                doc.addPage();
+                y = margin;
+            }
+        }
+
+        function lines(text, size, style, gap) {
+            doc.setFont('helvetica', style || 'normal');
+            doc.setFontSize(size || 11);
+            doc.splitTextToSize(String(text), maxW).forEach((line) => {
+                newPageIf(gap || 14);
+                doc.text(line, margin, y);
+                y += gap || 14;
+            });
+        }
+
+        function heading(title) {
+            newPageIf(30);
+            y += 12;
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(11);
+            doc.text(title.toUpperCase(), margin, y);
+            y += 16;
+        }
+
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(20);
+        doc.text(data.fullName || 'Your Name', margin, y);
+        y += 24;
+        if (data.jobTitle) {
+            lines(data.jobTitle, 12, 'normal', 16);
+        }
+        const contact = [data.email, data.phone, data.location, data.linkedin].filter(Boolean).join(' | ');
+        if (contact) lines(contact, 10, 'normal', 12);
+
+        if (data.summary) {
+            heading('Professional Summary');
+            lines(data.summary, 11);
+        }
+
+        const experiences = data.experience.filter((e) => e.title || e.company);
+        if (experiences.length) {
+            heading('Work Experience');
+            experiences.forEach((e) => {
+                lines((e.title || 'Position') + (e.company ? ' — ' + e.company : ''), 11, 'bold', 14);
+                const dates = [e.start, e.end].filter(Boolean).join(' — ');
+                if (dates) lines(dates, 10, 'normal', 12);
+                if (e.desc) {
+                    e.desc.split(/\r?\n/).forEach((row) => {
+                        const t = row.trim();
+                        if (t) lines(t.startsWith('•') ? t : '• ' + t, 10, 'normal', 13);
+                    });
+                }
+                y += 6;
+            });
+        }
+
+        const education = data.education.filter((e) => e.degree || e.school);
+        if (education.length) {
+            heading('Education');
+            education.forEach((e) => {
+                lines((e.degree || '') + (e.school ? ' — ' + e.school : ''), 11, 'bold', 14);
+                const dates = [e.start, e.end].filter(Boolean).join(' — ');
+                if (dates) lines(dates, 10, 'normal', 12);
+                if (e.desc) lines(e.desc, 10);
+                y += 6;
+            });
+        }
+
+        if (data.skills) {
+            heading('Skills');
+            lines(data.skills, 10);
+        }
+
+        doc.save(getExportBaseName() + '-ats.pdf');
+    }
+
     /* ====== EVENT WIRING ====== */
     function init() {
         // Step navigation buttons
@@ -403,9 +524,15 @@
             }
         });
 
-        // Download buttons
-        $('#btnDownload').addEventListener('click', downloadPDF);
-        $('#btnDownload2').addEventListener('click', downloadPDF);
+        // Export buttons
+        ['btnDownloadATS', 'btnDownloadATS2'].forEach((id) => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('click', downloadATSPDF);
+        });
+        ['btnDownloadPrint', 'btnDownloadPrint2'].forEach((id) => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('click', downloadPrintPDF);
+        });
 
         // Template & color changes re-render preview
         $('#templateSelect').addEventListener('change', renderPreview);

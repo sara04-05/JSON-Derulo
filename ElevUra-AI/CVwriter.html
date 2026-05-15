@@ -225,21 +225,28 @@
                                     <option value="#1a1a2e">Midnight</option>
                                 </select>
                             </div>
-                            <button type="button" class="btn btn-primary download-btn" id="btnDownload">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                                Download PDF
-                            </button>
+                            <div class="download-actions">
+                                <button type="button" class="btn btn-primary download-btn" id="btnDownloadATS" title="Selectable text PDF for ATS systems">
+                                    Download ATS PDF
+                                </button>
+                                <button type="button" class="btn btn-ghost download-btn btn-export-print" id="btnDownloadPrint" title="Opens print dialog — Save as PDF with full styling">
+                                    Save as PDF (Print)
+                                </button>
+                            </div>
                         </div>
+                        <p class="export-hint">
+                            <strong>ATS PDF:</strong> For resume scoring and ATS optimization<br>
+                            <strong>Print PDF:</strong> For job applications with clean formatting
+                        </p>
                         <div class="resume-preview-container" id="resumePreviewContainer">
                             <div class="resume-page" id="resumePage">
                                 <!-- Filled by JS -->
                             </div>
                         </div>
-                        <div class="btn-row" style="margin-top:18px;">
+                        <div class="btn-row btn-row-downloads" style="margin-top:18px;">
                             <button type="button" class="btn btn-ghost" id="btnBack4">← Back to Edit</button>
-                            <button type="button" class="btn btn-primary" id="btnDownload2">
-                                Download PDF
-                            </button>
+                            <button type="button" class="btn btn-primary" id="btnDownloadATS2">Download ATS PDF</button>
+                            <button type="button" class="btn btn-ghost btn-export-print" id="btnDownloadPrint2">Save as PDF (Print)</button>
                         </div>
                     </section>
 
