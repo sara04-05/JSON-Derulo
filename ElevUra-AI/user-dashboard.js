@@ -1,26 +1,7 @@
 /**
- * ElevUra — user dashboard view + mock data
+ * ElevUra — user dashboard view (data from PHP / MySQL)
  */
 (function () {
-  const MOCK_CVS = [
-    { title: 'Software Engineer — ATS Optimized', score: 92, edited: 'May 12, 2026' },
-    { title: 'Product Designer Portfolio CV', score: 87, edited: 'May 3, 2026' },
-    { title: 'Graduate Data Analyst', score: 78, edited: 'Apr 28, 2026' },
-  ];
-
-  const MOCK_JOBS = [
-    { company: 'NovaTech', role: 'Junior Developer', date: 'May 10, 2026', status: 'Interviewing' },
-    { company: 'Helix Health', role: 'Data Analyst Intern', date: 'May 2, 2026', status: 'Applied' },
-    { company: 'Orbit Labs', role: 'UX Research Associate', date: 'Apr 18, 2026', status: 'Rejected' },
-    { company: 'Pulse AI', role: 'ML Engineer Trainee', date: 'Apr 5, 2026', status: 'Accepted' },
-  ];
-
-  const MOCK_COURSES = [
-    { name: 'Advanced SQL for Analysts', progress: 100, status: 'Completed', badge: 'Mastered' },
-    { name: 'System Design Fundamentals', progress: 72, status: 'In Progress', badge: 'On Track' },
-    { name: 'Behavioral Interview Mastery', progress: 45, status: 'In Progress', badge: 'Building' },
-  ];
-
   const STATUS_CLASS = {
     Applied: 'job-status--cyan',
     Interviewing: 'job-status--purple',
@@ -34,62 +15,124 @@
     return 'ats-score--fair';
   }
 
-  function renderCVs(container) {
+  function emptyCard(message) {
+    return `<article class="ud-card ud-empty-card"><p class="ud-card-meta">${message}</p></article>`;
+  }
+
+  function renderCVs(container, items) {
     if (!container) return;
-    container.innerHTML = MOCK_CVS.map(
-      (cv) => `
+    if (!items?.length) {
+      container.innerHTML = emptyCard('No CVs yet. Use CV Optimizer to upload your first document.');
+      return;
+    }
+    container.innerHTML = items
+      .map(
+        (cv) => `
       <article class="ud-card ud-cv-card">
         <div class="ud-cv-card__top">
-          <h4 class="ud-card-title">${cv.title}</h4>
+          <h4 class="ud-card-title">${escapeHtml(cv.title)}</h4>
           <div class="ats-score ${scoreClass(cv.score)}" data-score="${cv.score}">
             <span class="ats-score__value">${cv.score}</span>
             <span class="ats-score__label">ATS</span>
           </div>
         </div>
-        <p class="ud-card-meta">Last edited · ${cv.edited}</p>
+        <p class="ud-card-meta">Last edited · ${escapeHtml(cv.edited)}</p>
         <div class="ud-card-actions">
           <button type="button" class="ud-btn ud-btn--ghost">Edit</button>
           <button type="button" class="ud-btn ud-btn--primary">Download</button>
         </div>
       </article>`
-    ).join('');
+      )
+      .join('');
   }
 
-  function renderJobs(container) {
+  function renderJobs(container, items) {
     if (!container) return;
-    container.innerHTML = MOCK_JOBS.map(
-      (job) => `
+    if (!items?.length) {
+      container.innerHTML = emptyCard('No applications tracked yet.');
+      return;
+    }
+    container.innerHTML = items
+      .map(
+        (job) => `
       <article class="ud-card ud-job-card">
         <div class="ud-job-card__head">
           <div>
-            <h4 class="ud-card-title">${job.role}</h4>
-            <p class="ud-card-meta">${job.company}</p>
+            <h4 class="ud-card-title">${escapeHtml(job.role)}</h4>
+            <p class="ud-card-meta">${escapeHtml(job.company)}</p>
           </div>
-          <span class="job-status ${STATUS_CLASS[job.status] || ''}">${job.status}</span>
+          <span class="job-status ${STATUS_CLASS[job.status] || ''}">${escapeHtml(job.status)}</span>
         </div>
-        <p class="ud-card-meta">Applied · ${job.date}</p>
+        <p class="ud-card-meta">Applied · ${escapeHtml(job.date)}</p>
       </article>`
-    ).join('');
+      )
+      .join('');
   }
 
-  function renderCourses(container) {
+  function renderCourses(container, items) {
     if (!container) return;
-    container.innerHTML = MOCK_COURSES.map(
-      (c) => `
+    if (!items?.length) {
+      container.innerHTML = emptyCard('No courses in progress. Start learning with Study Buddy.');
+      return;
+    }
+    container.innerHTML = items
+      .map(
+        (c) => `
       <article class="ud-card ud-course-card">
         <div class="ud-course-card__head">
-          <h4 class="ud-card-title">${c.name}</h4>
-          <span class="ud-achievement-badge">${c.badge}</span>
+          <h4 class="ud-card-title">${escapeHtml(c.name)}</h4>
+          <span class="ud-achievement-badge">${escapeHtml(c.badge)}</span>
         </div>
         <div class="ud-progress">
           <div class="ud-progress__bar" style="--progress: ${c.progress}%"></div>
         </div>
         <div class="ud-course-card__foot">
-          <span class="ud-card-meta">${c.status}</span>
+          <span class="ud-card-meta">${escapeHtml(c.status)}</span>
           <span class="ud-progress__pct">${c.progress}%</span>
         </div>
       </article>`
-    ).join('');
+      )
+      .join('');
+  }
+
+  function renderAnalytics(analytics, interviews) {
+    const overall = document.querySelector('#ud-section-interviews .ud-stat-value');
+    const commBar = document.querySelector('#ud-section-interviews .ud-stat-card:nth-child(2) .ud-progress__bar');
+    const confBar = document.querySelector('#ud-section-interviews .ud-stat-card:nth-child(3) .ud-progress__bar');
+    const feedback = document.querySelector('#ud-section-interviews .ud-feedback-text');
+    const sparkline = document.querySelector('#ud-section-interviews .ud-sparkline');
+
+    if (!analytics) return;
+
+    if (overall) {
+      overall.innerHTML = `${analytics.overall_score || 0} <span class="ud-stat-delta ud-stat-delta--up">latest</span>`;
+    }
+    if (commBar) commBar.style.setProperty('--progress', `${analytics.communication_score || 0}%`);
+    if (confBar) confBar.style.setProperty('--progress', `${analytics.confidence_score || 0}%`);
+    if (feedback) feedback.textContent = analytics.ai_feedback || 'Complete a mock interview to receive AI feedback.';
+
+    if (sparkline && interviews?.length) {
+      const trend = interviews.slice(0, 7).reverse();
+      const max = Math.max(...trend.map((i) => i.interview_score), 1);
+      sparkline.innerHTML = trend
+        .map((i) => `<span style="--h:${Math.round((i.interview_score / max) * 100)}%"></span>`)
+        .join('');
+    }
+  }
+
+  function escapeHtml(str) {
+    const d = document.createElement('div');
+    d.textContent = str ?? '';
+    return d.innerHTML;
+  }
+
+  function refreshFromAuth() {
+    const data = window.ElevUraAuth?.getDashboardData();
+    if (!data) return;
+    renderCVs(document.getElementById('ud-cvs-grid'), data.cvs);
+    renderJobs(document.getElementById('ud-jobs-grid'), data.applied_jobs);
+    renderCourses(document.getElementById('ud-courses-grid'), data.courses);
+    renderAnalytics(data.analytics, data.mock_interviews);
   }
 
   function showCommandCenter() {
@@ -106,6 +149,7 @@
       window.ElevUraAuthUI?.openAuth('login');
       return;
     }
+    refreshFromAuth();
     const cc = document.getElementById('view-command-center');
     const ud = document.getElementById('view-user-dashboard');
     if (cc) cc.hidden = true;
@@ -122,7 +166,7 @@
     }
 
     document.querySelectorAll('.ud-nav-btn').forEach((btn) => {
-      btn.classList.toggle('is-active', btn.getAttribute('data-ud-nav') === section);
+      btn.classList.toggle('is-active', btn.getAttribute('data-ud-nav') === (section || 'overview'));
     });
   }
 
@@ -151,13 +195,13 @@
   }
 
   function init() {
-    renderCVs(document.getElementById('ud-cvs-grid'));
-    renderJobs(document.getElementById('ud-jobs-grid'));
-    renderCourses(document.getElementById('ud-courses-grid'));
     initNav();
+    window.addEventListener('elevura:auth-change', refreshFromAuth);
+    if (window.ElevUraAuth?.isLoggedIn()) refreshFromAuth();
   }
 
   window.ElevUraViews = { showCommandCenter, showUserDashboard };
+  window.ElevUraDashboardData = { refresh: refreshFromAuth };
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);

@@ -1,92 +1,149 @@
 /**
- * ElevUra — frontend-only auth state (localStorage)
+ * ElevUra — auth state (PHP sessions + MySQL backend)
  */
 (function (global) {
-  const STORAGE_KEY = 'elevura_auth_user';
+  const API_BASE = 'backend/';
+  let currentUser = null;
+  let dashboardCache = null;
 
-  const DEFAULT_AVATARS = [
-    'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=128&h=128&fit=crop&crop=faces',
-    'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=128&h=128&fit=crop&crop=faces',
-    'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=128&h=128&fit=crop&crop=faces',
-  ];
-
-  function pickAvatar(seed) {
-    const n = Math.abs(
-      String(seed || '')
-        .split('')
-        .reduce((a, c) => a + c.charCodeAt(0), 0)
-    );
-    return DEFAULT_AVATARS[n % DEFAULT_AVATARS.length];
+  async function apiRequest(endpoint, options = {}) {
+    const url = API_BASE + endpoint;
+    const res = await fetch(url, {
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      ...options,
+    });
+    let data = {};
+    try {
+      data = await res.json();
+    } catch {
+      throw new Error('Invalid server response.');
+    }
+    if (!res.ok || data.success === false) {
+      throw new Error(data.message || 'Request failed.');
+    }
+    return data;
   }
 
   function normalizeUser(raw) {
-    if (!raw || !raw.loggedIn) return null;
+    if (!raw) return null;
     return {
+      id: raw.id,
       username: raw.username || 'User',
       email: raw.email || '',
-      tier: raw.tier || 'Pro',
-      avatar: raw.avatar || pickAvatar(raw.username),
+      tier: raw.tier || raw.membership_tier || 'Free',
+      avatar: raw.avatar || '',
       loggedIn: true,
     };
   }
 
-  function getUser() {
-    try {
-      const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
-      return normalizeUser(data);
-    } catch {
-      return null;
-    }
+  function dispatchChange() {
+    global.dispatchEvent(
+      new CustomEvent('elevura:auth-change', {
+        detail: { user: currentUser, dashboard: dashboardCache },
+      })
+    );
   }
 
   function setUser(user) {
-    const payload = normalizeUser({ ...user, loggedIn: true });
-    if (!payload) return null;
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
-    global.dispatchEvent(new CustomEvent('elevura:auth-change', { detail: { user: payload } }));
-    return payload;
+    currentUser = normalizeUser(user);
+    dispatchChange();
+    return currentUser;
   }
 
-  function logout() {
-    localStorage.removeItem(STORAGE_KEY);
-    global.dispatchEvent(new CustomEvent('elevura:auth-change', { detail: { user: null } }));
+  function clearUser() {
+    currentUser = null;
+    dashboardCache = null;
+    dispatchChange();
+  }
+
+  function getUser() {
+    return currentUser;
   }
 
   function isLoggedIn() {
-    return !!getUser();
+    return !!currentUser;
   }
 
-  function userFromLogin(email) {
-    const local = (email || '').split('@')[0] || 'User';
-    const username = local.charAt(0).toUpperCase() + local.slice(1);
-    return {
-      username,
-      email: email || '',
-      tier: 'Pro',
-      avatar: pickAvatar(email),
-      loggedIn: true,
-    };
+  function getDashboardData() {
+    return dashboardCache;
   }
 
-  function userFromSignup(name, email) {
-    const username = (name || 'User').trim().split(/\s+/)[0] || 'User';
-    return {
-      username,
-      email: email || '',
-      tier: 'Pro',
-      avatar: pickAvatar(name || email),
-      loggedIn: true,
-    };
+  async function refreshSession() {
+    try {
+      const data = await apiRequest('get_user_data.php', { method: 'GET' });
+      if (data.logged_in && data.user) {
+        currentUser = normalizeUser(data.user);
+        dashboardCache = {
+          cvs: data.cvs || [],
+          applied_jobs: data.applied_jobs || [],
+          courses: data.courses || [],
+          mock_interviews: data.mock_interviews || [],
+          analytics: data.analytics || {},
+        };
+      } else {
+        currentUser = null;
+        dashboardCache = null;
+      }
+      dispatchChange();
+      return { user: currentUser, dashboard: dashboardCache };
+    } catch {
+      currentUser = null;
+      dashboardCache = null;
+      dispatchChange();
+      return { user: null, dashboard: null };
+    }
+  }
+
+  async function login(identifier, password) {
+    const data = await apiRequest('login.php', {
+      method: 'POST',
+      body: JSON.stringify({ identifier, password }),
+    });
+    setUser(data.user);
+    await refreshSession();
+    return currentUser;
+  }
+
+  async function signup(username, email, password, confirmPassword) {
+    const data = await apiRequest('signup.php', {
+      method: 'POST',
+      body: JSON.stringify({
+        username,
+        email,
+        password,
+        confirm_password: confirmPassword,
+      }),
+    });
+    setUser(data.user);
+    await refreshSession();
+    return currentUser;
+  }
+
+  async function logout() {
+    try {
+      await apiRequest('logout.php', { method: 'POST', body: '{}' });
+    } catch {
+      /* session may already be gone */
+    }
+    clearUser();
   }
 
   global.ElevUraAuth = {
-    STORAGE_KEY,
+    API_BASE,
     getUser,
     setUser,
     logout,
     isLoggedIn,
-    userFromLogin,
-    userFromSignup,
-    pickAvatar,
+    refreshSession,
+    login,
+    signup,
+    getDashboardData,
   };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => refreshSession());
+  } else {
+    refreshSession();
+  }
 })(window);

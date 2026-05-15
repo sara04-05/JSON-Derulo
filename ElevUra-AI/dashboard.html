@@ -570,6 +570,8 @@
         </div>
     </section>
 
+            </section>
+
             <section class="content-area ud-content" id="view-user-dashboard" hidden>
                 <div class="ud-hero-panel">
                     <div class="hero-badge">&gt; USER DASHBOARD ONLINE</div>
@@ -648,18 +650,21 @@
                 <section class="ud-section" id="ud-section-settings">
                     <div class="ud-section-head">
                         <h2 class="section-title">Account <span>Settings</span></h2>
-                        <p class="ud-section-desc">Profile preferences (demo — no backend).</p>
+                        <p class="ud-section-desc">Your ElevUra profile synced from the database.</p>
                     </div>
                     <article class="ud-card ud-settings-card">
                         <div class="field">
-                            <label>Display name</label>
-                            <input type="text" id="settings-username" placeholder="Your name" autocomplete="name">
+                            <label>Username</label>
+                            <input type="text" id="settings-username" readonly autocomplete="username">
+                        </div>
+                        <div class="field">
+                            <label>Email</label>
+                            <input type="email" id="settings-email" readonly autocomplete="email">
                         </div>
                         <div class="field">
                             <label>Membership tier</label>
-                            <input type="text" id="settings-tier" readonly value="Pro">
+                            <input type="text" id="settings-tier" readonly>
                         </div>
-                        <button type="button" class="ud-btn ud-btn--primary" id="settings-save-demo">Save preferences (demo)</button>
                     </article>
                 </section>
             </section>
@@ -692,13 +697,13 @@
                 <div class="auth-modal__panel is-active" role="tabpanel" id="auth-panel-login" aria-labelledby="auth-tab-login">
                     <form id="auth-form-login" novalidate>
                         <div class="auth-field">
-                            <div class="auth-field-float" id="auth-wrap-login-email">
-                                <input type="email" id="auth-login-email" name="email" placeholder=" " autocomplete="email" required aria-describedby="auth-login-email-msg">
-                                <label for="auth-login-email">Email</label>
+                            <div class="auth-field-float" id="auth-wrap-login-identifier">
+                                <input type="text" id="auth-login-identifier" name="identifier" placeholder=" " autocomplete="username" required aria-describedby="auth-login-identifier-msg">
+                                <label for="auth-login-identifier">Email or username</label>
                                 <span class="auth-input-icon" aria-hidden="true">
                                     <svg viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
                                 </span>
-                                <p class="auth-field-msg" id="auth-login-email-msg" role="status"></p>
+                                <p class="auth-field-msg" id="auth-login-identifier-msg" role="status"></p>
                             </div>
                         </div>
                         <div class="auth-field">
@@ -732,13 +737,13 @@
                 <div class="auth-modal__panel" role="tabpanel" id="auth-panel-signup" aria-labelledby="auth-tab-signup">
                     <form id="auth-form-signup" novalidate>
                         <div class="auth-field">
-                            <div class="auth-field-float" id="auth-wrap-signup-name">
-                                <input type="text" id="auth-signup-name" name="fullname" placeholder=" " autocomplete="name" required minlength="2" aria-describedby="auth-signup-name-msg">
-                                <label for="auth-signup-name">Full name</label>
+                            <div class="auth-field-float" id="auth-wrap-signup-username">
+                                <input type="text" id="auth-signup-username" name="username" placeholder=" " autocomplete="username" required minlength="2" maxlength="50" pattern="[a-zA-Z0-9_]{2,50}" aria-describedby="auth-signup-username-msg">
+                                <label for="auth-signup-username">Username</label>
                                 <span class="auth-input-icon" aria-hidden="true">
                                     <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                                 </span>
-                                <p class="auth-field-msg" id="auth-signup-name-msg" role="status"></p>
+                                <p class="auth-field-msg" id="auth-signup-username-msg" role="status"></p>
                             </div>
                         </div>
                         <div class="auth-field">

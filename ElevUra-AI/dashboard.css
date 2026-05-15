@@ -4007,3 +4007,14 @@ body {
                 font-size: 11px;
             }
         }
+
+        .ud-empty-card {
+            text-align: center;
+            padding: 28px 20px;
+            border-style: dashed;
+            opacity: 0.85;
+        }
+
+        .auth-modal__flash--error {
+            color: #ff6b8a;
+        }

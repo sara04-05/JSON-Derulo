@@ -1,5 +1,5 @@
 /**
- * ElevUra — auth modal, header profile, dropdown, UI sync
+ * ElevUra — auth modal, header profile, dropdown, UI sync (PHP backend)
  */
 (function () {
   const AUTH_EVENT = 'elevura:auth-change';
@@ -57,13 +57,13 @@
     const menu = $('#profile-dropdown');
     if (!trigger || !menu) return;
 
-    const open = () => {
-      menu.classList.add('is-open');
-      trigger.setAttribute('aria-expanded', 'true');
-    };
     const close = () => {
       menu.classList.remove('is-open');
       trigger.setAttribute('aria-expanded', 'false');
+    };
+    const open = () => {
+      menu.classList.add('is-open');
+      trigger.setAttribute('aria-expanded', 'true');
     };
 
     trigger.addEventListener('click', (e) => {
@@ -73,12 +73,12 @@
     });
 
     menu.querySelectorAll('[data-profile-action], #profile-open-dashboard').forEach((item) => {
-      item.addEventListener('click', (e) => {
+      item.addEventListener('click', async (e) => {
         e.preventDefault();
         close();
         const action = item.getAttribute('data-profile-action');
         if (action === 'logout') {
-          window.ElevUraAuth.logout();
+          await window.ElevUraAuth.logout();
           showToast('Signed out successfully.');
           window.ElevUraViews?.showCommandCenter();
           return;
@@ -105,8 +105,6 @@
     const root = document.getElementById('auth-modal-root');
     if (!root) return;
 
-    const dialog = root.querySelector('.auth-modal__dialog');
-    const closeBtn = document.getElementById('auth-modal-close');
     const tabLogin = document.getElementById('auth-tab-login');
     const tabSignup = document.getElementById('auth-tab-signup');
     const panelLogin = document.getElementById('auth-panel-login');
@@ -139,8 +137,10 @@
       }
     };
 
-    const setFlash = (text) => {
-      if (flash) flash.textContent = text || '';
+    const setFlash = (text, isError) => {
+      if (!flash) return;
+      flash.textContent = text || '';
+      flash.classList.toggle('auth-modal__flash--error', !!isError);
     };
 
     const scorePassword = (pw) => {
@@ -204,8 +204,8 @@
       panelSignup?.classList.toggle('is-active', !login);
       if (subtitle) subtitle.textContent = login ? 'Sign in to continue' : 'Create your account';
       const focusEl = login
-        ? document.getElementById('auth-login-email')
-        : document.getElementById('auth-signup-name');
+        ? document.getElementById('auth-login-identifier')
+        : document.getElementById('auth-signup-username');
       if (focusEl) setTimeout(() => focusEl.focus(), 50);
     };
 
@@ -253,7 +253,7 @@
       });
     });
 
-    closeBtn?.addEventListener('click', () => closeAuth());
+    document.getElementById('auth-modal-close')?.addEventListener('click', () => closeAuth());
     root.querySelectorAll('[data-auth-close]').forEach((el) => {
       el.addEventListener('click', () => closeAuth());
     });
@@ -266,9 +266,9 @@
       }
     });
 
-    const loginEmail = document.getElementById('auth-login-email');
+    const loginId = document.getElementById('auth-login-identifier');
     const loginPass = document.getElementById('auth-login-password');
-    const signupName = document.getElementById('auth-signup-name');
+    const signupUser = document.getElementById('auth-signup-username');
     const signupEmail = document.getElementById('auth-signup-email');
     const signupPass = document.getElementById('auth-signup-password');
     const signupConfirm = document.getElementById('auth-signup-confirm');
@@ -277,73 +277,103 @@
     signupPass?.addEventListener('input', updateStrength);
 
     document.getElementById('auth-forgot')?.addEventListener('click', () => {
-      setFlash('If an account exists, a reset link was sent (demo).');
+      setFlash('Password reset is not configured yet. Contact support.', true);
     });
 
-    const submitWithAuth = (btn, buildUser, successMsg) => {
-      if (!btn || btn.classList.contains('is-loading')) return;
-      btn.classList.add('is-loading');
-      btn.disabled = true;
-      setTimeout(() => {
-        const user = window.ElevUraAuth.setUser(buildUser());
-        btn.classList.remove('is-loading');
-        btn.disabled = false;
-        syncAuthChrome();
-        closeAuth();
-        showToast(successMsg.replace('{name}', user?.username || 'there'));
-      }, 900);
+    const setLoading = (btn, loading) => {
+      if (!btn) return;
+      btn.classList.toggle('is-loading', loading);
+      btn.disabled = loading;
     };
 
-    formLogin?.addEventListener('submit', (e) => {
+    formLogin?.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const email = loginEmail?.value.trim() || '';
-      const passOk = (loginPass?.value.length || 0) >= 6;
-      if (!isValidEmail(email)) {
+      const identifier = loginId?.value.trim() || '';
+      const password = loginPass?.value || '';
+
+      if (!identifier) {
         setFieldState(
-          document.getElementById('auth-wrap-login-email'),
-          document.getElementById('auth-login-email-msg'),
-          'Enter a valid email.',
+          document.getElementById('auth-wrap-login-identifier'),
+          document.getElementById('auth-login-identifier-msg'),
+          'Enter your email or username.',
           'error'
         );
-        loginEmail?.focus();
+        loginId?.focus();
         return;
       }
-      if (!passOk) {
+      if (password.length < 6) {
         setFieldState(
           document.getElementById('auth-wrap-login-password'),
           document.getElementById('auth-login-password-msg'),
-          'Check your password.',
+          'Enter your password.',
           'error'
         );
         loginPass?.focus();
         return;
       }
-      submitWithAuth(
-        btnLogin,
-        () => window.ElevUraAuth.userFromLogin(email),
-        'Welcome back, {name}. Systems online.'
-      );
+
+      setLoading(btnLogin, true);
+      setFlash('');
+      try {
+        const user = await window.ElevUraAuth.login(identifier, password);
+        syncAuthChrome();
+        closeAuth();
+        showToast(`Welcome back, ${user?.username || 'there'}. Systems online.`);
+        window.ElevUraDashboardData?.refresh();
+      } catch (err) {
+        setFlash(err.message || 'Login failed.', true);
+      } finally {
+        setLoading(btnLogin, false);
+      }
     });
 
-    formSignup?.addEventListener('submit', (e) => {
+    formSignup?.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const name = signupName?.value.trim() || '';
+      const username = signupUser?.value.trim() || '';
       const email = signupEmail?.value.trim() || '';
       const pw = signupPass?.value || '';
       const conf = signupConfirm?.value || '';
-      if (name.length < 2 || !isValidEmail(email) || pw.length < 8 || pw !== conf) {
-        setFlash('Please complete all fields correctly.');
+
+      if (!/^[a-zA-Z0-9_]{2,50}$/.test(username)) {
+        setFieldState(
+          document.getElementById('auth-wrap-signup-username'),
+          document.getElementById('auth-signup-username-msg'),
+          'Username: 2–50 chars, letters, numbers, underscore.',
+          'error'
+        );
+        return;
+      }
+      if (!isValidEmail(email)) {
+        setFieldState(
+          document.getElementById('auth-wrap-signup-email'),
+          document.getElementById('auth-signup-email-msg'),
+          'Enter a valid email.',
+          'error'
+        );
+        return;
+      }
+      if (pw.length < 8 || pw !== conf) {
+        setFlash('Password must be 8+ characters and match confirmation.', true);
         return;
       }
       if (terms && !terms.checked) {
-        setFlash('Accept the terms to continue.');
+        setFlash('Accept the terms to continue.', true);
         return;
       }
-      submitWithAuth(
-        btnSignup,
-        () => window.ElevUraAuth.userFromSignup(name, email),
-        'Account initialized. Welcome, {name}.'
-      );
+
+      setLoading(btnSignup, true);
+      setFlash('');
+      try {
+        const user = await window.ElevUraAuth.signup(username, email, pw, conf);
+        syncAuthChrome();
+        closeAuth();
+        showToast(`Account initialized. Welcome, ${user?.username || 'there'}.`);
+        window.ElevUraDashboardData?.refresh();
+      } catch (err) {
+        setFlash(err.message || 'Sign up failed.', true);
+      } finally {
+        setLoading(btnSignup, false);
+      }
     });
   }
 
@@ -352,27 +382,20 @@
     initProfileDropdown();
     initAuthModal();
     window.addEventListener(AUTH_EVENT, syncAuthChrome);
-    const user = window.ElevUraAuth?.getUser();
+
     const settingsName = document.getElementById('settings-username');
     const settingsTier = document.getElementById('settings-tier');
-    if (user && settingsName) settingsName.value = user.username;
-    if (user && settingsTier) settingsTier.value = user.tier;
-    const settingsSave = document.getElementById('settings-save-demo');
-    settingsSave?.addEventListener('click', () => {
-      const user = window.ElevUraAuth.getUser();
-      if (!user) return;
-      const name = settingsName?.value.trim();
-      if (name) {
-        window.ElevUraAuth.setUser({ ...user, username: name.split(/\s+/)[0] });
-        syncAuthChrome();
-        showToast('Preferences saved (demo).');
-      }
-    });
-    window.addEventListener('elevura:auth-change', () => {
-      const user = window.ElevUraAuth.getUser();
+    const settingsEmail = document.getElementById('settings-email');
+
+    const fillSettings = () => {
+      const user = window.ElevUraAuth?.getUser();
       if (settingsName && user) settingsName.value = user.username;
       if (settingsTier && user) settingsTier.value = user.tier;
-    });
+      if (settingsEmail && user) settingsEmail.value = user.email;
+    };
+    fillSettings();
+
+    window.addEventListener('elevura:auth-change', fillSettings);
   }
 
   if (document.readyState === 'loading') {
