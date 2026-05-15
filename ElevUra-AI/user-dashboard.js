@@ -14,7 +14,6 @@
     jobs: 'applied-jobs',
     courses: 'courses-completed',
     interviews: 'mock-interviews',
-    settings: 'account-settings',
     overview: null,
   };
 
@@ -28,8 +27,21 @@
     return 'ats-score--fair';
   }
 
-  function emptyCard(message) {
-    return `<article class="ud-card ud-empty-card"><p class="ud-card-meta">${message}</p></article>`;
+  const EMPTY_ICONS = {
+    cvs: '<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>',
+    jobs: '<svg viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="7" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>',
+    courses: '<svg viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 0 6-2 6-3v-5"/></svg>',
+    interviews: '<svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v4a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/></svg>',
+    default: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg>',
+  };
+
+  function emptyCard(message, type = 'default') {
+    const icon = EMPTY_ICONS[type] || EMPTY_ICONS.default;
+    return `<article class="ud-card ud-empty-card">
+      <div class="ud-empty-icon" aria-hidden="true">${icon}</div>
+      <p class="ud-empty-title">Nothing here yet</p>
+      <p class="ud-card-meta">${message}</p>
+    </article>`;
   }
 
   function escapeHtml(str) {
@@ -41,7 +53,7 @@
   function renderCVs(container, items) {
     if (!container) return;
     if (!items?.length) {
-      container.innerHTML = emptyCard('No CVs yet. Use CV Optimizer to upload your first document.');
+      container.innerHTML = emptyCard('Use CV Optimizer on the Command Center to upload your first document.', 'cvs');
       return;
     }
     container.innerHTML = items
@@ -68,7 +80,7 @@
   function renderJobs(container, items) {
     if (!container) return;
     if (!items?.length) {
-      container.innerHTML = emptyCard('No applications tracked yet.');
+      container.innerHTML = emptyCard('Track applications from the Command Center to see your pipeline here.', 'jobs');
       return;
     }
     container.innerHTML = items
@@ -91,7 +103,7 @@
   function renderCourses(container, items) {
     if (!container) return;
     if (!items?.length) {
-      container.innerHTML = emptyCard('No courses in progress. Start learning with Study Buddy.');
+      container.innerHTML = emptyCard('Start learning with Study Buddy to build your course progress.', 'courses');
       return;
     }
     container.innerHTML = items
@@ -114,23 +126,62 @@
       .join('');
   }
 
-  function renderAnalytics(analytics, interviews) {
-    const section = document.getElementById('mock-interviews');
-    if (!section || !analytics) return;
-
-    const overall = section.querySelector('.ud-stat-value');
-    const commBar = section.querySelector('.ud-stat-card:nth-child(2) .ud-progress__bar');
-    const confBar = section.querySelector('.ud-stat-card:nth-child(3) .ud-progress__bar');
-    const feedback = section.querySelector('.ud-feedback-text');
-    const sparkline = section.querySelector('.ud-sparkline');
-
-    if (overall) {
-      overall.innerHTML = `${analytics.overall_score || 0} <span class="ud-stat-delta ud-stat-delta--up">latest</span>`;
+  function renderInterviews(container, items) {
+    if (!container) return;
+    if (!items?.length) {
+      container.innerHTML = emptyCard('Complete a mock interview on the Command Center to see sessions here.', 'interviews');
+      return;
     }
-    if (commBar) commBar.style.setProperty('--progress', `${analytics.communication_score || 0}%`);
-    if (confBar) confBar.style.setProperty('--progress', `${analytics.confidence_score || 0}%`);
+    container.innerHTML = items
+      .map(
+        (i) => `
+      <article class="ud-card ud-interview-card">
+        <div class="ud-interview-card__head">
+          <h4 class="ud-card-title">Session · ${escapeHtml(i.date)}</h4>
+          <span class="ud-interview-score">${i.interview_score}</span>
+        </div>
+        <div class="ud-interview-metrics">
+          <span class="ud-card-meta">Communication ${i.communication_score}%</span>
+          <span class="ud-card-meta">Confidence ${i.confidence_score}%</span>
+        </div>
+        <p class="ud-card-meta ud-interview-feedback">${escapeHtml((i.ai_feedback || '').slice(0, 120))}${(i.ai_feedback || '').length > 120 ? '…' : ''}</p>
+      </article>`
+      )
+      .join('');
+  }
+
+  function updateQuickStats(data) {
+    const cvs = document.getElementById('ud-stat-cvs');
+    const jobs = document.getElementById('ud-stat-jobs');
+    const courses = document.getElementById('ud-stat-courses');
+    const score = document.getElementById('ud-stat-score');
+    if (cvs) cvs.textContent = String(data.cvs?.length ?? 0);
+    if (jobs) jobs.textContent = String(data.applied_jobs?.length ?? 0);
+    if (courses) courses.textContent = String(data.courses?.length ?? 0);
+    if (score) score.textContent = String(data.analytics?.overall_score ?? 0);
+  }
+
+  function renderAnalytics(analytics, interviews) {
+    const overallEl = document.getElementById('ud-overall-score');
+    const commBar = document.getElementById('ud-comm-bar');
+    const confBar = document.getElementById('ud-conf-bar');
+    const commScore = document.getElementById('ud-comm-score');
+    const confScore = document.getElementById('ud-conf-score');
+    const feedback = document.getElementById('ud-feedback-text');
+    const sparkline = document.getElementById('ud-sparkline');
+
+    const overall = analytics?.overall_score ?? 0;
+    const comm = analytics?.communication_score ?? 0;
+    const conf = analytics?.confidence_score ?? 0;
+
+    if (overallEl) overallEl.textContent = String(overall);
+    if (commBar) commBar.style.setProperty('--progress', `${comm}%`);
+    if (confBar) confBar.style.setProperty('--progress', `${conf}%`);
+    if (commScore) commScore.textContent = `${comm}%`;
+    if (confScore) confScore.textContent = `${conf}%`;
     if (feedback) {
-      feedback.textContent = analytics.ai_feedback || 'Complete a mock interview to receive AI feedback.';
+      feedback.textContent =
+        analytics?.ai_feedback || 'Complete a mock interview on the Command Center to receive AI feedback.';
     }
 
     if (sparkline && interviews?.length) {
@@ -145,10 +196,12 @@
   function refreshFromAuth() {
     const data = window.ElevUraAuth?.getDashboardData();
     if (!data) return;
+    updateQuickStats(data);
     renderCVs(document.getElementById('ud-cvs-grid'), data.cvs);
     renderJobs(document.getElementById('ud-jobs-grid'), data.applied_jobs);
     renderCourses(document.getElementById('ud-courses-grid'), data.courses);
     renderAnalytics(data.analytics, data.mock_interviews);
+    renderInterviews(document.getElementById('ud-interviews-grid'), data.mock_interviews);
   }
 
   function scrollToSection(navKey) {

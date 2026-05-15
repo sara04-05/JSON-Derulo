@@ -203,4 +203,6 @@ $initialPayload = [
     'dashboard' => $loggedIn ? $dashboardData : null,
 ];
 
-$pageTitle = 'ElevUra Dashboard - AI Command Center';
+if (!isset($pageTitle)) {
+    $pageTitle = 'ElevUra Dashboard - AI Command Center';
+}

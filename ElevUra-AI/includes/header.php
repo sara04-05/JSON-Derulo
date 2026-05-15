@@ -7,9 +7,9 @@
                     </div>
                 </div>
 
+                <div class="header-right">
                     <div class="user-profile-wrap" id="header-auth-user"<?= $loggedIn ? '' : ' hidden' ?>>
                         <button type="button" class="user-info user-info--trigger" id="profile-trigger" aria-expanded="false" aria-haspopup="true" aria-controls="profile-dropdown">
-                            
                             <div class="user-meta">
                                 <div class="user-name" id="profile-username"><?= e($currentUser['username'] ?? 'User') ?></div>
                                 <div class="user-tier" id="profile-tier"><?= e(($currentUser['tier'] ?? 'Free') . ' Tier') ?></div>
@@ -38,10 +38,6 @@
                             <a href="user_dashboard.php#mock-interviews" class="profile-dropdown__item" role="menuitem">
                                 <span class="profile-dropdown__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v4a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/><line x1="12" x2="12" y1="19" y2="22"/></svg></span>
                                 Mock Interviews
-                            </a>
-                            <a href="user_dashboard.php#account-settings" class="profile-dropdown__item" role="menuitem">
-                                <span class="profile-dropdown__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></span>
-                                Account Settings
                             </a>
                             <div class="profile-dropdown__divider" role="separator"></div>
                             <button type="button" class="profile-dropdown__item profile-dropdown__item--danger" data-profile-action="logout" role="menuitem">
