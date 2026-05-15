@@ -29,7 +29,7 @@ document.getElementById('fileInput').addEventListener('change', (e) => {
 
 function handleFileSelection(file) {
     const validTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'text/plain'];
-    
+
     if (!validTypes.includes(file.type)) {
         alert('Please upload a valid resume file (PDF, DOC, DOCX, or TXT)');
         return;
@@ -58,7 +58,7 @@ async function analyzeResume() {
 
     const uploadSection = document.querySelector('.upload-section');
     const resultsSection = document.getElementById('resultsSection');
-    
+
     uploadSection.style.display = 'none';
     resultsSection.classList.add('show');
     resultsSection.innerHTML = `
@@ -74,10 +74,10 @@ async function analyzeResume() {
     try {
         const resumeText = await readFileAsText(selectedFile);
         const analysisResult = performAIAnalysis(resumeText);
-        
+
         setTimeout(() => {
             displayResults(analysisResult);
-        }, 2000);
+        }, 1500);
     } catch (error) {
         console.error('Error reading file:', error);
         resultsSection.innerHTML = `
@@ -98,178 +98,117 @@ function readFileAsText(file) {
     });
 }
 
-/**
- * Heuristic scan-ability: bullets, multiple lines, and line length (not section titles).
- */
-function scorePresentationAndScanability(rawText) {
-    const text = (rawText || '').trim();
-    if (!text) return 0;
-
-    const lines = text.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
-    const lineCount = lines.length;
-    const bulletLineRe = /^\s*([•▪▸·◦]|\d{1,2}[.)]|[\-*])\s+/;
-    const bulletMatches = lines.filter((l) => bulletLineRe.test(l) || /^[\t ]{0,3}[-–—][\t ]+\S/.test(l)).length;
-    const bulletRatio = lineCount ? bulletMatches / lineCount : 0;
-
-    let lineScore = 12;
-    if (lineCount >= 14) lineScore = 35;
-    else if (lineCount >= 10) lineScore = 32;
-    else if (lineCount >= 7) lineScore = 26;
-    else if (lineCount >= 5) lineScore = 20;
-    else if (lineCount >= 3) lineScore = 14;
-
-    let bulletScore = 8;
-    if (bulletRatio >= 0.38) bulletScore = 35;
-    else if (bulletRatio >= 0.22) bulletScore = 30;
-    else if (bulletRatio >= 0.1) bulletScore = 22;
-    else if (bulletMatches >= 2) bulletScore = 16;
-
-    const avgWords =
-        lineCount > 0
-            ? lines.reduce((sum, l) => sum + l.split(/\s+/).filter(Boolean).length, 0) / lineCount
-            : 0;
-    let densityScore = 12;
-    if (avgWords >= 7 && avgWords <= 22) densityScore = 30;
-    else if (avgWords > 22 && avgWords <= 34) densityScore = 20;
-    else if (avgWords > 34) densityScore = 6;
-    else if (avgWords >= 4) densityScore = 22;
-
-    return Math.min(100, Math.round(lineScore + bulletScore + densityScore));
-}
-
-/** Section hints for feedback only (not a scored category). */
-function resumeSectionHints(rawText) {
-    const text = rawText || '';
-
-    const hasEmail = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/.test(text);
-    const hasPhone =
-        /(\+\d{1,3}[-.\s])?(\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}|\d{3}[-.\s]\d{3}[-.\s]\d{4})/.test(text);
-    const hasLinkedIn = /linkedin\.com\/in\//i.test(text);
-    const hasContact = hasEmail || hasPhone || hasLinkedIn;
-
-    const hasSummary =
-        /\b(professional\s+summary|executive\s+summary|resume\s+summary|summary\s+of\s+qualifications|career\s+objective|about\s+me|key\s+qualifications|highlights)\b/i.test(
-            text
-        ) ||
-        /(?:^|[\r\n])\s*(summary|objective)\s*[:\-–]\s+/im.test(text) ||
-        /(?:^|[\r\n])\s{0,4}(summary|objective)\s*$/im.test(text);
-
-    const hasExpSection =
-        /\b(work\s+experience|professional\s+experience|employment(\s+history)?|relevant\s+experience|career(\s+history)?|positions?\s+held)\b/i.test(text) ||
-        /(?:^|[\r\n])\s*experience\s*[:\-–]\s+/im.test(text);
-    const hasExperienceWord = /\bexperience\b/i.test(text) && /\b(19|20)\d{2}\b/.test(text);
-    const hasAltWork =
-        /\b(internship|internships|project(\s+experience)?|research(\s+experience)?|volunteer(\s+work)?)\b/i.test(text);
-    const yearMatches = text.match(/\b(19|20)\d{2}\b/g) || [];
-    const hasJobTimeline =
-        new Set(yearMatches).size >= 2 &&
-        /\b(engineer|developer|manager|analyst|consultant|lead|director|specialist|coordinator|assistant|designer|architect|scientist|associate|intern|supervisor|representative)\b/i.test(
-            text
-        );
-
-    let experiencePts = 0;
-    if (hasExpSection) experiencePts = 36;
-    else if (hasExperienceWord) experiencePts = 28;
-    else if (hasAltWork && hasJobTimeline) experiencePts = 26;
-    else if (hasJobTimeline) experiencePts = 18;
-    else if (hasAltWork) experiencePts = 12;
-    const hasExperience = experiencePts >= 18;
-
-    const hasEduSection = /\b(education|academic(\s+background)?|qualifications?)\b/i.test(text);
-    const hasEduContent =
-        /\b(university|college|institute|bachelor|master|mba|ph\.?\s*d\.?|associate|diploma|certification|coursework)\b/i.test(text);
-    const hasEducation = hasEduSection || hasEduContent;
-
-    const hasSkills = /\b(skills?|technical\s+skills|core\s+competencies|technology\s+stack|proficiencies)\b/i.test(text);
-
-    return { hasSummary, hasExperience, hasEducation, hasSkills, hasContact };
-}
-
 function performAIAnalysis(text) {
     const feedback = [];
+    const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+    const wordCount = text.split(/\s+/).filter(Boolean).length;
 
-    const presentationScore = scorePresentationAndScanability(text);
-    const { hasSummary, hasExperience, hasEducation, hasSkills, hasContact } = resumeSectionHints(text);
+    // Normalize text to handle weird PDF spacing 
+    const normalizedText = text.replace(/\s+/g, ' ');
+    // Squish text entirely to catch headers parsed as "W O R K  E X P E R I E N C E" or "S K I L L S"
+    const squishedText = text.replace(/\s+/g, '').toLowerCase();
 
-    if (presentationScore < 45) {
-        feedback.push({
-            type: 'improvement',
-            title: 'Improve Scan-ability',
-            text: 'Break up dense paragraphs, add clear line breaks, and use bullet points so recruiters can skim your accomplishments quickly.'
-        });
-    } else if (presentationScore >= 78) {
-        feedback.push({
-            type: 'strength',
-            title: 'Easy to Skim',
-            text: 'Your text is split into readable lines with bullets or short blocks—good for a quick first pass.'
-        });
-    }
+    // 1. Structure & Sections (0-100)
+    let structureScore = 100;
 
-    if (!hasSummary) {
-        feedback.push({ type: 'improvement', title: 'Add Professional Summary', text: 'Include a brief professional summary at the top of your resume to highlight your value proposition.' });
-    }
-    if (!hasExperience) {
-        feedback.push({ type: 'warning', title: 'Experience Section Missing', text: 'Add detailed work experience with accomplishments and dates (use a clear header such as Work experience or Professional experience).' });
-    }
-    if (!hasEducation) {
-        feedback.push({ type: 'improvement', title: 'Education Section Needed', text: 'Include your educational background and certifications.' });
-    }
-    if (!hasSkills) {
-        feedback.push({ type: 'warning', title: 'Skills Section Missing', text: 'Add a dedicated skills section to highlight your technical abilities.' });
-    }
-    if (!hasContact) {
-        feedback.push({ type: 'improvement', title: 'Add Contact Details', text: 'Include at least one clear way to reach you (email, phone, or LinkedIn URL).' });
-    }
+    // Use squishedText and remove strict \b boundaries to make it bulletproof against PDF formatting quirks
+    const hasSummary = /(summary|objective|profile|aboutme)/i.test(squishedText);
+    const hasExperience = /(experience|workhistory|employment|career)/i.test(squishedText);
+    const hasEducation = /(education|academic|qualifications|degree)/i.test(squishedText);
+    const hasSkills = /(skills|technologies|tools|competencies)/i.test(squishedText);
 
-    const wordCount = text.trim() ? text.split(/\s+/).filter(Boolean).length : 0;
-    let contentScore = 50;
-    if (wordCount < 50) {
-        contentScore = 25;
-        feedback.push({ type: 'warning', title: 'Content Too Short', text: 'Expand your resume with more detailed information about your background.' });
-    } else if (wordCount < 100) {
-        contentScore = 45;
-        feedback.push({ type: 'warning', title: 'Content Too Short', text: 'Expand your resume with more detailed information about your background.' });
-    } else if (wordCount <= 550) {
-        contentScore = 92;
-    } else if (wordCount <= 900) {
-        contentScore = 88;
-    } else if (wordCount <= 1000) {
-        contentScore = 78;
-    } else {
-        contentScore = 62;
-        feedback.push({ type: 'improvement', title: 'Consider Condensing', text: 'Your resume might be too lengthy. Aim for 1-2 pages maximum.' });
+    // More forgiving contact regex for different phone and email formats
+    const hasContact = /[\w\.-]+@[\w\.-]+\.\w{2,4}/.test(normalizedText) || /\+?[\d\s.-]{8,15}/.test(normalizedText);
+
+    if (!hasSummary) { structureScore -= 15; feedback.push({ type: 'improvement', title: 'Add a Professional Summary', text: 'Include a 2-3 sentence overview highlighting your key value proposition.' }); }
+    if (!hasExperience) { structureScore -= 30; feedback.push({ type: 'warning', title: 'Missing Experience Section', text: 'Clearly label your work history section. This is critical for ATS parsing.' }); }
+    if (!hasEducation) { structureScore -= 15; feedback.push({ type: 'warning', title: 'Missing Education', text: 'Ensure your education section is clearly labeled and contains your degree(s).' }); }
+    if (!hasSkills) { structureScore -= 15; feedback.push({ type: 'improvement', title: 'Add a Dedicated Skills Section', text: 'Listing skills clearly helps ATS match you to job requirements.' }); }
+    if (!hasContact) { structureScore -= 25; feedback.push({ type: 'warning', title: 'Missing Contact Info', text: 'Make sure your email address and phone number are easy to find.' }); }
+
+    // 2. Impact & Metrics (0-100)
+    let impactScore = 40;
+    const numberMatches = (normalizedText.match(/\b\d+(\.\d+)?[%kmb]?\b/gi) || []).length;
+    const metricWords = /(increased|decreased|improved|reduced|saved|generated|revenue|budget)/gi;
+    const metricMatches = (normalizedText.match(metricWords) || []).length;
+
+    impactScore += Math.min(30, numberMatches * 3);
+    impactScore += Math.min(30, metricMatches * 5);
+
+    if (numberMatches < 3) {
+        feedback.push({ type: 'improvement', title: 'Quantify Your Impact', text: 'Use more numbers, percentages, and dollar amounts to show the scale of your achievements.' });
+    } else if (numberMatches > 8) {
+        feedback.push({ type: 'strength', title: 'Strong Use of Metrics', text: 'You effectively quantify your achievements, giving recruiters clear context on your impact.' });
     }
 
-    const actionVerbs = /led|managed|developed|designed|implemented|created|improved|increased|reduced|achieved/i;
-    const hasStrongVerbs = actionVerbs.test(text);
-    const languageScore = hasStrongVerbs ? 88 : 42;
-    if (hasStrongVerbs) {
-        feedback.push({ type: 'strength', title: 'Strong Action Verbs', text: 'Great use of powerful action verbs to describe achievements.' });
-    } else {
-        feedback.push({ type: 'improvement', title: 'Use Action Verbs', text: 'Replace passive language with action verbs like "Led", "Managed", "Developed".' });
+    // 3. Action Language (0-100)
+    let actionScore = 40;
+    const weakWords = /(helped|assisted|worked on|responsible for|duties included)/gi;
+    // Added 'built' as a strong verb which is common for SWEs
+    const strongVerbs = /(spearheaded|architected|orchestrated|delivered|engineered|transformed|optimized|pioneered|mentored|led|managed|developed|designed|implemented|created|built)/gi;
+
+    const weakMatches = (normalizedText.match(weakWords) || []).length;
+    const strongMatches = (normalizedText.match(strongVerbs) || []).length;
+
+    actionScore += Math.min(60, strongMatches * 4);
+    actionScore -= (weakMatches * 5);
+    actionScore = Math.max(0, actionScore);
+
+    if (weakMatches > 2) {
+        feedback.push({ type: 'warning', title: 'Remove Passive Language', text: 'Replace weak phrases like "responsible for" or "helped with" with strong action verbs (e.g., "Led", "Engineered").' });
+    }
+    if (strongMatches > 5) {
+        feedback.push({ type: 'strength', title: 'Powerful Action Verbs', text: 'You use strong, active language to describe your responsibilities.' });
     }
 
-    const hasMetrics = /\d+%|\$\d+|increased|reduced|saved|earned/i.test(text);
-    const impactScore = hasMetrics ? 90 : 38;
-    if (hasMetrics) {
-        feedback.push({ type: 'strength', title: 'Quantifiable Results', text: 'Excellent use of metrics and numbers to demonstrate impact.' });
-    } else {
-        feedback.push({ type: 'improvement', title: 'Add Quantifiable Metrics', text: 'Include numbers, percentages, or dollar amounts to show concrete impact.' });
+    // 4. Formatting & Length (0-100)
+    let formatScore = 100;
+
+    if (wordCount < 150) {
+        formatScore -= 30;
+        feedback.push({ type: 'warning', title: 'Resume Too Short', text: 'Your resume lacks detail. Expand on your experiences and achievements.' });
+    } else if (wordCount > 800) {
+        formatScore -= 20;
+        feedback.push({ type: 'improvement', title: 'Resume Too Long', text: 'Consider condensing your resume to highlight only the most relevant, recent experience.' });
     }
+
+    // Improved bullet point detection using standard unicode bullets (PDFs rarely parse newline hyphens well)
+    const bulletPoints = (text.match(/[•*-\u2022\u2023\u25E6\u2043]/g) || []).length;
+    if (bulletPoints < 3 && wordCount > 200) {
+        formatScore -= 20;
+        feedback.push({ type: 'improvement', title: 'Use Bullet Points', text: 'Break dense paragraphs into bullet points for better readability.' });
+    } else if (bulletPoints >= 3) {
+        feedback.push({ type: 'strength', title: 'Good Readability', text: 'Excellent use of bullet points makes your experience easy to scan.' });
+    }
+
+    // Ensure all scores are bounded
+    structureScore = Math.max(0, Math.min(100, structureScore));
+    impactScore = Math.max(0, Math.min(100, impactScore));
+    actionScore = Math.max(0, Math.min(100, actionScore));
+    formatScore = Math.max(0, Math.min(100, formatScore));
 
     const categories = [
-        { id: 'presentation', label: 'Presentation & scan-ability', score: presentationScore },
-        { id: 'content', label: 'Content depth & length', score: contentScore },
-        { id: 'language', label: 'Action-oriented language', score: languageScore },
-        { id: 'impact', label: 'Measurable impact', score: impactScore }
+        { id: 'structure', label: 'Structure & Sections', score: structureScore },
+        { id: 'impact', label: 'Quantifiable Impact', score: impactScore },
+        { id: 'language', label: 'Action-Oriented Language', score: actionScore },
+        { id: 'formatting', label: 'Length & Formatting', score: formatScore }
     ];
 
-    const rawAverage = categories.reduce((sum, c) => sum + c.score, 0) / categories.length;
+    const rawAverage = (structureScore + impactScore + actionScore + formatScore) / 4;
     let score = Math.round(rawAverage);
-    score = Math.max(0, Math.min(100, score));
 
-    if (score >= 75) {
-        feedback.unshift({ type: 'strength', title: 'Strong overall signal', text: 'Your resume reads clearly across length, wording, impact, and layout cues—keep tailoring it to each role.' });
+    if (score >= 85) {
+        feedback.unshift({ type: 'strength', title: 'Outstanding Resume', text: 'Your resume is highly optimized for both ATS and human recruiters. Excellent work.' });
+    }
+
+    // Deduplicate feedback titles
+    const uniqueFeedback = [];
+    const titles = new Set();
+    for (const f of feedback) {
+        if (!titles.has(f.title)) {
+            uniqueFeedback.push(f);
+            titles.add(f.title);
+        }
     }
 
     return {
@@ -278,9 +217,10 @@ function performAIAnalysis(text) {
         categoryAverage: Math.round(rawAverage * 10) / 10,
         tier: getTier(score),
         overallAssessment: getAssessment(score),
-        feedback
+        feedback: uniqueFeedback
     };
 }
+
 
 function getTier(score) {
     if (score >= 90) return '🌟 Excellent';
@@ -292,27 +232,25 @@ function getTier(score) {
 }
 
 function getAssessment(score) {
-    if (score >= 90) {
+    if (score >= 85) {
         return 'Your resume is exceptional! It showcases your experience effectively with strong action verbs, quantifiable results, and proper structure. You\'re well-positioned for top opportunities.';
-    } else if (score >= 80) {
-        return 'Your resume is strong and well-crafted. Consider adding more quantifiable metrics and ensuring all key sections are clearly defined to push it to excellence.';
     } else if (score >= 70) {
-        return 'Your resume has a solid foundation but could use some improvements. Focus on adding metrics, stronger action verbs, and ensuring all relevant sections are included.';
-    } else if (score >= 60) {
-        return 'Your resume has potential but needs significant improvements. Add missing sections, use more powerful language, and include specific examples of your achievements.';
+        return 'Your resume is strong and well-crafted. Review the suggestions below to refine your impact metrics and ensure ATS compatibility to push it to excellence.';
+    } else if (score >= 50) {
+        return 'Your resume has a solid foundation but could use some targeted improvements. Focus on quantifying your achievements and removing passive language.';
     } else {
-        return 'Your resume needs substantial revision. Make sure to include all key sections (summary, experience, education, skills) and expand on your accomplishments with concrete examples.';
+        return 'Your resume needs substantial revision. Focus on basic structure, expanding on your impact with numbers, and replacing weak phrasing with strong action verbs.';
     }
 }
 
 function displayResults(result) {
     const resultsSection = document.getElementById('resultsSection');
-    
+
     // Separate feedback into categories
     const suggestions = result.feedback.filter(item => item.type === 'improvement');
     const warnings = result.feedback.filter(item => item.type === 'warning');
     const strengths = result.feedback.filter(item => item.type === 'strength');
-    
+
     // Create suggestions HTML
     let suggestionsHTML = [...strengths, ...suggestions].map(item => `
         <div class="feedback-item ${item.type}">
@@ -332,7 +270,7 @@ function displayResults(result) {
         <div class="feedback-item ${item.type}">
             <div class="feedback-icon">⚠️</div>
             <div class="feedback-content">
-                <div class="feedback-label">Warning</div>
+                <div class="feedback-label">Action Required</div>
                 <div class="feedback-text"><strong>${item.title}</strong></div>
                 <div class="feedback-text">${item.text}</div>
             </div>
@@ -355,10 +293,6 @@ function displayResults(result) {
                     <div class="category-row-score">${c.score}</div>
                 </div>
             `).join('')}
-            <p class="category-average-note">
-                Overall score <strong>${result.score}</strong> is the rounded average of these categories
-                ${typeof result.categoryAverage === 'number' ? `(mean <strong>${result.categoryAverage}</strong>)` : ''}.
-            </p>
         </div>
     `
         : '';
@@ -390,13 +324,13 @@ function displayResults(result) {
 
         <div class="feedback-columns">
             <div class="rating-card">
-                <div class="feedback-title" style="margin-bottom: 24px;">💡 Suggestions & Improvements</div>
+                <div class="feedback-title" style="margin-bottom: 24px;">💡 Strengths & Suggestions</div>
                 <div>${suggestionsHTML || '<div style="color: var(--text-secondary);">No suggestions at this time.</div>'}</div>
             </div>
 
             <div class="rating-card">
                 <div class="feedback-title" style="margin-bottom: 24px;">⚠️ Areas to Address</div>
-                <div>${warningsHTML || '<div style="color: var(--text-secondary);">Great job! No critical warnings.</div>'}</div>
+                <div>${warningsHTML || '<div style="color: var(--text-secondary);">Great job! No critical areas to address.</div>'}</div>
             </div>
         </div>
     `;
