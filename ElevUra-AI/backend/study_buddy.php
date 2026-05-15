@@ -30,11 +30,17 @@ if (empty($hfKey)) {
     json_error('Hugging Face API key is missing. Please provide it in the form.');
 }
 
-// Model: confirmed "warm" on HF Inference (verified via HF Hub API)
-$model  = 'mistralai/Mistral-7B-Instruct-v0.2';
-
-// Current working endpoint — the old api-inference.huggingface.co is deprecated
-$apiUrl = 'https://router.huggingface.co/hf-inference/models/' . $model . '/v1/chat/completions';
+// Provider + model combos confirmed available via HF Hub API.
+// The HF router proxies to these providers using your HF token.
+// Format: router.huggingface.co/{provider}/models/{model}/v1/chat/completions
+$providerModels = [
+    ['provider' => 'novita',       'model' => 'meta-llama/Llama-3.1-8B-Instruct'],
+    ['provider' => 'cerebras',     'model' => 'meta-llama/Llama-3.1-8B-Instruct'],
+    ['provider' => 'together',     'model' => 'meta-llama/Llama-3.3-70B-Instruct'],
+    ['provider' => 'fireworks-ai', 'model' => 'meta-llama/Llama-3.3-70B-Instruct'],
+    ['provider' => 'novita',       'model' => 'meta-llama/Meta-Llama-3-8B-Instruct'],
+    ['provider' => 'cohere',       'model' => 'CohereLabs/c4ai-command-r7b-12-2024'],
+];
 
 // Build prompt for the requested type
 if ($type === 'flashcard') {
@@ -47,65 +53,71 @@ if ($type === 'flashcard') {
         . " Return ONLY valid JSON with no extra text: {\"type\": \"quiz\", \"job_title\": \"" . $jobTitle . "\", \"items\": [{\"question\": \"text\", \"options\": [\"A\",\"B\",\"C\",\"D\"], \"correct_index\": 0}, ...]}";
 }
 
-$payload = [
-    'model'       => $model,
-    'messages'    => [
-        ['role' => 'system', 'content' => 'You are a helpful assistant. You ONLY respond with valid JSON. No markdown, no explanations.'],
-        ['role' => 'user',   'content' => $userPrompt],
-    ],
-    'max_tokens'  => 1024,
-    'temperature' => 0.7,
-];
+// Try each provider+model combo until one succeeds
+$aiContent  = null;
+$lastError  = '';
 
-// Send request (with one retry for 503 / model loading)
-$aiContent = null;
-$maxRetries = 1;
+foreach ($providerModels as $combo) {
+    $provider = $combo['provider'];
+    $model    = $combo['model'];
 
-for ($attempt = 0; $attempt <= $maxRetries; $attempt++) {
-    $ch = curl_init($apiUrl);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
-    curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        'Content-Type: application/json',
-        'Authorization: Bearer ' . $hfKey,
-    ]);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 120);
+    $apiUrl = 'https://router.huggingface.co/' . $provider . '/models/' . $model . '/v1/chat/completions';
 
-    $response = curl_exec($ch);
-    $curlErr  = curl_error($ch);
-    $httpCode = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
+    $payload = [
+        'model'       => $model,
+        'messages'    => [
+            ['role' => 'system', 'content' => 'You are a helpful assistant. You ONLY respond with valid JSON. No markdown, no explanations.'],
+            ['role' => 'user',   'content' => $userPrompt],
+        ],
+        'max_tokens'  => 1024,
+        'temperature' => 0.7,
+    ];
 
-    if ($curlErr) {
-        json_error('AI Service Error: ' . $curlErr);
-    }
+    // Attempt with one retry for 503 (cold start)
+    for ($attempt = 0; $attempt <= 1; $attempt++) {
+        $ch = curl_init($apiUrl);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $hfKey,
+        ]);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 120);
 
-    // 503 = model is cold-starting — wait then retry once
-    if ($httpCode === 503 && $attempt < $maxRetries) {
+        $response = curl_exec($ch);
+        $curlErr  = curl_error($ch);
+        $httpCode = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($curlErr) {
+            $lastError = 'CURL: ' . $curlErr;
+            break; // try next provider
+        }
+
+        if ($httpCode === 503 && $attempt === 0) {
+            $body = json_decode($response, true);
+            $wait = (int) ($body['estimated_time'] ?? 15);
+            sleep(min($wait, 20));
+            continue;
+        }
+
+        if ($httpCode === 200) {
+            $resData   = json_decode($response, true);
+            $aiContent = $resData['choices'][0]['message']['content'] ?? null;
+            if ($aiContent) break 2; // success — exit both loops
+        }
+
+        // Non-200: log and try next provider
         $body = json_decode($response, true);
-        $wait = (int) ($body['estimated_time'] ?? 20);
-        sleep(min($wait, 30));
-        continue;
-    }
-
-    if ($httpCode !== 200) {
-        $body = json_decode($response, true);
-        $msg  = $body['error'] ?? ($body['message'] ?? 'HTTP ' . $httpCode);
-        json_error('Hugging Face API Error (' . $httpCode . '): ' . $msg);
-    }
-
-    // Parse OpenAI-compatible chat response
-    $resData = json_decode($response, true);
-    $aiContent = $resData['choices'][0]['message']['content'] ?? null;
-
-    if ($aiContent) {
-        break;
+        $lastError = ($provider . '/' . $model . ': '
+            . ($body['error'] ?? ($body['message'] ?? 'HTTP ' . $httpCode)));
+        break; // try next provider
     }
 }
 
 if (!$aiContent) {
-    json_error('AI returned empty content. Response: ' . substr($response ?? '', 0, 200));
+    json_error('All AI providers failed. Last error: ' . $lastError);
 }
 
 // ── Clean AI output ───────────────────────────────────────────────
