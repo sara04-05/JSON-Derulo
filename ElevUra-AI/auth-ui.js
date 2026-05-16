@@ -3,9 +3,35 @@
  */
 (function () {
   const AUTH_EVENT = 'elevura:auth-change';
+  let modalOpenAuth = null;
 
   function $(sel, root) {
     return (root || document).querySelector(sel);
+  }
+
+  /** Opens auth modal when guest clicks sidebar nav (capture phase, runs before other handlers). */
+  function initSidebarNav() {
+    document.addEventListener(
+      'click',
+      (e) => {
+        const link = e.target.closest('.sidebar-menu a.sidebar-item');
+        if (!link) return;
+        if (window.ElevUraAuth?.isLoggedIn()) return;
+
+        e.preventDefault();
+        e.stopImmediatePropagation();
+
+        const mode = link.getAttribute('data-auth-open') || 'login';
+        if (modalOpenAuth) {
+          modalOpenAuth(mode);
+        } else if (window.ElevUraAuthUI?.openAuth) {
+          window.ElevUraAuthUI.openAuth(mode);
+        } else {
+          window.location.href = `index.php?auth=${mode === 'signup' ? 'signup' : 'login'}`;
+        }
+      },
+      true
+    );
   }
 
   function showToast(message) {
@@ -224,6 +250,7 @@
       }, 320);
     };
 
+    modalOpenAuth = openAuth;
     window.ElevUraAuthUI = { openAuth, closeAuth };
 
     document.getElementById('auth-open-login')?.addEventListener('click', (e) => {
@@ -368,9 +395,9 @@
   function init() {
     syncAuthChrome();
     initProfileDropdown();
+    initSidebarNav();
     initAuthModal();
     window.addEventListener(AUTH_EVENT, syncAuthChrome);
-
   }
 
   if (document.readyState === 'loading') {
