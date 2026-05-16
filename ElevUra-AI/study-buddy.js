@@ -73,6 +73,7 @@
 
     setLoading(true);
     showError('');
+    showWarning('');
 
     try {
       const res = await fetch(API_ENDPOINT, {
@@ -84,6 +85,9 @@
       const result = await res.json();
       if (!result.success) throw new Error(result.message || 'Generation failed');
 
+      showWarning(result.warning || (result.source === 'fallback'
+        ? 'AI generation is temporarily unavailable. Showing offline practice content.'
+        : ''));
       renderResults(result.data);
       setupForm.classList.add('hidden');
       resultsArea.classList.remove('hidden');
@@ -156,11 +160,19 @@
     });
   }
 
+  function showWarning(msg) {
+    const el = $('#sb-warning');
+    if (!el) return;
+    el.textContent = msg || '';
+    el.classList.toggle('hidden', !msg);
+  }
+
   function resetWorkspace(hideWorkspace = true) {
     $('#sb-setup-form').classList.remove('hidden');
     $('#sb-results').classList.add('hidden');
     $('#sb-content-container').innerHTML = '';
     $('#sb-error').classList.add('hidden');
+    showWarning('');
     if (hideWorkspace) $('#study-buddy-workspace').classList.add('hidden');
   }
 

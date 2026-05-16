@@ -65,6 +65,7 @@
 
                 <!-- RESULTS AREA (Hidden by default) -->
                 <div id="sb-results" class="hidden" style="margin-top: 30px;">
+                    <p id="sb-warning" class="hint err hidden" role="status"></p>
                     <div id="sb-content-container"></div>
                     <div class="btn-row mi-btn-row" style="margin-top: 20px;">
                         <button type="button" class="btn btn-primary" id="btnResetSB">New Generation</button>
