@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 $pageSlug = 'study-buddy';
-$pageTitle = 'Study Buddy — ElevUra';
+$pageTitle = 'Career Prep — ElevUra';
 $activeNav = 'study-buddy';
 $extraStylesheets = ['css/study-buddy.css'];
 

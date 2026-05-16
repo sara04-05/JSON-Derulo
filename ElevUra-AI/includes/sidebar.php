@@ -15,7 +15,7 @@ $navItems = [
     'dashboard' => ['href' => 'user_dashboard.php', 'label' => 'Mission Control', 'icon' => 'grid'],
     'career-coach' => ['href' => 'MockInterview.php', 'label' => 'AI Career Coach', 'icon' => 'coach'],
     'cv-optimizer' => ['href' => 'cv-optimizer.php', 'label' => 'CV Optimizer', 'icon' => 'cv'],
-    'study-buddy' => ['href' => 'study-buddy.php', 'label' => 'Study Buddy', 'icon' => 'study'],
+    'study-buddy' => ['href' => 'study-buddy.php', 'label' => 'Career Prep', 'icon' => 'study'],
     'ai-cv-writer' => ['href' => 'CVwriter.php', 'label' => 'AI CV Writer', 'icon' => 'writer'],
 ];
 

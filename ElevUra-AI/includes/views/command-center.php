@@ -59,16 +59,16 @@ $toolCtaAuthAttr = empty($loggedIn) ? ' data-auth-open="login"' : '';
                         </p>
                     </div>
 
-                    <!-- Study Buddy (now a dedicated page) -->
+                    <!-- Career Prep (dedicated page) -->
                     <div class="module-card" id="module-study-buddy" data-protected-tool="study-buddy">
                         <div class="module-header">
                             <div class="module-icon module-icon-accent-cyan" aria-hidden="true">
                                 <svg viewBox="0 0 24 24"><circle cx="9" cy="12" r="5"/><circle cx="15" cy="12" r="5"/></svg>
                             </div>
                         </div>
-                        <h3 class="module-title">Study Buddy</h3>
+                        <h3 class="module-title">Career Prep</h3>
                         <p class="module-description">
-                            Explains complex topics, generates quizzes, creates personalized study plans, and prepares for exams.
+                            Adaptive quizzes, flashcards, and interview prep tailored to your target role and industry.
                         </p>
                     </div>
 
@@ -278,10 +278,10 @@ $toolCtaAuthAttr = empty($loggedIn) ? ' data-auth-open="login"' : '';
 
         </section>
 
-        <!-- HOW STUDY BUDDY WORKS SECTION -->
+        <!-- CAREER PREP SECTION -->
         <section class="study-buddy-works" id="study-buddy-works">
            <span class="wow-badge">PRACTICE &amp; INSTANT FEEDBACK</span>
-            <h3>Study <span> Buddy</span> AI</h3>
+            <h3>Career <span>Prep</span></h3>
             <div class="study-buddy-grid">
                 <div class="study-buddy-card" data-protected-tool="study-buddy">
                     <div class="study-buddy-icon" aria-hidden="true"></div>
@@ -460,7 +460,7 @@ $toolCtaAuthAttr = empty($loggedIn) ? ' data-auth-open="login"' : '';
 
             <div class="testimonial-card fade-in">
                 <div class="stars" aria-label="5 out of 5 stars">5/5</div>
-                <p class="testimonial-text">"The AI Study Buddy helped me understand complex algorithms. My exam score improved alot!"</p>
+                <p class="testimonial-text">"Career Prep helped me understand complex algorithms and feel ready for technical interviews."</p>
                 <div class="testimonial-author">- Liam, Computer Science</div>
             </div>
 

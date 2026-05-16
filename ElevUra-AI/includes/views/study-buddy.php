@@ -1,6 +1,6 @@
 <section class="study-buddy-works">
    <span class="wow-badge">PRACTICE &amp; INSTANT FEEDBACK</span>
-    <h3>Study <span> Buddy</span> AI</h3>
+    <h3>Career <span>Prep</span></h3>
     <div class="study-buddy-grid">
         <div class="study-buddy-card purple" data-sb-type="quiz" data-protected-tool="study-buddy">
             <div class="study-buddy-icon" aria-hidden="true"></div>
