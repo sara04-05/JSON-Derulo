@@ -152,7 +152,14 @@ $udTier = e($currentUser['tier'] ?? 'Free');
                                         </article>
                                         <article class="ud-card ud-stat-card ud-stat-card--wide">
                                             <p class="ud-card-meta">AI feedback summary</p>
-                                            <p class="ud-feedback-text" id="ud-feedback-text">Complete a mock interview on the Command Center to receive AI feedback.</p>
+                                            <div class="ud-feedback-callout ud-feedback-callout--empty" id="ud-feedback-root" aria-live="polite">
+                                                <div class="ud-feedback-empty">
+                                                    <span class="ud-feedback-callout__icon" aria-hidden="true">
+                                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                                                    </span>
+                                                    <p class="ud-feedback-text">Complete a mock interview on the Command Center to receive AI feedback.</p>
+                                                </div>
+                                            </div>
                                         </article>
                                     </div>
                                 </div>

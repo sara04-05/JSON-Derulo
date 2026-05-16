@@ -130,18 +130,137 @@
       .join('');
   }
 
-  function interviewFeedbackPreview(feedback) {
-    if (!feedback) return '';
-    try {
-      const parsed = JSON.parse(feedback);
-      if (parsed?.summary) {
-        const role = parsed.job_title ? `${parsed.job_title} — ` : '';
-        return role + parsed.summary;
-      }
-    } catch (_) {
-      /* plain text feedback */
+  const FEEDBACK_EMPTY_MSG =
+    'Complete a mock interview on the Command Center to receive AI feedback.';
+
+  function parseInterviewFeedback(feedback) {
+    if (feedback === null || feedback === undefined || feedback === '') {
+      return { empty: true, summary: '', jobTitle: '', tier: '', items: [] };
     }
-    return feedback;
+
+    let data = feedback;
+    if (typeof feedback === 'string') {
+      const trimmed = feedback.trim().replace(/^\uFEFF/, '');
+      if (!trimmed || trimmed === FEEDBACK_EMPTY_MSG) {
+        return { empty: true, summary: '', jobTitle: '', tier: '', items: [] };
+      }
+      try {
+        data = JSON.parse(trimmed);
+      } catch {
+        const start = trimmed.indexOf('{');
+        const end = trimmed.lastIndexOf('}');
+        if (start !== -1 && end > start) {
+          try {
+            data = JSON.parse(trimmed.slice(start, end + 1));
+          } catch {
+            return { empty: false, summary: trimmed, jobTitle: '', tier: '', items: [] };
+          }
+        } else {
+          return { empty: false, summary: trimmed, jobTitle: '', tier: '', items: [] };
+        }
+      }
+    }
+
+    if (typeof data !== 'object' || data === null) {
+      return { empty: true, summary: '', jobTitle: '', tier: '', items: [] };
+    }
+
+    const summary = String(data.summary ?? '').trim();
+    const items = Array.isArray(data.items) ? data.items : [];
+
+    return {
+      empty: !summary && items.length === 0,
+      summary,
+      jobTitle: String(data.job_title ?? '').trim(),
+      tier: String(data.tier ?? '').trim(),
+      items,
+    };
+  }
+
+  function tierClass(tier) {
+    const t = tier.toLowerCase();
+    if (t.includes('excellent') || t.includes('strong') || t.includes('ready')) return 'ud-feedback-tier--good';
+    if (t.includes('needs') || t.includes('practice') || t.includes('improve')) return 'ud-feedback-tier--warn';
+    return 'ud-feedback-tier--neutral';
+  }
+
+  function renderFeedbackPanel(aiFeedback) {
+    const root = document.getElementById('ud-feedback-root');
+    if (!root) return;
+
+    const parsed = parseInterviewFeedback(aiFeedback);
+
+    if (parsed.empty) {
+      root.className = 'ud-feedback-callout ud-feedback-callout--empty';
+      root.innerHTML =
+        '<div class="ud-feedback-empty">' +
+        '<span class="ud-feedback-callout__icon" aria-hidden="true">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>' +
+        '</span>' +
+        '<p class="ud-feedback-text">' +
+        escapeHtml(FEEDBACK_EMPTY_MSG) +
+        '</p></div>';
+      return;
+    }
+
+    const tips = parsed.items
+      .filter((item) => item && (item.feedback || item.question))
+      .slice(0, 3)
+      .map((item) => {
+        const score = typeof item.score === 'number' ? item.score : parseInt(item.score, 10) || 0;
+        const tip = String(item.feedback || '').trim() || String(item.question || '').trim();
+        return { score, tip };
+      })
+      .filter((t) => t.tip);
+
+    const tierHtml = parsed.tier
+      ? '<span class="ud-feedback-tier ' +
+        tierClass(parsed.tier) +
+        '">' +
+        escapeHtml(parsed.tier) +
+        '</span>'
+      : '';
+
+    const roleHtml = parsed.jobTitle
+      ? '<span class="ud-feedback-role">' + escapeHtml(parsed.jobTitle) + '</span>'
+      : '';
+
+    let tipsHtml = '';
+    if (tips.length) {
+      tipsHtml =
+        '<ul class="ud-feedback-tips">' +
+        tips
+          .map(
+            (t) =>
+              '<li class="ud-feedback-tip">' +
+              '<span class="ud-feedback-tip__score">' +
+              t.score +
+              '</span>' +
+              '<span class="ud-feedback-tip__text">' +
+              escapeHtml(t.tip) +
+              '</span></li>'
+          )
+          .join('') +
+        '</ul>';
+    }
+
+    root.className = 'ud-feedback-callout';
+    root.innerHTML =
+      '<div class="ud-feedback-callout__header">' +
+      roleHtml +
+      tierHtml +
+      '</div>' +
+      '<p class="ud-feedback-text">' +
+      escapeHtml(parsed.summary || 'Review your latest session below for detailed notes.') +
+      '</p>' +
+      tipsHtml;
+  }
+
+  function interviewFeedbackPreview(feedback) {
+    const parsed = parseInterviewFeedback(feedback);
+    if (parsed.empty) return '';
+    const role = parsed.jobTitle ? parsed.jobTitle + ' — ' : '';
+    return role + parsed.summary;
   }
 
   function renderInterviews(container, items) {
@@ -188,7 +307,6 @@
     const confBar = document.getElementById('ud-conf-bar');
     const commScore = document.getElementById('ud-comm-score');
     const confScore = document.getElementById('ud-conf-score');
-    const feedback = document.getElementById('ud-feedback-text');
     const sparkline = document.getElementById('ud-sparkline');
 
     const overall = analytics?.overall_score ?? 0;
@@ -200,10 +318,7 @@
     if (confBar) confBar.style.setProperty('--progress', `${conf}%`);
     if (commScore) commScore.textContent = `${comm}%`;
     if (confScore) confScore.textContent = `${conf}%`;
-    if (feedback) {
-      feedback.textContent =
-        analytics?.ai_feedback || 'Complete a mock interview on the Command Center to receive AI feedback.';
-    }
+    renderFeedbackPanel(analytics?.ai_feedback);
 
     if (sparkline && interviews?.length) {
       const trend = interviews.slice(0, 7).reverse();
