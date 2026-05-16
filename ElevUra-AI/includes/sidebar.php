@@ -12,11 +12,11 @@ $sidebarAuthAttr = $sidebarGuest ? ' data-auth-open="login"' : '';
 
 $navItems = [
     'home' => ['href' => 'index.php', 'label' => 'Command Center', 'icon' => 'terminal'],
-    'dashboard' => ['href' => 'user_dashboard.php', 'label' => 'Mission Control', 'icon' => 'grid'],
     'career-coach' => ['href' => 'MockInterview.php', 'label' => 'AI Career Coach', 'icon' => 'coach'],
     'cv-optimizer' => ['href' => 'cv-optimizer.php', 'label' => 'CV Optimizer', 'icon' => 'cv'],
-    'study-buddy' => ['href' => 'study-buddy.php', 'label' => 'Career Prep', 'icon' => 'study'],
     'ai-cv-writer' => ['href' => 'CVwriter.php', 'label' => 'AI CV Writer', 'icon' => 'writer'],
+    'study-buddy' => ['href' => 'study-buddy.php', 'label' => 'Career Prep', 'icon' => 'study'],
+    'dashboard' => ['href' => 'user_dashboard.php', 'label' => 'Mission Control', 'icon' => 'grid'],
 ];
 
 function sidebar_active(string $key, string $activeNav): string
@@ -36,12 +36,6 @@ function sidebar_active(string $key, string $activeNav): string
                     <span class="sidebar-item-icon sidebar-item-icon-terminal" aria-hidden="true">&gt;_</span>
                     <span><?= e($navItems['home']['label']) ?></span>
                 </a>
-                <a href="<?= e($navItems['dashboard']['href']) ?>" class="sidebar-item<?= sidebar_active('dashboard', $activeNav) ?>" id="sidebar-mission-control" data-sidebar-dashboard<?= $sidebarAuthAttr ?>>
-                    <span class="sidebar-item-icon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-                    </span>
-                    <span><?= e($navItems['dashboard']['label']) ?></span>
-                </a>
                 <a href="<?= e($navItems['career-coach']['href']) ?>" class="sidebar-item<?= sidebar_active('career-coach', $activeNav) ?>"<?= $sidebarAuthAttr ?>>
                     <span class="sidebar-item-icon" aria-hidden="true">
                         <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -54,17 +48,23 @@ function sidebar_active(string $key, string $activeNav): string
                     </span>
                     <span><?= e($navItems['cv-optimizer']['label']) ?></span>
                 </a>
+                <a href="<?= e($navItems['ai-cv-writer']['href']) ?>" class="sidebar-item<?= sidebar_active('ai-cv-writer', $activeNav) ?>"<?= $sidebarAuthAttr ?>>
+                    <span class="sidebar-item-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                    </span>
+                    <span><?= e($navItems['ai-cv-writer']['label']) ?></span>
+                </a>
                 <a href="<?= e($navItems['study-buddy']['href']) ?>" class="sidebar-item<?= sidebar_active('study-buddy', $activeNav) ?>"<?= $sidebarAuthAttr ?>>
                     <span class="sidebar-item-icon" aria-hidden="true">
                         <svg viewBox="0 0 24 24"><circle cx="9" cy="12" r="5"/><circle cx="15" cy="12" r="5"/></svg>
                     </span>
                     <span><?= e($navItems['study-buddy']['label']) ?></span>
                 </a>
-                <a href="<?= e($navItems['ai-cv-writer']['href']) ?>" class="sidebar-item<?= sidebar_active('ai-cv-writer', $activeNav) ?>"<?= $sidebarAuthAttr ?>>
+                <a href="<?= e($navItems['dashboard']['href']) ?>" class="sidebar-item<?= sidebar_active('dashboard', $activeNav) ?>" id="sidebar-mission-control" data-sidebar-dashboard<?= $sidebarAuthAttr ?>>
                     <span class="sidebar-item-icon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
                     </span>
-                    <span><?= e($navItems['ai-cv-writer']['label']) ?></span>
+                    <span><?= e($navItems['dashboard']['label']) ?></span>
                 </a>
             </nav>
 
