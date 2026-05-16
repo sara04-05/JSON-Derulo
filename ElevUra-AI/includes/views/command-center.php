@@ -309,15 +309,13 @@ $toolCtaAuthAttr = empty($loggedIn) ? ' data-auth-open="login"' : '';
                     <h3>Mock <span>Interview</span> Coach</h3>
                     <div class="mi-intro-copy">
                         <p>Practice role-specific questions with voice capture, then get structured scores across communication, confidence, and professionalism.</p>
-                        <p>Our AI tailors prompts to your target job title and seniority, then breaks down each answer with actionable feedback you can apply before the real interview.</p>
-                        <p>Results sync to Mission Control so you can track improvement across every mock session.</p>
                     </div>
                     <div class="mi-setup">
                         <div class="pill">Step 1 — Role</div>
                         <div class="field">
                             <label for="miJobTitle">Job position you are applying for *</label>
                             <input type="text" id="miJobTitle" placeholder="e.g. Junior Data Analyst at a healthcare company" autocomplete="off">
-                            <p class="hint">Questions are tailored using this title. Be specific about seniority and domain when you can.</p>
+                            <p class="hint">Questions are tailored using this title. </p>
                         </div>
                         <div class="row">
                             <div class="field">
