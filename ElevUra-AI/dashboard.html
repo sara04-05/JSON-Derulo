@@ -2,6 +2,2477 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ElevUra Dashboard - AI Command Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+    --bg-primary: #181818;
+    --bg-secondary: #171f21;
+    --bg-card: #1d1f24;
+    --text-primary: #f3f4f6;
+    --text-secondary: #9ca3af;
+    --accent-cyan: #00e7ff;
+    --accent-blue: #59b8ff;
+    --accent-purple: #b08cff;
+}
+        html {
+            scroll-behavior: smooth;
+            font-size: 14px;
+        }
+body {
+    background-color: rgb(18, 18, 18);
+    background-image: url('https://www.transparenttextures.com/patterns/cubes.png');
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+}
+        .container-wrapper {
+            position: relative;
+            z-index: 1;
+            display: flex;
+        
+        }
+
+        /* ==================== SIDEBAR ==================== */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 190px;
+            min-width: 190px;
+            height: 100vh;
+            background: rgba(16, 16, 16, 0.99);
+            border-right: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+            z-index: 100;
+            overflow-y: auto;
+        }
+
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding: 22px 16px 18px;
+            height: 60px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-brand-mark {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: linear-gradient(145deg, var(--accent-cyan), #00b8d4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .sidebar-brand-mark svg {
+            width: 19px;
+            height: 19px;
+            fill: #050810;
+        }
+
+        .sidebar-brand-text {
+            font-size: 17px;
+            font-weight: 800;
+            letter-spacing: -0.35px;
+            color: var(--text-primary);
+        }
+
+        .sidebar-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: auto;
+            position: relative;
+            z-index: 2;
+            padding: 14px 10px 12px;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-height: 44px;
+            padding: 0 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            color: rgba(255,255,255,0.48);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            border: 1px solid transparent;
+            position: relative;
+            z-index: 2;
+        }
+
+        .sidebar-item:hover {
+            background: rgba(0, 242, 255, 0.05);
+            color: rgba(255,255,255,0.92);
+            border-color: rgba(0, 242, 255, 0.12);
+        }
+
+        .sidebar-item.active {
+            background: rgba(0, 242, 255, 0.09);
+            border: 1px solid rgba(0, 242, 255, 0.42);
+            color: var(--text-primary);
+           
+        }
+
+        .sidebar-item-icon {
+            font-size: 0;
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: rgba(255,255,255,0.42);
+        }
+
+        .sidebar-item.active .sidebar-item-icon {
+            color: var(--accent-cyan);
+        }
+
+        .sidebar-item-icon-terminal {
+            font-family: 'JetBrains Mono', ui-monospace, monospace;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: inherit;
+            width: 22px;
+        }
+
+        .sidebar-item-icon svg {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.75;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .sidebar-status {
+            margin-top: auto;
+            margin-left: 10px;
+            margin-right: 10px;
+            margin-bottom: 14px;
+            padding: 10px 14px;
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(0, 242, 255, 0.18);
+            border-radius: 999px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .sidebar-status-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sidebar-status-dot {
+            width: 7px;
+            height: 7px;
+            background: #22c55e;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .sidebar-status-label {
+            flex: 1;
+            font-family: 'JetBrains Mono', ui-monospace, monospace;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--accent-cyan);
+            letter-spacing: 0.02em;
+        }
+
+        .sidebar-status-latency {
+            font-family: 'JetBrains Mono', ui-monospace, monospace;
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--accent-cyan);
+            background: rgba(0, 242, 255, 0.12);
+            border: 1px solid rgba(0, 242, 255, 0.22);
+            padding: 4px 9px;
+            border-radius: 999px;
+        }
+
+
+
+        /* ==================== MAIN CONTENT ==================== */
+        .main-content {
+            margin-left: 180px;
+            width: calc(100% - 218px);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background: transparent;
+            position: relative;
+        }
+
+        /* ==================== TOP HEADER ==================== */
+        .top-header {
+            height: 60px;
+            width: 1347px;
+            background-color: rgba(28, 28, 28, 0.99);
+            border: 1px solid rgba(247, 247, 247, 0.064);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            z-index: 50;
+        }
+
+        .header-left-meta {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            padding: 30px;
+        }
+
+        .environment-text {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .environment-text .production {
+            color: var(--accent-cyan);
+            font-weight: 600;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .notification-icon {
+            position: relative;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--accent-cyan);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .notification-icon:hover {
+            color: #7ff8ff;
+        }
+
+        .notification-dot {
+            position: absolute;
+            top: -3px;
+            right: -2px;
+            width: 7px;
+            height: 7px;
+            background: #3b82f6;
+            border-radius: 50%;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 2px solid rgba(0, 242, 255, 0.45);
+            background: #111;
+        }
+
+        .user-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+
+        .user-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .user-tier {
+            font-size: 10px;
+            color: var(--accent-cyan);
+            font-weight: 500;
+        }
+
+        .header-fullscreen {
+            width: 40px;
+            height: 36px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(12,14,18,0.55);
+            color: rgba(255,255,255,0.55);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+        }
+
+        .header-fullscreen:hover {
+            color: var(--accent-cyan);
+            border-color: rgba(0,229,255,0.35);
+            background: rgba(0,229,255,0.06);
+        }
+
+        .header-fullscreen svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.75;
+        }
+
+        /* ==================== CONTENT AREA ==================== */
+        .content-area {
+            padding-top: 25px;
+            padding-left: 48px;
+
+            flex: 1;
+            overflow-y: auto;
+            
+            position: relative;
+            z-index: 1;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* centers everything */
+
+            width: 100%;
+           }
+
+
+            /* ==================== HERO SECTION ==================== */
+        .hero-panel {
+            background-color: #151717;
+            border: 1px solid rgba(247, 247, 247, 0.064);
+            border-radius: 16px;
+
+            max-width: 900px;
+
+            padding: 15px 20px;
+
+            margin-bottom: 0;
+
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            align-items: center;
+
+            position: relative;
+            overflow: hidden;
+        }
+
+
+
+        .hero-left {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 0;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 6px 13px;
+            border: 1px solid rgba(0, 242, 255, 0.35);
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--accent-cyan);
+            letter-spacing: 0.06em;
+            margin-bottom: 22px;
+            text-transform: uppercase;
+            width: fit-content;
+            background: rgba(0, 242, 255, 0.06);
+            font-family: 'JetBrains Mono', ui-monospace, monospace;
+        }
+
+        .hero-title {
+            font-size: 48px;
+            font-weight: 700;
+            line-height: 1.02;
+            margin-bottom: 18px;
+            letter-spacing: -0.04em;
+            color: var(--text-primary);
+            text-transform: none;
+        }
+
+        .hero-title-gradient {
+            background: linear-gradient(90deg, #00f2ff 0%, #67e8f9 35%, #c084fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 14px;
+            color: #e2e8f0;
+            line-height: 1.65;
+            max-width: 540px;
+            margin-top: 0;
+            margin-bottom: 28px;
+            font-weight: 400;
+        }
+
+        .command-input-wrapper {
+            display: flex;
+            align-items: stretch;
+            gap: 0;
+            margin-top: 0;
+            margin-bottom: 0;
+            max-width: 720px;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            height: 54px;
+            background: rgba(5,8,12,0.95);
+            overflow: hidden;
+            transition: border-color 0.25s ease;
+        }
+
+        .command-prompt {
+            display: flex;
+            align-items: center;
+            padding: 0 14px;
+            font-family: 'JetBrains Mono', ui-monospace, monospace;
+            font-size: 13px;
+            font-weight: 500;
+            color: rgba(0, 242, 255, 0.95);
+            border-right: 1px solid rgba(255,255,255,0.06);
+            background: rgba(0,0,0,0.28);
+            flex-shrink: 0;
+            border-radius: 12px 0 0 12px;
+        }
+
+        .command-input {
+            height: 54px;
+            flex: 1;
+            min-width: 0;
+            padding: 0 18px;
+            background: transparent;
+            border: none;
+            border-radius: 0;
+            color: var(--text-primary);
+            font-size: 13px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.25s ease;
+        }
+
+        .command-input::placeholder {
+            color: #64748b;
+            font-style: normal;
+            font-family: 'JetBrains Mono', ui-monospace, monospace;
+            font-size: 12px;
+        }
+
+        .command-input:focus {
+            outline: none;
+            border-color: rgba(0,229,255,0.3);
+        }
+
+        .execute-button {
+            height: auto;
+            min-height: 40px;
+            margin: 7px;
+            padding: 0 22px;
+            background: #f8fafc;
+            color: #0f172a;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            letter-spacing: 0;
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .execute-button .execute-key {
+            font-size: 15px;
+            opacity: 0.65;
+            font-weight: 500;
+        }
+
+        .execute-button:hover {
+            transform: translateY(-2px);
+            background: #FFFFFF;
+        }
+
+        .execute-button:active {
+            transform: translateY(0);
+        }
+
+        .hero-right {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+            min-height: 240px;
+        }
+        
+        
+        .hero-wireframe {
+            width: 320px;
+            height: 320px;
+
+            border-radius: 50%;
+            overflow: hidden;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            position: relative;
+
+        
+        }
+.hero-wireframe img {
+    width: 78%;
+    height: 78%;
+    margin-bottom: 15px;
+
+    object-fit: cover;
+
+    border-radius: 50%;
+
+    opacity: 6;
+
+    mix-blend-mode: screen;
+
+    mask-image: radial-gradient(
+        circle at center,
+        rgba(0,0,0,1) 28%,
+        rgba(0,0,0,0.9) 45%,
+        rgba(0,0,0,0.4) 65%,
+        transparent 100%
+    );
+
+    -webkit-mask-image: radial-gradient(
+        circle at center,
+        rgba(0,0,0,1) 28%,
+        rgba(0,0,0,0.9) 45%,
+        rgba(0,0,0,0.4) 65%,
+        transparent 100%
+    );
+}
+                
+            /* ==================== MODULE GRID ==================== */
+            .module-grid {
+                width: 100%;
+                max-width: 900px;
+
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+
+                gap: 28px;
+                margin-top: 28px;
+                content-visibility: auto;
+            }
+
+            /* ==================== MODULE CARD ==================== */
+            .module-card {
+                background-color: #151717;
+                border: 1px solid rgb(255 255 255 / 0.05);
+
+                border-radius: 16px;
+
+                position: relative;
+                overflow: hidden;
+
+                cursor: pointer;
+                transition: all 0.25s ease;
+
+                padding: 22px;
+
+                width: 100%; /* IMPORTANT */
+                height: auto;
+
+                display: flex;
+                flex-direction: column;
+            }
+
+        .module-card:hover {
+            border-color:  rgba(168, 85, 247, 0.4);
+        }
+
+        .module-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        .module-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .module-icon svg {
+            width: 22px;
+            height: 22px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.75;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .module-icon-accent-cyan {
+            color: var(--accent-cyan);
+            background: rgba(0, 242, 255, 0.08);
+            border: 1px solid rgba(0, 242, 255, 0.35);
+        }
+
+        .module-icon-accent-purple {
+            color: var(--accent-purple);
+            background: rgba(168, 85, 247, 0.1);
+            border: 1px solid rgba(168, 85, 247, 0.4);
+        }
+
+        .module-tag {
+            font-size: 11px;
+            font-weight: 600;
+            color: rgba(148, 163, 184, 0.75);
+            background: transparent;
+            padding: 0;
+            border-radius: 0;
+            letter-spacing: 0.02em;
+            text-transform: none;
+            border: none;
+            font-family: 'JetBrains Mono', ui-monospace, monospace;
+        }
+
+        .module-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-top: 18px;
+            margin-bottom: 0;
+            position: relative;
+            z-index: 2;
+            letter-spacing: -0.4px;
+        }
+
+        
+
+        .module-description {
+            font-size: 16px;
+            color: #9ca3af;
+            line-height: 1.6;
+            margin-top: 8px;
+            margin-bottom: 0;
+            max-width: 100%;
+            position: relative;
+            z-index: 2;
+        }
+
+        .module-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #f1f5f9;
+            font-weight: 600;
+            font-size: 12px;
+            text-decoration: none;
+            transition: all 0.25s ease;
+            position: relative;
+            z-index: 2;
+            margin-top: auto;
+        }
+
+        .module-cta:hover {
+            gap: 10px;
+            color: var(--accent-cyan);
+        }
+/* ==================== WOW SECTION ==================== */
+
+.wow-section {
+    width: 100%;
+    max-width: 900px;
+
+    margin-top: 28px;
+}
+
+/* ==================== WOW LAYOUT ==================== */
+
+.wow-layout {
+    width: 100%;
+    max-width: 900px;
+
+    display: grid;
+    grid-template-columns: 1fr 360px;
+
+    gap: 28px;
+
+    align-items: stretch;
+
+    margin-top: 28px;
+}
+
+.wow-content-card,
+.cv-demo-card {
+    background-color: #151717;
+
+    border: 1px solid rgba(255,255,255,0.05);
+
+    border-radius: 20px;
+
+    padding: 34px;
+}
+
+/* LEFT SIDE */
+
+.wow-content-card h3 {
+    font-size: 44px;
+
+    line-height: 1.05;
+
+    font-weight: 800;
+
+    letter-spacing: -0.04em;
+
+    color: white;
+
+    margin-bottom: 20px;
+}
+
+.wow-content-card h3 span {
+    background: linear-gradient(
+        90deg,
+        #00f2ff 0%,
+        #67e8f9 45%,
+        #c084fc 100%
+    );
+
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.wow-content-card p {
+    font-size: 15px;
+
+    line-height: 1.8;
+
+    color: #9ca3af;
+
+    margin-bottom: 16px;
+}
+
+/* RIGHT SIDE */
+
+.cv-demo-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 900px) {
+    .wow-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .wow-content-card h3 {
+        font-size: 36px;
+    }
+}
+/* ==================== INTERVIEW CARD ==================== */
+
+.interview-box {
+    border-radius: 16px;
+
+    padding: 20px;
+
+    margin-bottom: 18px;
+
+    border: 1px solid rgba(255,255,255,0.06);
+}
+
+.interview-ai {
+    background: rgba(0,242,255,0.06);
+
+    border-color: rgba(0,242,255,0.2);
+}
+
+.interview-user {
+    background: rgba(168,85,247,0.06);
+
+    border-color: rgba(168,85,247,0.2);
+}
+
+.interview-label {
+    font-size: 12px;
+
+    font-family: 'JetBrains Mono', monospace;
+
+    margin-bottom: 12px;
+
+    font-weight: 700;
+
+    color: var(--accent-cyan);
+
+    letter-spacing: 0.06em;
+}
+
+.interview-user .interview-label {
+    color: var(--accent-purple);
+}
+
+.interview-text {
+    color: white;
+
+    font-size: 14px;
+
+    line-height: 1.7;
+}
+
+.user-text {
+    color: #cbd5e1;
+}
+
+/* ==================== STATS ==================== */
+
+.interview-stats {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 16px;
+}
+
+.interview-stat {
+    background: rgba(255,255,255,0.03);
+
+    border: 1px solid rgba(255,255,255,0.06);
+
+    border-radius: 16px;
+
+    padding: 18px;
+
+    text-align: center;
+}
+
+.stat-title {
+    font-size: 12px;
+
+    color: #9ca3af;
+
+    margin-bottom: 8px;
+}
+
+.stat-score {
+    font-size: 28px;
+
+    font-weight: 800;
+
+    color: var(--accent-cyan);
+}
+/* ==================== WOW ITEM ==================== */
+
+.wow-item {
+    background-color: #151717;
+
+    border: 1px solid rgba(255,255,255,0.05);
+
+    border-radius: 20px;
+
+    padding: 34px;
+
+    display: grid;
+
+    grid-template-columns: 1fr 360px;
+
+    gap: 34px;
+
+    align-items: center;
+
+    overflow: hidden;
+
+    position: relative;
+}
+
+.wow-item::before {
+    content: "";
+
+    position: absolute;
+
+    top: -120px;
+    right: -120px;
+
+    width: 260px;
+    height: 260px;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(0,242,255,0.08),
+            transparent 70%
+        );
+
+    pointer-events: none;
+}
+/* ==================== INTERVIEW DEMO CARD ==================== */
+
+.interview-demo-card {
+    background:
+        linear-gradient(
+            180deg,
+            rgba(20,20,20,0.95),
+            rgba(14,14,14,0.98)
+        );
+
+    border: 1px solid rgba(255,255,255,0.06);
+
+    border-radius: 24px;
+
+    padding: 24px;
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+/* TOPBAR */
+
+.interview-topbar {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 24px;
+}
+
+.live-indicator {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    font-size: 11px;
+
+    font-family: 'JetBrains Mono', monospace;
+
+    color: #22c55e;
+
+    letter-spacing: 0.08em;
+}
+
+.live-dot {
+    width: 8px;
+    height: 8px;
+
+    border-radius: 50%;
+
+    background: #22c55e;
+
+    box-shadow:
+        0 0 12px #22c55e;
+}
+
+.session-time {
+    font-size: 12px;
+
+    color: #9ca3af;
+
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* CHAT BUBBLES */
+
+.chat-bubble {
+    border-radius: 18px;
+
+    padding: 18px;
+
+    margin-bottom: 16px;
+
+    position: relative;
+}
+
+.ai-bubble {
+    background: rgba(0,242,255,0.07);
+
+    border: 1px solid rgba(0,242,255,0.16);
+}
+
+.user-bubble {
+    background: rgba(168,85,247,0.07);
+
+    border: 1px solid rgba(168,85,247,0.16);
+}
+
+.bubble-header {
+    font-size: 11px;
+
+    font-family: 'JetBrains Mono', monospace;
+
+    margin-bottom: 10px;
+
+    color: white;
+
+    opacity: 0.7;
+
+    letter-spacing: 0.08em;
+}
+
+.chat-bubble p {
+    font-size: 14px;
+
+    line-height: 1.7;
+
+    color: #e2e8f0;
+}
+
+/* ANALYSIS */
+
+.analysis-panel {
+    margin-top: 24px;
+
+    padding-top: 20px;
+
+    border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.analysis-row {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 10px;
+
+    font-size: 13px;
+
+    color: #cbd5e1;
+}
+
+.analysis-row strong {
+    color: white;
+}
+
+.progress-line {
+    width: 100%;
+
+    height: 8px;
+
+    background: rgba(255,255,255,0.06);
+
+    border-radius: 999px;
+
+    overflow: hidden;
+
+    margin-bottom: 18px;
+}
+
+.progress-fill {
+    height: 100%;
+
+    border-radius: 999px;
+}
+
+.confidence-fill {
+    width: 92%;
+
+    background: linear-gradient(
+        90deg,
+        #22c55e,
+        #4ade80
+    );
+}
+
+.communication-fill {
+    width: 87%;
+
+    background: linear-gradient(
+        90deg,
+        #00f2ff,
+        #67e8f9
+    );
+}
+
+.professional-fill {
+    width: 91%;
+
+    background: linear-gradient(
+        90deg,
+        #a855f7,
+        #c084fc
+    );
+}
+/* ==================== CONTENT ==================== */
+
+.wow-badge {
+    display: inline-flex;
+
+    align-items: center;
+
+    padding: 7px 14px;
+
+    border-radius: 999px;
+
+    border: 1px solid rgba(0,242,255,0.2);
+
+    background: rgba(0,242,255,0.06);
+
+    color: var(--accent-cyan);
+
+    font-size: 11px;
+
+    font-family: 'JetBrains Mono', monospace;
+
+    font-weight: 600;
+
+    letter-spacing: 0.08em;
+
+    margin-bottom: 20px;
+}
+
+.wow-content h3 {
+    font-size: 42px;
+
+    line-height: 1.05;
+
+    font-weight: 800;
+
+    letter-spacing: -0.04em;
+
+    color: var(--text-primary);
+
+    margin-bottom: 18px;
+}
+
+.wow-content h3 span {
+    background: linear-gradient(
+        90deg,
+        #00f2ff 0%,
+        #67e8f9 45%,
+        #c084fc 100%
+    );
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    background-clip: text;
+}
+
+.wow-content p {
+    font-size: 14px;
+
+    line-height: 1.8;
+
+    color: #9ca3af;
+
+    margin-bottom: 14px;
+
+    max-width: 520px;
+}
+
+/* ==================== SCORE DEMO ==================== */
+
+.cv-demo {
+    background: rgba(18,22,28,0.72);
+
+    border: 1px solid rgba(255,255,255,0.06);
+
+    border-radius: 18px;
+
+    padding: 24px;
+}
+
+/* ==================== SCORE RING ==================== */
+
+.cv-score-ring {
+    width: 170px;
+    height: 170px;
+
+    margin: 0 auto 24px;
+
+    border-radius: 50%;
+
+    background:
+        conic-gradient(
+            #00f2ff 0deg,
+            #67e8f9 220deg,
+            rgba(255,255,255,0.06) 220deg
+        );
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.score-inner {
+    width: 128px;
+    height: 128px;
+
+    border-radius: 50%;
+
+    background: #151717;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.score-num {
+    font-size: 42px;
+
+    font-weight: 800;
+
+    color: white;
+
+    line-height: 1;
+}
+
+.score-percent {
+    font-size: 12px;
+
+    color: var(--accent-cyan);
+
+    margin-top: 8px;
+
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* ==================== DETAILS ==================== */
+
+.score-details {
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 14px;
+}
+
+.detail-item {
+    background: rgba(255,255,255,0.03);
+
+    border: 1px solid rgba(255,255,255,0.05);
+
+    border-radius: 14px;
+
+    padding: 14px;
+}
+
+.detail-item h4 {
+    font-size: 12px;
+
+    color: #cbd5e1;
+
+    margin-bottom: 10px;
+
+    font-weight: 600;
+}
+
+.detail-value {
+    font-size: 22px;
+
+    font-weight: 700;
+
+    color: var(--accent-cyan);
+}
+
+/* ==================== RESPONSIVE ==================== */
+
+@media (max-width: 900px) {
+    .wow-item {
+        grid-template-columns: 1fr;
+    }
+
+    .wow-content h3 {
+        font-size: 34px;
+    }
+}
+        /* ==================== METRICS ==================== */
+
+.metrics {
+    width: calc(100% - 0px);
+
+    margin-top: 28px;
+
+    align-self: stretch;
+}
+
+.metrics-container {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    background-color: #151717;
+
+    border: 1px solid rgba(255,255,255,0.05);
+
+    border-radius: 18px;
+
+    overflow: hidden;
+}
+
+.metric-item {
+    flex: 1;
+
+    padding: 28px 18px;
+
+    text-align: center;
+
+    position: relative;
+}
+
+.metric-item:not(:last-child) {
+    border-right: 1px solid rgba(255,255,255,0.06);
+}
+
+.metric-item::before {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        radial-gradient(
+            circle at top,
+            rgba(0,242,255,0.08),
+            transparent 70%
+        );
+
+    opacity: 0;
+
+    transition: opacity 0.3s ease;
+}
+
+.metric-item:hover::before {
+    opacity: 1;
+}
+
+.metric-item h3 {
+    font-size: 34px;
+
+    font-weight: 800;
+
+    letter-spacing: -0.04em;
+
+    margin-bottom: 8px;
+
+    background: linear-gradient(
+        90deg,
+        #00f2ff 0%,
+        #67e8f9 45%,
+        #c084fc 100%
+    );
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    background-clip: text;
+
+    position: relative;
+    z-index: 2;
+}
+
+.metric-item p {
+    font-size: 13px;
+
+    color: #9ca3af;
+
+    font-weight: 500;
+
+    position: relative;
+    z-index: 2;
+}
+
+/* ==================== RESPONSIVE ==================== */
+
+@media (max-width: 768px) {
+    .metrics-container {
+        flex-direction: column;
+    }
+
+    .metric-item {
+        width: 100%;
+    }
+
+    .metric-item:not(:last-child) {
+        border-right: none;
+
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+}
+       
+        /* ==================== TESTIMONIALS ==================== */
+
+
+.testimonials {
+    width: 100%;
+    max-width: 900px;
+
+    margin-top: 28px;
+}
+.testimonials-grid {
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 22px;
+
+    width: 100%;
+}
+
+.testimonial-card {
+    background-color: #151717;
+
+    border: 1px solid rgba(255,255,255,0.05);
+
+    border-radius: 18px;
+
+    padding: 28px 26px;
+
+    position: relative;
+
+    overflow: hidden;
+
+    transition: all 0.28s ease;
+}
+
+.testimonial-card::before {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(0,242,255,0.08),
+            transparent 70%
+        );
+
+    opacity: 0;
+
+    transition: opacity 0.3s ease;
+}
+
+.testimonial-card:hover {
+    transform: translateY(-6px);
+
+    border-color: #d1d5db;
+
+    box-shadow:
+        0 18px 40px rgba(0,0,0,0.35);
+}
+
+.testimonial-card:hover::before {
+    opacity: 1;
+}
+
+.stars {
+    font-size: 18px;
+
+    letter-spacing: 2px;
+
+    margin-bottom: 18px;
+
+    background: var(--accent-purple);
+
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    background-clip: text;
+
+    font-weight: 700;
+}
+
+.testimonial-text {
+    font-size: 15px;
+
+    line-height: 1.8;
+
+    color: #d1d5db;
+
+    margin-bottom: 24px;
+}
+
+.testimonial-author {
+    font-size: 13px;
+
+    color: var(--accent-purple);
+
+    font-weight: 600;
+
+    font-family: 'JetBrains Mono', monospace;
+
+    letter-spacing: 0.02em;
+}
+
+/* ==================== RESPONSIVE ==================== */
+
+@media (max-width: 1024px) {
+    .testimonials-grid {
+        grid-template-columns: 1fr;
+    }
+}
+        /* ==================== HOW IT WORKS ==================== */
+
+.how-it-works {
+    width: 100%;
+    max-width: 900px;
+
+    margin-top: 32px;
+
+    background-color: #151717;
+    border: 1px solid rgba(255,255,255,0.05);
+
+    border-radius: 18px;
+
+    padding: 38px 32px;
+
+    position: relative;
+    overflow: hidden;
+}
+
+.how-it-works::before {
+    content: "";
+    position: absolute;
+
+    top: -120px;
+    right: -120px;
+
+    width: 260px;
+    height: 260px;
+
+    background: radial-gradient(
+        circle,
+        rgba(0,242,255,0.12) 0%,
+        transparent 70%
+    );
+
+    pointer-events: none;
+}
+
+.section-title {
+    font-size: 34px;
+    font-weight: 700;
+
+    color: var(--text-primary);
+
+    text-align: center;
+
+    letter-spacing: -0.03em;
+
+    margin-bottom: 10px;
+}
+
+.section-subtitle {
+    text-align: center;
+
+    color: var(--text-secondary);
+
+    font-size: 15px;
+
+    margin-bottom: 42px;
+
+    line-height: 1.6;
+}
+
+.steps-container {
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 22px;
+}
+
+.step-card {
+    background: rgba(18,22,28,0.72);
+
+    border: 1px solid rgba(255,255,255,0.06);
+
+    border-radius: 18px;
+
+    padding: 28px 24px;
+
+    position: relative;
+
+    overflow: hidden;
+
+    transition: all 0.28s ease;
+}
+
+.step-card:hover {
+    transform: translateY(-6px);
+
+    border-color: rgba(0,242,255,0.25);
+
+    box-shadow:
+        0 0 0 1px rgba(0,242,255,0.08),
+        0 20px 40px rgba(0,0,0,0.35);
+}
+
+.step-number {
+    font-size: 13px;
+
+    font-family: 'JetBrains Mono', monospace;
+
+    color: var(--accent-cyan);
+
+    margin-bottom: 18px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.08em;
+}
+
+.step-card h3 {
+    font-size: 21px;
+
+    color: var(--text-primary);
+
+    margin-bottom: 14px;
+
+    font-weight: 700;
+
+    letter-spacing: -0.02em;
+}
+
+.step-card p {
+    font-size: 14px;
+
+    line-height: 1.7;
+
+    color: #9ca3af;
+
+    margin-bottom: 28px;
+}
+
+.step-animation {
+    width: 58px;
+    height: 58px;
+
+    border-radius: 16px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 26px;
+
+    background: rgba(0,242,255,0.08);
+
+    border: 1px solid rgba(0,242,255,0.2);
+}/* ==================== FAQ ==================== */
+
+.faq {
+    width: 100%;
+    max-width: 900px;
+
+    margin-top: 28px;
+}
+
+.faq-container {
+    background-color: #151717;
+
+    border: 1px solid rgba(255,255,255,0.05);
+
+    border-radius: 18px;
+
+    overflow: hidden;
+}
+
+.faq-item {
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+
+    transition: background 0.25s ease;
+}
+
+.faq-item:last-child {
+    border-bottom: none;
+}
+
+.faq-item:hover {
+    background: rgba(255,255,255,0.015);
+}
+
+.faq-question {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 18px 22px;
+
+    cursor: pointer;
+}
+
+.faq-question h4 {
+    font-size: 15px;
+
+    font-weight: 600;
+
+    color: var(--text-primary);
+
+    letter-spacing: -0.02em;
+}
+
+.faq-toggle {
+    color: var(--accent-cyan);
+
+    font-size: 13px;
+
+    transition: transform 0.25s ease;
+
+    flex-shrink: 0;
+}
+
+.faq-item.active .faq-toggle {
+    transform: rotate(180deg);
+}
+
+.faq-answer {
+    max-height: 0;
+
+    overflow: hidden;
+
+    transition:
+        max-height 0.3s ease,
+        padding 0.3s ease;
+
+    padding:
+        0 22px;
+
+    color: #9ca3af;
+
+    font-size: 13px;
+
+    line-height: 1.7;
+}
+
+.faq-item.active .faq-answer {
+    max-height: 180px;
+
+    padding:
+        0 22px 18px;
+}
+
+/* ==================== RESPONSIVE ==================== */
+
+@media (max-width: 768px) {
+    .faq-question {
+        padding: 16px 18px;
+    }
+
+    .faq-answer {
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+
+    .faq-item.active .faq-answer {
+        padding:
+            0 18px 16px;
+    }
+}
+/* ==================== RESPONSIVE ==================== */
+
+@media (max-width: 768px) {
+    .faq-question {
+        padding: 20px;
+    }
+
+    .faq-answer {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .faq-item.active .faq-answer {
+        padding:
+            0 20px 20px;
+    }
+
+    .faq-question h4 {
+        font-size: 15px;
+    }
+}
+/* ==================== RESPONSIVE ==================== */
+
+@media (max-width: 900px) {
+    .steps-container {
+        grid-template-columns: 1fr;
+    }
+
+    .how-it-works {
+        padding: 28px 22px;
+    }
+
+    .section-title {
+        font-size: 28px;
+    }
+}
+
+        /* ==================== SCROLLBAR ==================== */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(27, 27, 27, 0.28);
+            border-radius: 4px;
+            transition: background 0.25s ease;
+        }
+
+        /* ==================== RESPONSIVE ==================== */
+
+
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 72px;
+                min-width: 0;
+                padding: 0;
+            }
+
+            .sidebar-menu {
+                padding: 8px 6px;
+            }
+
+            .sidebar-item {
+                justify-content: center;
+                padding: 0 8px;
+                margin-bottom: 0;
+            }
+
+            .sidebar-item span:not(.sidebar-item-icon) {
+                display: none;
+            }
+
+            .sidebar-item-icon {
+                margin-right: 0;
+            }
+
+            .sidebar-status {
+                padding: 8px 10px;
+                margin-left: 6px;
+                margin-right: 6px;
+            }
+
+            .sidebar-status-label {
+                font-size: 9px;
+            }
+
+            .sidebar-status-latency {
+                font-size: 9px;
+                padding: 3px 7px;
+            }
+
+            .sidebar-brand-text {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 72px;
+                width: calc(100% - 72px);
+            }
+
+            .header-left-meta {
+                gap: 12px;
+            }
+
+            .module-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .analytics-section {
+                grid-template-columns: 1fr;
+            }
+
+            .command-input {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 60px;
+                align-items: center;
+            }
+
+            .sidebar-item {
+                justify-content: center;
+                padding: 10px 8px;
+            }
+
+            .sidebar-item-icon {
+                margin-right: 0;
+            }
+
+            .main-content {
+                margin-left: 60px;
+                width: calc(100% - 60px);
+            }
+
+            .header-left {
+                gap: 12px;
+            }
+
+    
+            .environment-text {
+                font-size: 12px;
+            }
+
+            .hero-title {
+                font-size: 40px;
+            }
+
+            .content-area {
+                padding: 16px 12px 50px;
+            }
+
+            .module-grid {
+                gap: 16px;
+            }
+
+            .hero-panel {
+                padding: 18px;
+            }
+        }
+    </style>
+</head>
+<body >
+    <div class="container-wrapper">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <div class="sidebar-brand-mark" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                </div>
+                <span class="sidebar-brand-text">ElevUra</span>
+            </div>
+            <nav class="sidebar-menu">
+                <a href="dashboard.html" class="sidebar-item active">
+                    <span class="sidebar-item-icon sidebar-item-icon-terminal" aria-hidden="true">&gt;_</span>
+                    <span>Command Center</span>
+                </a>
+                <a href="MockInterview.html" class="sidebar-item">
+                    <span class="sidebar-item-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    </span>
+                    <span>AI Career Coach</span>
+                </a>
+                <a href="resume-rater.html" class="sidebar-item">
+                    <span class="sidebar-item-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+                    </span>
+                    <span>CV Optimizer</span>
+                </a>
+                <a href="CVwriter.html" class="sidebar-item">
+                    <span class="sidebar-item-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    </span>
+                    <span>AI CV Writer</span>
+                </a>
+                <a href="#" class="sidebar-item">
+                    <span class="sidebar-item-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><circle cx="9" cy="12" r="5"/><circle cx="15" cy="12" r="5"/></svg>
+                    </span>
+                    <span>Study Buddy</span>
+                </a>
+                <a href="#" class="sidebar-item">
+                    <span class="sidebar-item-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><path d="M9 3h6v2H9V3z"/><path d="M10 5v5.2c0 .86-.37 1.68-1 2.26L6 16h12l-3-3.54c-.63-.58-1-1.4-1-2.26V5"/><path d="M6 16h12v2a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-2z"/></svg>
+                    </span>
+                    <span>Research Assistant</span>
+                </a>
+            </nav>
+
+            
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <!-- TOP HEADER -->
+            <header class="top-header">
+                <div class="header-left">
+                    <div class="header-left-meta">
+                        <div class="environment-text">
+                            Environment: <span class="production">Production</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="header-right">
+                    <div class="notification-icon" title="Notifications" aria-label="Notifications">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+                        <span class="notification-dot"></span>
+                    </div>
+
+                    <div class="user-info">
+                        <div class="user-avatar">
+                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=128&amp;h=128&amp;fit=crop&amp;crop=faces" width="36" height="36" alt="" loading="lazy" decoding="async">
+                        </div>
+                        <div class="user-meta">
+                            <div class="user-name">Alex Mercer</div>
+                            <div class="user-tier">Pro Tier</div>
+                        </div>
+                    </div>
+
+                    <button type="button" class="header-fullscreen" title="Fullscreen" aria-label="Toggle fullscreen">
+                        <svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+                    </button>
+                </div>
+            </header>
+
+            <!-- CONTENT AREA -->
+            <section class="content-area">
+                <!-- HERO PANEL -->
+                <div class="hero-panel">
+                    <div class="hero-left">
+                        <div class="hero-badge">&gt; SYSTEM INITIALIZED</div>
+                        <h1 class="hero-title">
+                            Initialize Your <span class="hero-title-gradient">Future Trajectory</span>
+                        </h1>
+                        <p class="hero-subtitle">
+                            Unlock your potential with AI-powered career guidance, CV optimization, and personalized learning paths designed to accelerate your trajectory in an evolving market.
+                        </p>
+                        <div class="command-input-wrapper">
+                            <span class="command-prompt">~ $</span>
+                            <input
+                                type="text"
+                                class="command-input"
+                                placeholder="Prompt the command center... (e.g. 'Analyze my CV against...')"
+                                autocomplete="off"
+                            />
+                            <button type="button" class="execute-button">Execute <span class="execute-key" aria-hidden="true">↵</span></button>
+                        </div>
+                    </div>
+
+                <div class="hero-right">
+                    <div class="hero-wireframe">
+                        <img src="images/image.png" alt="Hero Graphic" loading="lazy" decoding="async">
+                    </div>
+                </div>
+                </div>
+
+                <!-- MODULE GRID -->
+                <div class="module-grid">
+                    <!-- AI Career Coach -->
+                    <div class="module-card">
+                        <div class="module-header">
+                            <div class="module-icon module-icon-accent-purple" aria-hidden="true">
+                                <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            </div>
+                        </div>
+                        <h3 class="module-title">AI Career Coach</h3>
+                        <p class="module-description">
+                            Career path suggestions, interview prep, skills gap analysis, and salary predictions tailored to your profile.
+                        </p>
+                    </div>
+
+                    <!-- CV Optimizer -->
+                    <div class="module-card">
+                        <div class="module-header">
+                            <div class="module-icon module-icon-accent-cyan" aria-hidden="true">
+                                <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"></svg>
+                            </div>
+                        </div>
+                        <h3 class="module-title">CV Optimizer</h3>
+                        <p class="module-description">
+                            ATS score analysis, grammar fixes, keyword enhancement, and recruiter simulation for maximum impact.
+                        </p>
+                    </div>
+
+                    <!-- Study Buddy -->
+                    <div class="module-card">
+                        <div class="module-header">
+                            <div class="module-icon module-icon-accent-cyan" aria-hidden="true">
+                                <svg viewBox="0 0 24 24"><circle cx="9" cy="12" r="5"/><circle cx="15" cy="12" r="5"/></svg>
+                            </div>
+                        </div>
+                        <h3 class="module-title">Study Buddy</h3>
+                        <p class="module-description">
+                            Explains complex topics, generates quizzes, creates personalized study plans, and prepares for exams.
+                        </p>
+                        </div>
+
+                    <!-- Research Assistant -->
+                    <div class="module-card">
+                        <div class="module-header">
+                            <div class="module-icon module-icon-accent-purple" aria-hidden="true">
+                                <svg viewBox="0 0 24 24"><path d="M9 3h6v2H9V3z"/><path d="M10 5v5.2c0 .86-.37 1.68-1 2.26L6 16h12l-3-3.54c-.63-.58-1-1.4-1-2.26V5"/><path d="M6 16h12v2a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-2z"/></svg>
+                            </div>
+                        </div>
+                        <h3 class="module-title">Research Assistant</h3>
+                        <p class="module-description">
+                            Summarizes PDFs, generates citations, extracts key points, and provides research recommendations.
+                        </p>
+                    </div>
+                </div>
+
+               <section class="wow-section">
+
+    <div class="wow-layout">
+
+        <!-- LEFT TEXT CARD -->
+        <div class="wow-content-card">
+
+            <span class="wow-badge">⚡ INSTANT FEEDBACK</span>
+
+            <h3>
+                Live AI CV <span>Scoring</span>
+            </h3>
+
+            <p>
+                Upload your CV and watch as our AI instantly analyzes and scores it across multiple dimensions.
+            </p>
+
+            <p>
+                Get real-time feedback, recruiter simulations, ATS scoring, and improvement suggestions instantly.
+            </p>
+
+            <p>
+                Understand exactly how employers view your CV using advanced AI heatmap analysis and optimization systems.
+            </p>
+
+        </div>
+
+        <!-- RIGHT SCORE CARD -->
+        <div class="cv-demo-card">
+
+            <div class="cv-score-ring">
+                <div class="score-inner">
+                    <div class="score-num">84</div>
+                    <div class="score-percent">ATS Score</div>
+                </div>
+            </div>
+
+            <div class="score-details">
+
+                <div class="detail-item">
+                    <h4>📝 Readability</h4>
+                    <div class="detail-value">94%</div>
+                </div>
+
+                <div class="detail-item">
+                    <h4>🎯 Keywords</h4>
+                    <div class="detail-value">88%</div>
+                </div>
+
+                <div class="detail-item">
+                    <h4>✨ Professionalism</h4>
+                    <div class="detail-value">91%</div>
+                </div>
+
+                <div class="detail-item">
+                    <h4>🏆 Overall Quality</h4>
+                    <div class="detail-value">87%</div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+            <section class="wow-section">
+
+    <div class="wow-layout">
+
+        <!-- LEFT TEXT CARD -->
+        <div class="interview-demo-card">
+
+            <span class="wow-badge">🎤 INTERVIEW READY</span>
+
+            <h3>
+                AI <span>Mock Interviews</span>
+            </h3>
+
+            <p>
+                Practice with our AI interviewer that adapts to your responses and evaluates your confidence in real time.
+            </p>
+
+            <p>
+                Get realistic interview simulations with scoring on communication, technical knowledge, professionalism, and clarity.
+            </p>
+
+            <p>
+                Improve your answers instantly with personalized AI feedback and performance analysis after every session.
+            </p>
+
+        </div>
+
+        <!-- RIGHT INTERVIEW CARD -->
+<div class="interview-demo-card">
+
+    <!-- TOP BAR -->
+    <div class="interview-topbar">
+
+        <div class="live-indicator">
+            <span class="live-dot"></span>
+            LIVE SESSION
+        </div>
+
+        <div class="session-time">
+            12:48
+        </div>
+
+    </div>
+
+    <!-- AI QUESTION -->
+    <div class="chat-bubble ai-bubble">
+
+        <div class="bubble-header">
+            🤖 AI Interviewer
+        </div>
+
+        <p>
+            Tell me about a difficult challenge you faced while you were leading a project.
+        </p>
+
+    </div>
+
+    <!-- USER RESPONSE -->
+    <div class="chat-bubble user-bubble">
+
+        <div class="bubble-header">
+            👤 You
+        </div>
+
+        <p>
+            I managed a dashboard redesign project where deadlines were extremely tight...
+        </p>
+
+    </div>
+
+    <!-- ANALYSIS -->
+    <div class="analysis-panel">
+
+        <div class="analysis-row">
+            <span>Confidence Level</span>
+            <strong>92%</strong>
+        </div>
+
+        <div class="progress-line">
+            <div class="progress-fill confidence-fill"></div>
+        </div>
+
+        <div class="analysis-row">
+            <span>Communication</span>
+            <strong>8.7/10</strong>
+        </div>
+
+        <div class="progress-line">
+            <div class="progress-fill communication-fill"></div>
+        </div>
+
+        <div class="analysis-row">
+            <span>Professionalism</span>
+            <strong>91%</strong>
+        </div>
+
+        <div class="progress-line">
+            <div class="progress-fill professional-fill"></div>
+        </div>
+
+    </div>
+
+    </div>
+
+    </div>
+
+</section>
+            
+            <!-- HOW IT WORKS -->
+            <section class="how-it-works" id="how-it-works">
+                <h2 class="section-title">How ElevUra AI Works</h2>
+
+                <div class="steps-container">
+                    <div class="step-card fade-in">
+                        <h3>Upload or Input</h3>
+                        
+                        <p>Upload your CV, share your notes, or ask your question.</p>
+                    </div>
+
+                    <div class="step-card fade-in">
+                        <h3>AI Processing</h3>
+                        <p>Our AI analyzes, understands, and optimizes your content.</p>
+                    </div>
+
+                    <div class="step-card fade-in">
+                        <h3>Smart Results</h3>
+                        <p>Get actionable insights and improved outputs instantly.</p>
+                    </div>
+                </div>
+                
+            </section>
+            <section class="metrics">
+        <div class="metrics-container">
+            <div class="metric-item">
+                <h3>12,000+</h3>
+                <p>CVs Optimized</p>
+            </div>
+            <div class="metric-item">
+                <h3>89%</h3>
+                <p>Interview Success</p>
+            </div>
+            <div class="metric-item">
+                <h3>30,000+</h3>
+                <p>Study Sessions</p>
+            </div>
+            <div class="metric-item">
+                <h3>95%</h3>
+                <p>User Satisfaction</p>
+            </div>
+        </div>
+        
+    </section>
+    
+ <!-- TESTIMONIALS -->
+    <section class="testimonials">
+        <h2 class="section-title">Student Success Stories</h2>
+        <div class="testimonials-grid">
+            <div class="testimonial-card fade-in">
+                <div class="stars">★★★★★</div>
+                <p class="testimonial-text">"ElevUra AI helped me improve my resume ATS score by 35 points. Got 3 interviews in one week!"</p>
+                <div class="testimonial-author">- Emma, Engineering Student</div>
+            </div>
+
+            <div class="testimonial-card fade-in">
+                <div class="stars">★★★★★</div>
+                <p class="testimonial-text">"The AI Study Buddy helped me understand complex algorithms. My exam score improved alot!"</p>
+                <div class="testimonial-author">- Liam, Computer Science</div>
+            </div>
+
+            <div class="testimonial-card fade-in">
+                <div class="stars">★★★★★</div>
+                <p class="testimonial-text">"The Career Coach prepared me for interviews perfectly. I landed my dream job at a top tech company!"</p>
+                <div class="testimonial-author">- Sarah, Business Graduate</div>
+            </div>
+        </div>
+    </section>
+    <!-- FAQ -->
+    <section class="faq" id="faq">
+        <h2 class="section-title">Frequently Asked Questions</h2>
+        <div class="faq-container">
+            <div class="faq-item active">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <h4>How does ElevUra AI analyze my resume?</h4>
+                    <div class="faq-toggle">v</div>
+                </div>
+                <div class="faq-answer">
+                    ElevUra AI uses advanced NLP and machine learning to analyze your resume against industry standards, ATS systems, and job requirements. It provides actionable feedback on optimization.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <h4>Is my data secure and private?</h4>
+                    <div class="faq-toggle">v</div>
+                </div>
+                <div class="faq-answer">
+                    Yes! We use enterprise-grade encryption and comply with GDPR and privacy regulations. Your data is never shared with third parties.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <h4>Can I use ElevUra AI for multiple languages?</h4>
+                    <div class="faq-toggle">v</div>
+                </div>
+                <div class="faq-answer">
+                    Currently, we support English and Albanian. More languages are coming soon! Let us know which languages you'd like to see.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <h4>What's included in the free plan?</h4>
+                    <div class="faq-toggle">v</div>
+                </div>
+                <div class="faq-answer">
+                    Free plan includes: 5 CV analyses/month, unlimited study materials, basic AI chat (5 conversations/day), and limited research assistance.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <h4>How accurate is the Career Coach AI?</h4>
+                    <div class="faq-toggle">v</div>
+                </div>
+                <div class="faq-answer">
+                    Our AI is trained on thousands of successful career transitions and job placements. It provides insights with 90%+ accuracy based on market data.
+                </div>
+            </div>
+        </div>
+    </section>
+            </section>
+        </main>
+    </div>
+
+                <button type="button" class="fab-help" title="Help" aria-label="Help">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/></svg>
+                </button>
+
+    
+    <script src="dashboard-interactions.js"></script>
+    <script>
+function toggleFAQ(element) {
+    const faqItem = element.parentElement;
+
+    faqItem.classList.toggle('active');
+}
+</script>
     <meta http-equiv="refresh" content="0;url=index.php">
     <title>Redirecting…</title>
     <script>location.replace('index.php');</script>

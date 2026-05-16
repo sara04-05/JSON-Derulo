@@ -4,4 +4,7 @@ DirectoryIndex index.php
     RewriteEngine On
     RewriteRule ^dashboard\.html$ index.php [R=301,L]
     RewriteRule ^auth\.html$ auth.php [R=301,L]
+    RewriteRule ^MockInterview\.html$ career-coach.php [R=301,L]
+    RewriteRule ^resume-rater\.html$ cv-optimizer.php [R=301,L]
+    RewriteRule ^CVwriter\.html$ ai-cv-writer.php [R=301,L]
 </IfModule>

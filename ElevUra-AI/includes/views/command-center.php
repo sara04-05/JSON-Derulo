@@ -170,7 +170,31 @@
 </p>
                </section>
 
-        <!-- Study Buddy moved to standalone page: includes/views/study-buddy.php -->
+        <!-- HOW STUDY BUDDY WORKS SECTION -->
+        <section class="study-buddy-works" id="study-buddy-works">
+           <span class="wow-badge">PRACTICE &amp; INSTANT FEEDBACK</span>
+            <h3>Study <span> Buddy</span> AI</h3>
+            <div class="study-buddy-grid">
+                <div class="study-buddy-card" data-protected-tool="study-buddy">
+                    <div class="study-buddy-icon" aria-hidden="true"></div>
+                    <div class="study-buddy-card-title">AI-Powered Explanations</div>
+                    <div class="study-buddy-card-desc">Enter any topic and get instant, personalized explanations tailored to your learning level with real-world examples.</div>
+                    <button type="button" class="study-buddy-btn" data-protected-tool="study-buddy">Execute</button>
+                </div>
+                <div class="study-buddy-card purple" data-protected-tool="study-buddy">
+                    <div class="study-buddy-icon" aria-hidden="true"></div>
+                    <div class="study-buddy-card-title">Adaptive Quizzes</div>
+                    <div class="study-buddy-card-desc">Dynamically generated questions that adjust difficulty based on your performance and aspiring learning goals.</div>
+                    <button type="button" class="study-buddy-btn" data-protected-tool="study-buddy">Execute</button>
+                </div>
+                <div class="study-buddy-card pink" data-protected-tool="study-buddy">
+                    <div class="study-buddy-icon" aria-hidden="true"></div>
+                    <div class="study-buddy-card-title">Personalized Study Plans</div>
+                    <div class="study-buddy-card-desc">AI creates structured 4-week roadmaps aligned with your goals, intensity, and schedule for optimal learning.</div>
+                    <button type="button" class="study-buddy-btn" data-protected-tool="study-buddy">Execute</button>
+                </div>
+            </div>
+        </section>
                 <p class="protected-trigger" data-protected-tool="model" style="
     font-size: 20px;
     line-height: 1.05;

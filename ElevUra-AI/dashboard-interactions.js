@@ -1,6 +1,5 @@
 /**
  * ElevUra Dashboard - Dashboard Interactions
- * Handles user interactions and command execution
  */
 
 class ElevUraDashboard {
@@ -8,6 +7,7 @@ class ElevUraDashboard {
     this.init();
     this.setupInteractions();
     this.setupMetricsAnimation();
+    this.scrollToHashTarget();
   }
 
   init() {
@@ -35,12 +35,32 @@ class ElevUraDashboard {
   setupSidebarNavigation() {
     document.querySelectorAll('.sidebar-menu .sidebar-item[data-view="command"]').forEach((item) => {
       item.addEventListener('click', (e) => {
-        if (item.hasAttribute('data-protected-tool')) return;
-        e.preventDefault();
-        document.querySelectorAll('.sidebar-item').forEach((i) => i.classList.remove('active'));
-        item.classList.add('active');
+        if (window.ElevUraAuth && !window.ElevUraAuth.isLoggedIn()) return;
+        const onHome =
+          document.body.dataset.page === 'home' &&
+          !window.location.pathname.replace(/\\/g, '/').includes('user_dashboard');
+        if (onHome) {
+          e.preventDefault();
+          document.querySelectorAll('.sidebar-item').forEach((i) => i.classList.remove('active'));
+          item.classList.add('active');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          if (window.location.hash) {
+            history.replaceState(null, '', 'index.php');
+          }
+        }
       });
     });
+  }
+
+  scrollToHashTarget() {
+    const hash = window.location.hash;
+    if (!hash) return;
+    const target = document.querySelector(hash);
+    if (target) {
+      requestAnimationFrame(() => {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    }
   }
 
   setupFullscreenToggle() {
@@ -74,12 +94,14 @@ class ElevUraDashboard {
     this.executeButton.style.opacity = '0.7';
 
     setTimeout(() => {
-      this.executeButton.innerHTML = 'Executed <span class="execute-key" aria-hidden="true">Enter</span>';
+      this.executeButton.innerHTML =
+        'Executed <span class="execute-key" aria-hidden="true">Enter</span>';
       this.executeButton.style.background = 'linear-gradient(135deg, #A78BFA 0%, #8B5CF6 100%)';
       this.executeButton.style.color = '#F5F3FF';
 
       setTimeout(() => {
-        this.executeButton.innerHTML = 'Execute <span class="execute-key" aria-hidden="true">Enter</span>';
+        this.executeButton.innerHTML =
+          'Execute <span class="execute-key" aria-hidden="true">Enter</span>';
         this.executeButton.disabled = false;
         this.executeButton.style.opacity = '1';
         this.executeButton.style.background = '';

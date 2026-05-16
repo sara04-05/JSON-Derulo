@@ -9,6 +9,7 @@
     <script src="protected-ui.js"></script>
     <?php if (($pageSlug ?? 'home') === 'user-dashboard'): ?>
     <script src="user-dashboard.js"></script>
+<?php elseif (!empty($skipDashboardInteractions)): ?>
     <?php elseif (($pageSlug ?? 'home') === 'research-assistant'): ?>
         <script src="dashboard-interactions.js"></script>
         <script src="research-assistant.js"></script>
@@ -24,6 +25,12 @@
         }
     </script>
 <?php endif; ?>
+<?php foreach ($extraScripts ?? [] as $scriptSrc): ?>
+    <script src="<?= e($scriptSrc) ?>"></script>
+<?php endforeach; ?>
+<?php foreach ($extraScriptBlocks ?? [] as $block): ?>
+    <?= $block ?>
+<?php endforeach; ?>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             if (window.__ELEVURA_AUTH_PROMPT__ && window.ElevUraAuthUI?.openAuth) {
