@@ -1,5 +1,5 @@
-/**
- * ElevUra — user dashboard page (separate from homepage)
+﻿/**
+ * ElevUra â€” user dashboard page (separate from homepage)
  */
 (function () {
   const STATUS_CLASS = {
@@ -67,7 +67,7 @@
             <span class="ats-score__label">ATS</span>
           </div>
         </div>
-        <p class="ud-card-meta">Last edited · ${escapeHtml(cv.edited)}</p>
+        <p class="ud-card-meta">Last edited Â· ${escapeHtml(cv.edited)}</p>
         <div class="ud-card-actions">
           <a href="CVwriter.php" class="ud-btn ud-btn--ghost">Edit</a>
           ${
@@ -98,7 +98,7 @@
           </div>
           <span class="job-status ${STATUS_CLASS[job.status] || ''}">${escapeHtml(job.status)}</span>
         </div>
-        <p class="ud-card-meta">Applied · ${escapeHtml(job.date)}</p>
+        <p class="ud-card-meta">Applied Â· ${escapeHtml(job.date)}</p>
       </article>`
       )
       .join('');
@@ -259,7 +259,7 @@
   function interviewFeedbackPreview(feedback) {
     const parsed = parseInterviewFeedback(feedback);
     if (parsed.empty) return '';
-    const role = parsed.jobTitle ? parsed.jobTitle + ' — ' : '';
+    const role = parsed.jobTitle ? parsed.jobTitle + ' - ' : '';
     return role + parsed.summary;
   }
 

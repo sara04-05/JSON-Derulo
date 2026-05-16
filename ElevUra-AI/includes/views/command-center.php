@@ -233,29 +233,24 @@ $toolCtaAuthAttr = empty($loggedIn) ? ' data-auth-open="login"' : '';
 
             </div>
 
-            <div class="score-details" style="margin-top: 18px;">
-
-                <div class="detail-item">
-                    <h4>Templates</h4>
-                    <div class="detail-value">6</div>
-                </div>
-
-                <div class="detail-item">
-                    <h4>Export</h4>
-                    <div class="detail-value">PDF</div>
-                </div>
-
-                <div class="detail-item">
-                    <h4>AI Rewrite</h4>
-                    <div class="detail-value">On</div>
-                </div>
-
-                <div class="detail-item">
-                    <h4>ATS Ready</h4>
-                    <div class="detail-value">Yes</div>
-                </div>
-
-            </div>
+            <ul class="cv-writer-features" aria-label="CV Writer capabilities">
+                <li class="cv-writer-feature">
+                    <span class="cv-writer-feature__label">Templates</span>
+                    <span class="cv-writer-feature__value">6</span>
+                </li>
+                <li class="cv-writer-feature">
+                    <span class="cv-writer-feature__label">Export</span>
+                    <span class="cv-writer-feature__value">PDF</span>
+                </li>
+                <li class="cv-writer-feature">
+                    <span class="cv-writer-feature__label">AI Rewrite</span>
+                    <span class="cv-writer-feature__value">On</span>
+                </li>
+                <li class="cv-writer-feature">
+                    <span class="cv-writer-feature__label">ATS Ready</span>
+                    <span class="cv-writer-feature__value">Yes</span>
+                </li>
+            </ul>
 
         </div>
 
@@ -302,107 +297,98 @@ $toolCtaAuthAttr = empty($loggedIn) ? ' data-auth-open="login"' : '';
                     <button type="button" class="study-buddy-btn" data-protected-tool="study-buddy">Execute</button>
                 </div>
             </div>
+            <p class="protected-trigger wow-section-cta">
+                To use our model <a href="study-buddy.php" class="protected-trigger-link"<?= $toolCtaAuthAttr ?>>press here</a>.
+            </p>
         </section>
-                <p class="protected-trigger" style="
-    font-size: 20px;
-    line-height: 1.05;
-    font-weight: 800;
-    letter-spacing: -0.04em;
-    color: white;
-    text-align: center;
-    grid-column: 1 / -1;
-    padding-bottom: 0;
-    margin-bottom: 0;
-">
-    To use our model <a href="study-buddy.php" class="protected-trigger-link"<?= $toolCtaAuthAttr ?>>press here</a>.
-</p>
-            <section class="wow-section" id="mock-interview" data-protected-block="mock-interview">
-                <div class="wow-layout">
-                    <div class="wow-content-card">
-                        <span class="wow-badge">PRACTICE &amp; FEEDBACK</span>
-                        <h3>Mock <span>Interview</span> Coach</h3>
-                        <div id="stepSetup" class="mi-setup">
-                            <div class="pill">Step 1 - Role</div>
+
+        <section class="wow-section" id="mock-interview" data-protected-block="mock-interview">
+            <div class="wow-layout mi-layout">
+                <div class="wow-content-card mi-intro-card">
+                    <span class="wow-badge">PRACTICE &amp; FEEDBACK</span>
+                    <h3>Mock <span>Interview</span> Coach</h3>
+                    <div class="mi-intro-copy">
+                        <p>Practice role-specific questions with voice capture, then get structured scores across communication, confidence, and professionalism.</p>
+                        <p>Our AI tailors prompts to your target job title and seniority, then breaks down each answer with actionable feedback you can apply before the real interview.</p>
+                        <p>Results sync to Mission Control so you can track improvement across every mock session.</p>
+                    </div>
+                    <div class="mi-setup">
+                        <div class="pill">Step 1 — Role</div>
+                        <div class="field">
+                            <label for="miJobTitle">Job position you are applying for *</label>
+                            <input type="text" id="miJobTitle" placeholder="e.g. Junior Data Analyst at a healthcare company" autocomplete="off">
+                            <p class="hint">Questions are tailored using this title. Be specific about seniority and domain when you can.</p>
+                        </div>
+                        <div class="row">
                             <div class="field">
-                                <label for="jobTitle">Job position you are applying for *</label>
-                                <input type="text" id="jobTitle" placeholder="e.g. Junior Data Analyst at a healthcare company" autocomplete="off">
-                                <p class="hint">Questions are tailored using this title. Be specific about seniority and domain when you can.</p>
+                                <label for="miQuestionCount">Number of questions</label>
+                                <select id="miQuestionCount">
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5" selected>5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                </select>
                             </div>
-                            <div class="row">
-                                <div class="field">
-                                    <label for="questionCount">Number of questions</label>
-                                    <select id="questionCount">
-                                        <option value="3">3</option>
-                                        <option value="4">4</option>
-                                        <option value="5" selected>5</option>
-                                        <option value="6">6</option>
-                                        <option value="7">7</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="btn-row mi-btn-row">
-                                <button type="button" class="btn btn-primary" id="btnStart" data-protected-tool="mock-interview">Start mock interview</button>
-                            </div>
-                            <p id="setupError" class="hint err hidden"></p>
+                        </div>
+                        <div class="btn-row mi-btn-row">
+                            <a href="MockInterview.php" class="btn btn-primary" id="btnStart" data-protected-tool="mock-interview">Start mock interview</a>
                         </div>
                     </div>
-
-                    <div class="cv-demo-card mi-demo-rail">
-                        <div class="mi-preview-panel mi-preview-panel--cyan">
-                            <div class="pill">Your results preview</div>
-                            <div class="mi-preview-score">
-                                <div class="q-label">Overall interview score</div>
-                                <div class="big-score">87</div>
-                                <div class="tier">Strong performance</div>
-                            </div>
-                        </div>
-
-                        <div class="mi-preview-panel mi-preview-panel--purple">
-                            <div class="pill pill--purple">Performance metrics</div>
-                            <div class="mi-metric-grid">
-                                <div>
-                                    <div class="mi-metric-label">Confidence</div>
-                                    <div class="mi-metric-value mi-metric-value--green">92%</div>
-                                </div>
-                                <div>
-                                    <div class="mi-metric-label">Communication</div>
-                                    <div class="mi-metric-value mi-metric-value--cyan">88%</div>
-                                </div>
-                                <div>
-                                    <div class="mi-metric-label"> Knowledge</div>
-                                    <div class="mi-metric-value mi-metric-value--purple">91%</div>
-                                </div>
-                                <div>
-                                    <div class="mi-metric-label">Professionalism</div>
-                                    <div class="mi-metric-value mi-metric-value--sky">89%</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="mi-preview-panel mi-preview-panel--blue">
-                            <div class="pill pill--blue">Sample answer feedback</div>
-                            <div class="mi-feedback-stack">
-                                <div class="mi-feedback-item mi-feedback-item--good">
-                                    <strong>Question 1: &ldquo;Tell me about yourself&rdquo;</strong>
-                                    Excellent response with clear structure and relevant details. You highlighted key achievements effectively.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-<p class="protected-trigger" style="
-    font-size: 20px;
-    line-height: 1.05;
-    font-weight: 800;
-    letter-spacing: -0.04em;
-    color: white;
-    text-align: center;
-    grid-column: 1 / -1;
-">
-    To use our model <a href="career-coach.php" class="protected-trigger-link"<?= $toolCtaAuthAttr ?>>press here</a>.
-</p>
                 </div>
-            </section>
-            
+
+                <div class="cv-demo-card mi-demo-rail">
+                    <div class="mi-preview-panel mi-preview-panel--cyan">
+                        <div class="pill">Your results preview</div>
+                        <div class="mi-preview-score">
+                            <div class="q-label">Overall interview score</div>
+                            <div class="big-score">87</div>
+                            <div class="tier">Strong performance</div>
+                        </div>
+                    </div>
+
+                    <div class="mi-preview-panel mi-preview-panel--purple">
+                        <div class="pill pill--purple">Performance metrics</div>
+                        <div class="mi-metric-grid">
+                            <div>
+                                <div class="mi-metric-label">Confidence</div>
+                                <div class="mi-metric-value mi-metric-value--green">92%</div>
+                            </div>
+                            <div>
+                                <div class="mi-metric-label">Communication</div>
+                                <div class="mi-metric-value mi-metric-value--cyan">88%</div>
+                            </div>
+                            <div>
+                                <div class="mi-metric-label">Knowledge</div>
+                                <div class="mi-metric-value mi-metric-value--purple">91%</div>
+                            </div>
+                            <div>
+                                <div class="mi-metric-label">Professionalism</div>
+                                <div class="mi-metric-value mi-metric-value--sky">89%</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mi-preview-panel mi-preview-panel--blue">
+                        <div class="pill pill--blue">Sample answer feedback</div>
+                        <div class="mi-feedback-stack">
+                            <div class="mi-feedback-item mi-feedback-item--good">
+                                <strong>Question 1: &ldquo;Tell me about yourself&rdquo;</strong>
+                                Excellent response with clear structure and relevant details. You highlighted key achievements effectively.
+                            </div>
+                            <div class="mi-feedback-item mi-feedback-item--warn">
+                                <strong>Question 3: &ldquo;Describe a challenge you overcame&rdquo;</strong>
+                                Good story arc, but add a measurable outcome so recruiters see the impact of your actions.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p class="protected-trigger wow-section-cta">
+                To use our model <a href="MockInterview.php" class="protected-trigger-link"<?= $toolCtaAuthAttr ?>>press here</a>.
+            </p>
+        </section>
+
             <!-- HOW IT WORKS -->
             <section class="how-it-works" id="how-it-works">
                 <h2 class="section-title">How ElevUra AI Works</h2>

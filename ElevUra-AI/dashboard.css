@@ -1876,7 +1876,194 @@ body {
             font-weight: 600;
         }
 
+        #cv-writer-section .wow-content-card,
+        #cv-writer-section .cv-demo-card {
+            padding-top: 48px;
+        }
+
+        #cv-writer-section .wow-content-card {
+            text-align: center;
+        }
+
+        #cv-writer-section .wow-content-card p {
+            max-width: 520px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #cv-writer-section .wow-layout {
+            grid-template-columns: minmax(280px, 1fr) minmax(340px, 1.05fr);
+            max-width: 1040px;
+        }
+
+        #cv-writer-section .cv-demo-card {
+            justify-content: flex-start;
+            gap: 18px;
+        }
+
+        #cv-writer-section .cv-writer-preview {
+            flex: 1;
+            min-height: 0;
+        }
+
+        #mock-interview.wow-section {
+            max-width: 1040px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #mock-interview .wow-layout,
+        #mock-interview .mi-layout {
+            grid-template-columns: minmax(300px, 1fr) minmax(320px, 1fr);
+            gap: 24px;
+            align-items: stretch;
+            max-width: none;
+            margin-top: 0;
+        }
+
+        #mock-interview .mi-intro-card,
+        #mock-interview .mi-demo-rail {
+            padding: 40px 32px 32px;
+        }
+
+        #mock-interview .mi-intro-card {
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        #mock-interview .mi-intro-copy {
+            max-width: 480px;
+            margin: 0 auto 8px;
+        }
+
+        #mock-interview .mi-intro-copy p {
+            margin-bottom: 14px;
+        }
+
+        #mock-interview .mi-intro-copy p:last-child {
+            margin-bottom: 0;
+        }
+
+        #mock-interview .mi-setup {
+            margin-top: 24px;
+            padding: 20px;
+            border-radius: 14px;
+            background: rgba(0, 0, 0, 0.22);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            text-align: left;
+            border-top: none;
+        }
+
+        #mock-interview .mi-demo-rail {
+            justify-content: flex-start;
+            gap: 14px;
+        }
+
+        #mock-interview .mi-preview-panel {
+            padding: 16px 18px;
+        }
+
+        #mock-interview .mi-preview-score {
+            margin-top: 12px;
+        }
+
+        #mock-interview .mi-preview-score .big-score {
+            font-size: 40px;
+        }
+
+        #mock-interview .mi-metric-grid {
+            margin-top: 12px;
+            gap: 12px;
+        }
+
+        #mock-interview .mi-metric-value {
+            font-size: 20px;
+        }
+
+        #mock-interview .mi-feedback-stack {
+            margin-top: 12px;
+            gap: 10px;
+        }
+
+        #mock-interview .mi-feedback-item {
+            font-size: 12px;
+            padding: 10px 12px;
+        }
+
+        #mock-interview a.btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        .wow-section-cta {
+            margin-top: 36px;
+            padding-top: 0;
+            font-size: 20px;
+            line-height: 1.05;
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            color: white;
+            text-align: center;
+        }
+
         @media (max-width: 900px) {
+            #mock-interview .wow-layout,
+            #mock-interview .mi-layout {
+                grid-template-columns: 1fr;
+            }
+
+            #mock-interview .mi-intro-card,
+            #mock-interview .mi-demo-rail {
+                padding: 28px 22px 24px;
+            }
+        }
+
+        .cv-writer-features {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 10px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .cv-writer-feature {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            min-height: 72px;
+            padding: 12px 8px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            text-align: center;
+        }
+
+        .cv-writer-feature__label {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: #94a3b8;
+        }
+
+        .cv-writer-feature__value {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            line-height: 1.1;
+        }
+
+        @media (max-width: 900px) {
+            .cv-writer-features {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
             .wow-item {
                 grid-template-columns: 1fr;
             }
