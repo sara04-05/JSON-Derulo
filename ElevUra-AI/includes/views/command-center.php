@@ -173,7 +173,7 @@ $toolCtaAuthAttr = empty($loggedIn) ? ' data-auth-open="login"' : '';
                </section>
 
         <!-- AI CV WRITER SECTION -->
-        <section class="wow-section" id="cv-writer-section">
+        <section class="wow-section" id="cv-writer-section" data-protected-block="cv-writer">
 
     <div class="wow-layout">
 

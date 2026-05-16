@@ -12,6 +12,9 @@ $extraScripts = [
 ];
 
 require_once __DIR__ . '/includes/init.php';
+if (!$loggedIn && $authPrompt === '') {
+    $authPrompt = 'login';
+}
 require_once __DIR__ . '/includes/layout-start.php';
 ?>
             <section class="content-area">
