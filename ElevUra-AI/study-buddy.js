@@ -85,9 +85,9 @@
       const result = await res.json();
       if (!result.success) throw new Error(result.message || 'Generation failed');
 
-      showWarning(result.warning || (result.source === 'fallback'
-        ? 'AI generation is temporarily unavailable. Showing offline practice content.'
-        : ''));
+      // showWarning(result.warning || (result.source === 'fallback'
+      //   ? 'AI generation is temporarily unavailable. Showing offline practice content.'
+      //   : ''));
       renderResults(result.data);
       setupForm.classList.add('hidden');
       resultsArea.classList.remove('hidden');

@@ -14,8 +14,8 @@ $navItems = [
     'home' => ['href' => 'index.php', 'label' => 'Command Center', 'icon' => 'terminal'],
     'career-coach' => ['href' => 'MockInterview.php', 'label' => 'AI Career Coach', 'icon' => 'coach'],
     'cv-optimizer' => ['href' => 'cv-optimizer.php', 'label' => 'CV Optimizer', 'icon' => 'cv'],
-    'ai-cv-writer' => ['href' => 'CVwriter.php', 'label' => 'AI CV Writer', 'icon' => 'writer'],
     'study-buddy' => ['href' => 'study-buddy.php', 'label' => 'Career Prep', 'icon' => 'study'],
+    'ai-cv-writer' => ['href' => 'CVwriter.php', 'label' => 'AI CV Writer', 'icon' => 'writer'],
     'dashboard' => ['href' => 'user_dashboard.php', 'label' => 'Mission Control', 'icon' => 'grid'],
 ];
 
@@ -48,17 +48,17 @@ function sidebar_active(string $key, string $activeNav): string
                     </span>
                     <span><?= e($navItems['cv-optimizer']['label']) ?></span>
                 </a>
-                <a href="<?= e($navItems['ai-cv-writer']['href']) ?>" class="sidebar-item<?= sidebar_active('ai-cv-writer', $activeNav) ?>"<?= $sidebarAuthAttr ?>>
-                    <span class="sidebar-item-icon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-                    </span>
-                    <span><?= e($navItems['ai-cv-writer']['label']) ?></span>
-                </a>
                 <a href="<?= e($navItems['study-buddy']['href']) ?>" class="sidebar-item<?= sidebar_active('study-buddy', $activeNav) ?>"<?= $sidebarAuthAttr ?>>
                     <span class="sidebar-item-icon" aria-hidden="true">
                         <svg viewBox="0 0 24 24"><circle cx="9" cy="12" r="5"/><circle cx="15" cy="12" r="5"/></svg>
                     </span>
                     <span><?= e($navItems['study-buddy']['label']) ?></span>
+                </a>
+                <a href="<?= e($navItems['ai-cv-writer']['href']) ?>" class="sidebar-item<?= sidebar_active('ai-cv-writer', $activeNav) ?>"<?= $sidebarAuthAttr ?>>
+                    <span class="sidebar-item-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                    </span>
+                    <span><?= e($navItems['ai-cv-writer']['label']) ?></span>
                 </a>
                 <a href="<?= e($navItems['dashboard']['href']) ?>" class="sidebar-item<?= sidebar_active('dashboard', $activeNav) ?>" id="sidebar-mission-control" data-sidebar-dashboard<?= $sidebarAuthAttr ?>>
                     <span class="sidebar-item-icon" aria-hidden="true">
