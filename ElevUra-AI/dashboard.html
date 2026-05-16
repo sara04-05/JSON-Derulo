@@ -1318,6 +1318,98 @@ body {
     color: var(--accent-cyan);
 }
 
+/* ==================== CV WRITER DEMO ==================== */
+
+.cv-writer-steps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.cv-writer-step {
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(168, 85, 247, 0.25);
+    background: rgba(168, 85, 247, 0.08);
+    color: #c084fc;
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+}
+
+.cv-writer-step.is-active {
+    border-color: rgba(0, 242, 255, 0.35);
+    background: rgba(0, 242, 255, 0.1);
+    color: var(--accent-cyan);
+}
+
+.cv-writer-preview {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 16px;
+    padding: 18px;
+}
+
+.cv-writer-preview-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    padding-bottom: 14px;
+    margin-bottom: 14px;
+}
+
+.cv-writer-preview-name {
+    font-size: 18px;
+    font-weight: 800;
+    color: white;
+    letter-spacing: -0.02em;
+}
+
+.cv-writer-preview-role {
+    font-size: 12px;
+    color: var(--accent-cyan);
+    margin-top: 4px;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.cv-writer-preview-summary {
+    font-size: 12px;
+    line-height: 1.6;
+    color: #9ca3af;
+    margin-bottom: 14px;
+}
+
+.cv-writer-bullet {
+    display: flex;
+    gap: 8px;
+    font-size: 12px;
+    line-height: 1.55;
+    color: #e2e8f0;
+    margin-bottom: 8px;
+}
+
+.cv-writer-bullet::before {
+    content: "▸";
+    color: var(--accent-purple);
+    flex-shrink: 0;
+}
+
+.cv-writer-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 14px;
+}
+
+.cv-writer-tag {
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(0, 242, 255, 0.08);
+    border: 1px solid rgba(0, 242, 255, 0.15);
+    color: #67e8f9;
+    font-size: 10px;
+    font-weight: 600;
+}
+
 /* ==================== RESPONSIVE ==================== */
 
 @media (max-width: 900px) {
@@ -2225,6 +2317,99 @@ body {
     </div>
 
 </section>
+
+            <section class="wow-section" id="cv-writer-section">
+
+    <div class="wow-layout">
+
+        <!-- LEFT TEXT CARD -->
+        <div class="wow-content-card">
+
+            <span class="wow-badge">✍️ BUILD &amp; EXPORT</span>
+
+            <h3>
+                AI <span>CV Writer</span>
+            </h3>
+
+            <p>
+                Build a professional resume step by step with guided personal info, experience, education, and skills sections.
+            </p>
+
+            <p>
+                AI strengthens your summary, rewrites bullet points for impact, and aligns every line to your target role.
+            </p>
+
+            <p>
+                Preview templates in real time, then download ATS-friendly or styled PDFs ready to send to employers.
+            </p>
+
+        </div>
+
+        <!-- RIGHT CV WRITER DEMO CARD -->
+        <div class="cv-demo-card">
+
+            <div class="cv-writer-steps">
+                <span class="cv-writer-step is-active">Personal</span>
+                <span class="cv-writer-step">Experience</span>
+                <span class="cv-writer-step">Education</span>
+                <span class="cv-writer-step">Skills</span>
+                <span class="cv-writer-step">Preview</span>
+            </div>
+
+            <div class="cv-writer-preview">
+
+                <div class="cv-writer-preview-header">
+                    <div class="cv-writer-preview-name">Sarah Johnson</div>
+                    <div class="cv-writer-preview-role">Senior Software Engineer</div>
+                </div>
+
+                <p class="cv-writer-preview-summary">
+                    Results-driven engineer with 6+ years building scalable web products. Led cross-functional teams to deliver features used by 500K+ users.
+                </p>
+
+                <div class="cv-writer-bullet">Increased application performance by 40% through React optimization and API caching.</div>
+                <div class="cv-writer-bullet">Shipped payment integration reducing checkout drop-off by 18% across mobile and web.</div>
+                <div class="cv-writer-bullet">Mentored 4 junior developers and established code review standards for the frontend guild.</div>
+
+                <div class="cv-writer-tags">
+                    <span class="cv-writer-tag">React</span>
+                    <span class="cv-writer-tag">TypeScript</span>
+                    <span class="cv-writer-tag">Node.js</span>
+                    <span class="cv-writer-tag">AWS</span>
+                </div>
+
+            </div>
+
+            <div class="score-details" style="margin-top: 18px;">
+
+                <div class="detail-item">
+                    <h4>📄 Templates</h4>
+                    <div class="detail-value">6</div>
+                </div>
+
+                <div class="detail-item">
+                    <h4>📥 Export</h4>
+                    <div class="detail-value">PDF</div>
+                </div>
+
+                <div class="detail-item">
+                    <h4>✨ AI Rewrite</h4>
+                    <div class="detail-value">On</div>
+                </div>
+
+                <div class="detail-item">
+                    <h4>🎯 ATS Ready</h4>
+                    <div class="detail-value">Yes</div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
             <section class="wow-section">
 
     <div class="wow-layout">
