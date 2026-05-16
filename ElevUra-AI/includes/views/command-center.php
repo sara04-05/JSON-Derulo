@@ -1,3 +1,6 @@
+<?php
+$toolCtaAuthAttr = empty($loggedIn) ? ' data-auth-open="login"' : '';
+?>
             <section class="content-area" id="view-command-center">
                 <!-- HERO PANEL -->
                 <div class="hero-panel">
@@ -153,7 +156,7 @@
         </div>
 
     </div>
-<p class="protected-trigger" data-protected-tool="model" style="
+<p class="protected-trigger" style="
     font-size: 20px;
     line-height: 1.05;
     font-weight: 800;
@@ -165,7 +168,7 @@
     padding-bottom: 0;
     margin-bottom: 0;
 ">
-    To use our model press here.
+    To use our model <a href="cv-optimizer.php" class="protected-trigger-link"<?= $toolCtaAuthAttr ?>>press here</a>.
 </p>
                </section>
 
@@ -194,7 +197,7 @@
                 </div>
             </div>
         </section>
-                <p class="protected-trigger" data-protected-tool="model" style="
+                <p class="protected-trigger" style="
     font-size: 20px;
     line-height: 1.05;
     font-weight: 800;
@@ -205,7 +208,7 @@
     padding-bottom: 0;
     margin-bottom: 0;
 ">
-    To use our model press here.
+    To use our model <a href="study-buddy.php" class="protected-trigger-link"<?= $toolCtaAuthAttr ?>>press here</a>.
 </p>
             <section class="wow-section" id="mock-interview" data-protected-block="mock-interview">
                 <div class="wow-layout">
@@ -280,7 +283,7 @@
                             </div>
                         </div>
                     </div>
-<p class="protected-trigger" data-protected-tool="model" style="
+<p class="protected-trigger" style="
     font-size: 20px;
     line-height: 1.05;
     font-weight: 800;
@@ -289,7 +292,7 @@
     text-align: center;
     grid-column: 1 / -1;
 ">
-    To use our model press here.
+    To use our model <a href="career-coach.php" class="protected-trigger-link"<?= $toolCtaAuthAttr ?>>press here</a>.
 </p>
                 </div>
             </section>

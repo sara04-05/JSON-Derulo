@@ -3609,6 +3609,19 @@ body {
             text-shadow: 0 0 20px rgba(0, 231, 255, 0.35);
         }
 
+        .protected-trigger-link {
+            color: inherit;
+            text-decoration: underline;
+            text-underline-offset: 0.15em;
+            cursor: pointer;
+            transition: color 0.25s ease, opacity 0.25s ease;
+        }
+
+        .protected-trigger-link:hover {
+            color: var(--accent-cyan);
+            opacity: 0.9;
+        }
+
         .protected-unlock-flash {
             animation: unlock-flash 0.6s ease;
         }
