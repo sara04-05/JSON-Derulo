@@ -69,6 +69,7 @@
                 </div>
             </div>
             <p class="summary" id="overallSummary"></p>
+            <p id="saveStatus" class="hint save-status hidden" role="status"></p>
             <div id="perAnswer"></div>
             <div class="btn-row" style="margin-top: 8px;">
                 <button type="button" class="btn btn-primary" id="btnRestart">New interview</button>

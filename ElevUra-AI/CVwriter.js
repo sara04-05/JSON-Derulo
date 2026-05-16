@@ -337,72 +337,120 @@
         return raw || 'Resume';
     }
 
+    const EXPORT_BTN_IDS = [
+        'btnDownloadATS',
+        'btnDownloadATS2',
+        'btnDownloadPrint',
+        'btnDownloadPrint2',
+    ];
+
+    function setExportButtonsBusy(busy) {
+        EXPORT_BTN_IDS.forEach((id) => {
+            const el = document.getElementById(id);
+            if (el) el.disabled = !!busy;
+        });
+    }
+
     /**
-     * Extra export: print dialog (Save as PDF) — styled document matching preview.
+     * Styled PDF matching the preview — download only (no database save).
      */
-    function downloadPrintPDF() {
-        renderPreview();
-
-        const page = $('#resumePage');
-        const accent = $('#accentColor').value;
-        const name = getExportBaseName();
-        const templateExtra = page.className.replace(/\bresume-page\b/g, '').trim();
-
-        const printWin = window.open('', '_blank');
-        if (!printWin) {
-            alert('Pop-up blocked. Allow pop-ups for this site to print or save as PDF.');
+    async function downloadPrintPDF() {
+        if (typeof html2pdf === 'undefined') {
+            alert('PDF export library not loaded. Please refresh the page.');
             return;
         }
 
-        const safeTitle = name.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        const safeAccent = /^#[0-9A-Fa-f]{3,8}$/.test(accent) ? accent : '#0ea5e9';
+        renderPreview();
+        const element = document.getElementById('resumePage');
+        if (!element || !element.innerHTML.trim()) {
+            alert('Complete your resume details and open the preview before downloading.');
+            return;
+        }
 
-        printWin.document.write(`<!DOCTYPE html>
-<html lang="en"><head>
-<meta charset="UTF-8">
-<title>${safeTitle} - Resume</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Georgia&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="CVwriter.css">
-<style>
-  body { margin: 0; padding: 0; background: #fff; }
-  .resume-page {
-    width: 210mm;
-    min-height: 297mm;
-    margin: 0 auto;
-    background: #fff;
-    --resume-accent: ${safeAccent};
-  }
-  @media print {
-    body { margin: 0; }
-    .resume-page { width: 100%; min-height: auto; padding: 44px 40px; }
-    @page { size: A4; margin: 0; }
-  }
-</style>
-</head><body>
-<div class="resume-page ${templateExtra}" style="--resume-accent:${safeAccent}">
-${page.innerHTML}
-</div>
-<script>
-  window.onload = function() {
-    setTimeout(function() { window.print(); }, 400);
-  };
-</script>
-</body></html>`);
+        setExportButtonsBusy(true);
 
-        printWin.document.close();
+        try {
+            const filename = getExportBaseName() + '-styled.pdf';
+            await html2pdf()
+                .set({
+                    margin: [8, 8, 8, 8],
+                    filename,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: {
+                        scale: 2,
+                        useCORS: true,
+                        backgroundColor: '#ffffff',
+                        logging: false,
+                    },
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                    pagebreak: { mode: ['css', 'legacy'] },
+                })
+                .from(element)
+                .save();
+        } catch (err) {
+            console.error('Styled PDF export failed:', err);
+            alert('Could not generate the styled PDF. Try again or use Download & Save ATS PDF.');
+        } finally {
+            setExportButtonsBusy(false);
+        }
+    }
+
+    function buildCvTitle(data) {
+        const name = data.fullName || 'Resume';
+        const role = data.jobTitle || '';
+        return role ? `${name} — ${role}` : name;
+    }
+
+    function setCvSaveStatus(message, type) {
+        const el = document.getElementById('cvSaveStatus');
+        if (!el) return;
+        el.textContent = message;
+        el.classList.remove('hidden', 'err', 'is-saved');
+        if (type === 'error') el.classList.add('err');
+        if (type === 'saved') el.classList.add('is-saved');
+    }
+
+    async function persistCvPdf(doc, data) {
+        const cvTitle = buildCvTitle(data);
+        const pdfBase64 = doc.output('datauristring').split(',')[1];
+
+        setCvSaveStatus('Saving CV to your profile…', 'pending');
+
+        try {
+            const res = await fetch('backend/save_cv.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'same-origin',
+                body: JSON.stringify({
+                    cv_title: cvTitle,
+                    pdf_base64: pdfBase64,
+                    export_type: 'ats',
+                }),
+            });
+            const payload = await res.json().catch(() => ({}));
+
+            if (res.ok && payload.success) {
+                setCvSaveStatus('CV saved to your dashboard.', 'saved');
+                return;
+            }
+
+            if (res.status === 401) {
+                setCvSaveStatus('Sign in to save this CV to your dashboard.', 'error');
+                return;
+            }
+
+            setCvSaveStatus(payload.message || 'Could not save CV to your profile.', 'error');
+        } catch (err) {
+            console.warn('Failed to save CV:', err);
+            setCvSaveStatus('Could not reach the server to save your CV.', 'error');
+        }
     }
 
     /**
      * ATS export: true text-based PDF (selectable, structured sections).
      */
-    function downloadATSPDF() {
-        if (!window.jspdf) {
-            alert('PDF library not loaded. Refresh the page or use Print / Save as PDF.');
-            return;
-        }
-
+    function buildAtsPdfDocument(data) {
         const { jsPDF } = window.jspdf;
-        const data = collectData();
         const doc = new jsPDF({ unit: 'pt', format: 'a4' });
         const margin = 48;
         const maxW = 595.28 - margin * 2;
@@ -483,7 +531,35 @@ ${page.innerHTML}
             lines(data.skills, 10);
         }
 
-        doc.save(getExportBaseName() + '-ats.pdf');
+        return doc;
+    }
+
+    async function downloadATSPDF() {
+        if (!window.jspdf) {
+            alert('PDF library not loaded. Please refresh the page.');
+            return;
+        }
+
+        const data = collectData();
+        if (!data.fullName.trim()) {
+            alert('Please enter your full name before exporting.');
+            return;
+        }
+
+        setExportButtonsBusy(true);
+        setCvSaveStatus('Generating ATS PDF…', 'pending');
+
+        try {
+            const doc = buildAtsPdfDocument(data);
+            doc.save(getExportBaseName() + '-ats.pdf');
+            await persistCvPdf(doc, data);
+        } catch (err) {
+            console.error('ATS PDF export failed:', err);
+            setCvSaveStatus('Could not generate ATS PDF.', 'error');
+            alert('Could not generate ATS PDF. Please try again.');
+        } finally {
+            setExportButtonsBusy(false);
+        }
     }
 
     /* ====== EVENT WIRING ====== */

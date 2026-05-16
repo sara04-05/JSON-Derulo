@@ -23,6 +23,7 @@
     const overallSummary = document.getElementById('overallSummary');
     const perAnswer = document.getElementById('perAnswer');
     const btnRestart = document.getElementById('btnRestart');
+    const saveStatus = document.getElementById('saveStatus');
 
     /** @type {string[]} */
     let questions = [];
@@ -507,6 +508,7 @@
         overallTier.textContent = '';
         overallSummary.textContent = 'Scoring your answers…';
         perAnswer.innerHTML = '';
+        clearSaveStatus();
 
         const qaPayload = sessionAnswers.map((x) => ({ question: x.question, answer: x.answer }));
 
@@ -514,28 +516,23 @@
             try {
                 const g = await geminiScoreSession(jobTitle, qaPayload, apiKey);
                 const os = Math.max(0, Math.min(100, Math.round(Number(g.overallScore) || 0)));
-                overallScore.textContent = String(os);
-                overallTier.textContent = g.tier || tierFromScore(os);
-                overallSummary.textContent = g.summary || 'Here is how you did across the mock interview.';
-
-                const items = Array.isArray(g.items) ? g.items : [];
-                perAnswer.innerHTML = sessionAnswers
-                    .map((row, idx) => {
-                        const it = items[idx] || {};
+                const geminiItems = Array.isArray(g.items) ? g.items : [];
+                const resultItems = sessionAnswers.map((row, idx) => {
+                        const it = geminiItems[idx] || {};
                         const fallback = localScoreAnswer(row.question, row.answer, jobTitle);
-                        const sc = Math.max(0, Math.min(100, Math.round(Number(it.score) || fallback.score)));
-                        const fb = it.feedback || fallback.feedback;
-                        return (
-                            '<div class="answer-block">' +
-                            '<span class="score-tag">' + sc + '/100</span>' +
-                            '<h3>Question ' + (idx + 1) + '</h3>' +
-                            '<div class="answer-meta">' + escapeHtml(row.question) + '</div>' +
-                            '<div class="answer-body"><strong>Your answer</strong><br>' + escapeHtml(row.answer) + '</div>' +
-                            '<div class="answer-body" style="margin-top:10px;"><strong>Feedback</strong><br>' + escapeHtml(fb) + '</div>' +
-                            '</div>'
-                        );
-                    })
-                    .join('');
+                        return {
+                            question: row.question,
+                            answer: row.answer,
+                            score: Math.max(0, Math.min(100, Math.round(Number(it.score) || fallback.score))),
+                            feedback: it.feedback || fallback.feedback,
+                        };
+                    });
+                renderResults(
+                    resultItems,
+                    os,
+                    g.tier || tierFromScore(os),
+                    g.summary || 'Here is how you did across the mock interview.'
+                );
                 return;
             } catch (e) {
                 console.warn('Gemini scoring failed, using local rubric:', e);
@@ -551,27 +548,14 @@
                 ? 0
                 : Math.round(localItems.reduce((s, x) => s + x.score, 0) / localItems.length);
 
-        overallScore.textContent = String(avg);
-        overallTier.textContent = tierFromScore(avg);
-        overallSummary.textContent =
+        const summaryText =
             avg >= 80
                 ? 'Strong rehearsal: your answers were detailed and mostly structured. Tighten stories further with crisper outcomes.'
                 : avg >= 65
                     ? 'Good foundation. Push each answer with clearer stakes, your specific actions, and measurable results.'
                     : 'Keep practicing out loud. Focus on one clear example per question with beginning, middle, and measurable end.';
 
-        perAnswer.innerHTML = localItems
-            .map(
-                (row, idx) =>
-                    '<div class="answer-block">' +
-                    '<span class="score-tag">' + row.score + '/100</span>' +
-                    '<h3>Question ' + (idx + 1) + '</h3>' +
-                    '<div class="answer-meta">' + escapeHtml(row.question) + '</div>' +
-                    '<div class="answer-body"><strong>Your answer</strong><br>' + escapeHtml(row.answer) + '</div>' +
-                    '<div class="answer-body" style="margin-top:10px;"><strong>Feedback</strong><br>' + escapeHtml(row.feedback) + '</div>' +
-                    '</div>'
-            )
-            .join('');
+        renderResults(localItems, avg, tierFromScore(avg), summaryText);
     }
 
     function escapeHtml(s) {
@@ -582,9 +566,90 @@
             .replace(/"/g, '&quot;');
     }
 
+    function setSaveStatus(message, type) {
+        if (!saveStatus) return;
+        saveStatus.textContent = message;
+        saveStatus.classList.remove('hidden', 'err', 'is-saved');
+        if (type === 'error') saveStatus.classList.add('err');
+        if (type === 'saved') saveStatus.classList.add('is-saved');
+    }
+
+    function clearSaveStatus() {
+        if (!saveStatus) return;
+        saveStatus.textContent = '';
+        saveStatus.classList.add('hidden');
+        saveStatus.classList.remove('err', 'is-saved');
+    }
+
+    async function persistInterview(payload) {
+        if (!saveStatus) return;
+
+        setSaveStatus('Saving interview to your profile…', 'pending');
+
+        try {
+            const res = await fetch('backend/save_mock_interview.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'same-origin',
+                body: JSON.stringify(payload),
+            });
+            const data = await res.json().catch(() => ({}));
+
+            if (res.ok && data.success) {
+                setSaveStatus('Interview saved to your dashboard.', 'saved');
+                return;
+            }
+
+            if (res.status === 401) {
+                setSaveStatus('Sign in to save this interview to your dashboard.', 'error');
+                return;
+            }
+
+            setSaveStatus(data.message || 'Could not save interview results.', 'error');
+        } catch (e) {
+            console.warn('Failed to save mock interview:', e);
+            setSaveStatus('Could not reach the server to save your interview.', 'error');
+        }
+    }
+
+    function renderResults(items, overall, tier, summary) {
+        overallScore.textContent = String(overall);
+        overallTier.textContent = tier;
+        overallSummary.textContent = summary;
+
+        perAnswer.innerHTML = items
+            .map((row, idx) => {
+                const sc = Math.max(0, Math.min(100, Math.round(Number(row.score) || 0)));
+                return (
+                    '<div class="answer-block">' +
+                    '<span class="score-tag">' + sc + '/100</span>' +
+                    '<h3>Question ' + (idx + 1) + '</h3>' +
+                    '<div class="answer-meta">' + escapeHtml(row.question) + '</div>' +
+                    '<div class="answer-body"><strong>Your answer</strong><br>' + escapeHtml(row.answer) + '</div>' +
+                    '<div class="answer-body" style="margin-top:10px;"><strong>Feedback</strong><br>' + escapeHtml(row.feedback) + '</div>' +
+                    '</div>'
+                );
+            })
+            .join('');
+
+        void persistInterview({
+            job_title: jobTitle,
+            interview_score: overall,
+            tier: tier,
+            summary: summary,
+            items: items.map((row) => ({
+                question: row.question,
+                answer: row.answer,
+                score: Math.max(0, Math.min(100, Math.round(Number(row.score) || 0))),
+                feedback: row.feedback,
+            })),
+        });
+    }
+
     btnRestart.addEventListener('click', () => {
         show(stepResults, false);
         show(stepSetup, true);
+        clearSaveStatus();
         jobTitleEl.focus();
     });
 })();
