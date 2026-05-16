@@ -1,6 +1,12 @@
 ﻿<?php
-/** @var string $activeNav home|dashboard|research-assistant */
-$activeNav = $activeNav ?? ($pageSlug === 'user-dashboard' ? 'dashboard' : ($pageSlug === 'research-assistant' ? 'research-assistant' : 'home'));
+/** @var string $activeNav home|dashboard|research-assistant|study-buddy */
+$activeNav = $activeNav ?? (
+    $pageSlug === 'user-dashboard' ? 'dashboard' : (
+        $pageSlug === 'research-assistant' ? 'research-assistant' : (
+            $pageSlug === 'study-buddy' ? 'study-buddy' : 'home'
+        )
+    )
+);
 $sidebarGuest = empty($loggedIn);
 $sidebarAuthAttr = $sidebarGuest ? ' data-auth-open="login"' : '';
 
@@ -9,7 +15,7 @@ $navItems = [
     'dashboard' => ['href' => 'user_dashboard.php', 'label' => 'Mission Control', 'icon' => 'grid'],
     'career-coach' => ['href' => 'career-coach.php', 'label' => 'AI Career Coach', 'icon' => 'coach'],
     'cv-optimizer' => ['href' => 'cv-optimizer.php', 'label' => 'CV Optimizer', 'icon' => 'cv'],
-    'study-buddy' => ['href' => 'index.php#study-buddy-works', 'label' => 'Study Buddy', 'icon' => 'study'],
+    'study-buddy' => ['href' => 'study-buddy.php', 'label' => 'Study Buddy', 'icon' => 'study'],
     'ai-cv-writer' => ['href' => 'ai-cv-writer.php', 'label' => 'AI CV Writer', 'icon' => 'writer'],
 ];
 
