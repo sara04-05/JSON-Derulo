@@ -20,18 +20,8 @@
         return '<' + tag + (className ? ' class="' + className + '"' : '') + '>' + inner + '</' + tag + '>';
     }
 
-    const FEEDBACK_ICONS = {
-        strength:
-            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>',
-        warning:
-            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>',
-        improvement:
-            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>',
-    };
-
     function renderFeedbackItem(item) {
-        const iconKey = item.type === 'strength' ? 'strength' : item.type === 'warning' ? 'warning' : 'improvement';
-        const icon = FEEDBACK_ICONS[iconKey];
+        const icon = item.type === 'strength' ? '✅' : item.type === 'warning' ? '⚠️' : '💡';
         const label =
             item.type === 'strength'
                 ? 'Strength'

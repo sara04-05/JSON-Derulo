@@ -606,22 +606,6 @@
             margin-bottom: 8px;
         }
 
-        .feedback-title--icon {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .feedback-title-icon {
-            display: flex;
-            color: var(--accent-cyan);
-        }
-
-        .feedback-title-icon svg {
-            width: 24px;
-            height: 24px;
-        }
-
         .feedback-item {
             display: flex;
             gap: 16px;
@@ -653,27 +637,10 @@
         }
 
         .feedback-icon {
+            font-size: 24px;
             min-width: 24px;
             display: flex;
             align-items: center;
-            color: var(--accent-cyan);
-        }
-
-        .feedback-icon svg {
-            width: 24px;
-            height: 24px;
-        }
-
-        .feedback-item.strength .feedback-icon {
-            color: #10b981;
-        }
-
-        .feedback-item.warning .feedback-icon {
-            color: #ef4444;
-        }
-
-        .feedback-item.improvement .feedback-icon {
-            color: #f59e0b;
         }
 
         .feedback-content {
