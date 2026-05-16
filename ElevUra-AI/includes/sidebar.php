@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /** @var string $activeNav home|dashboard|research-assistant|study-buddy */
 $activeNav = $activeNav ?? (
     $pageSlug === 'user-dashboard' ? 'dashboard' : (
@@ -13,10 +13,10 @@ $sidebarAuthAttr = $sidebarGuest ? ' data-auth-open="login"' : '';
 $navItems = [
     'home' => ['href' => 'index.php', 'label' => 'Command Center', 'icon' => 'terminal'],
     'dashboard' => ['href' => 'user_dashboard.php', 'label' => 'Mission Control', 'icon' => 'grid'],
-    'career-coach' => ['href' => 'career-coach.php', 'label' => 'AI Career Coach', 'icon' => 'coach'],
+    'career-coach' => ['href' => 'MockInterview.php', 'label' => 'AI Career Coach', 'icon' => 'coach'],
     'cv-optimizer' => ['href' => 'cv-optimizer.php', 'label' => 'CV Optimizer', 'icon' => 'cv'],
     'study-buddy' => ['href' => 'study-buddy.php', 'label' => 'Study Buddy', 'icon' => 'study'],
-    'ai-cv-writer' => ['href' => 'ai-cv-writer.php', 'label' => 'AI CV Writer', 'icon' => 'writer'],
+    'ai-cv-writer' => ['href' => 'CVwriter.php', 'label' => 'AI CV Writer', 'icon' => 'writer'],
 ];
 
 function sidebar_active(string $key, string $activeNav): string

@@ -165,6 +165,15 @@ textarea { min-height: 100px; resize: vertical; line-height: 1.5; }
 
 .hint { font-size: 12px; color: var(--text-muted); margin-top: 6px; line-height: 1.45; }
 .hint.err { color: var(--danger); }
+
+.save-status {
+    margin: 12px 0 0;
+    text-align: center;
+}
+
+.save-status.is-saved {
+    color: var(--success, #34d399);
+}
 .pill {
     display: inline-block;
     padding: 4px 10px;

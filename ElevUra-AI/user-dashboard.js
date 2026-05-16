@@ -69,8 +69,12 @@
         </div>
         <p class="ud-card-meta">Last edited · ${escapeHtml(cv.edited)}</p>
         <div class="ud-card-actions">
-          <button type="button" class="ud-btn ud-btn--ghost">Edit</button>
-          <button type="button" class="ud-btn ud-btn--primary">Download</button>
+          <a href="CVwriter.php" class="ud-btn ud-btn--ghost">Edit</a>
+          ${
+            cv.file_path
+              ? `<a href="backend/download_cv.php?id=${encodeURIComponent(cv.id)}" class="ud-btn ud-btn--primary">Download</a>`
+              : '<button type="button" class="ud-btn ud-btn--primary" disabled>Download</button>'
+          }
         </div>
       </article>`
       )
@@ -126,6 +130,20 @@
       .join('');
   }
 
+  function interviewFeedbackPreview(feedback) {
+    if (!feedback) return '';
+    try {
+      const parsed = JSON.parse(feedback);
+      if (parsed?.summary) {
+        const role = parsed.job_title ? `${parsed.job_title} — ` : '';
+        return role + parsed.summary;
+      }
+    } catch (_) {
+      /* plain text feedback */
+    }
+    return feedback;
+  }
+
   function renderInterviews(container, items) {
     if (!container) return;
     if (!items?.length) {
@@ -134,7 +152,9 @@
     }
     container.innerHTML = items
       .map(
-        (i) => `
+        (i) => {
+          const preview = interviewFeedbackPreview(i.ai_feedback);
+          return `
       <article class="ud-card ud-interview-card">
         <div class="ud-interview-card__head">
           <h4 class="ud-card-title">Session · ${escapeHtml(i.date)}</h4>
@@ -144,8 +164,9 @@
           <span class="ud-card-meta">Communication ${i.communication_score}%</span>
           <span class="ud-card-meta">Confidence ${i.confidence_score}%</span>
         </div>
-        <p class="ud-card-meta ud-interview-feedback">${escapeHtml((i.ai_feedback || '').slice(0, 120))}${(i.ai_feedback || '').length > 120 ? '…' : ''}</p>
-      </article>`
+        <p class="ud-card-meta ud-interview-feedback">${escapeHtml(preview.slice(0, 120))}${preview.length > 120 ? '…' : ''}</p>
+      </article>`;
+        }
       )
       .join('');
   }

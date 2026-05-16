@@ -349,4 +349,13 @@
         .mi-wrap .card a:hover { text-decoration: underline; }
 
         .hint.err { color: var(--danger); }
+
+        .save-status {
+            margin: 12px 0 4px;
+            text-align: center;
+        }
+
+        .save-status.is-saved {
+            color: var(--success);
+        }
     

@@ -138,18 +138,19 @@
                                 </select>
                             </div>
                             <div class="download-actions">
-                                <button type="button" class="btn btn-primary download-btn" id="btnDownloadATS" title="Selectable text PDF for ATS systems">
-                                    Download ATS PDF
+                                <button type="button" class="btn btn-primary download-btn" id="btnDownloadATS" title="ATS-friendly PDF — downloads and saves to your profile when signed in">
+                                    Download &amp; Save ATS PDF
                                 </button>
-                                <button type="button" class="btn btn-ghost download-btn btn-export-print" id="btnDownloadPrint" title="Opens print dialog — Save as PDF with full styling">
-                                    Save as PDF (Print)
+                                <button type="button" class="btn btn-ghost download-btn btn-export-print" id="btnDownloadPrint" title="Styled PDF matching the preview — download only">
+                                    Download PDF (Print)
                                 </button>
                             </div>
                         </div>
                         <p class="export-hint">
-                            <strong>ATS PDF:</strong> For resume scoring and ATS optimization<br>
-                            <strong>Print PDF:</strong> For job applications with clean formatting
+                            <strong>ATS PDF:</strong> Text-based file saved to your dashboard when signed in<br>
+                            <strong>Print PDF:</strong> Styled layout for applications — download only
                         </p>
+                        <p id="cvSaveStatus" class="hint save-status hidden" role="status"></p>
                         <div class="resume-preview-container" id="resumePreviewContainer">
                             <div class="resume-page" id="resumePage">
                                 <!-- Filled by JS -->
@@ -157,10 +158,10 @@
                         </div>
                         <div class="btn-row btn-row-downloads" style="margin-top:18px;">
                             <button type="button" class="btn btn-ghost" id="btnBack4">← Back to Edit</button>
-                            <button type="button" class="btn btn-primary" id="btnDownloadATS2">Download ATS PDF</button>
-                            <button type="button" class="btn btn-ghost btn-export-print" id="btnDownloadPrint2">Save as PDF (Print)</button>
+                            <button type="button" class="btn btn-primary" id="btnDownloadATS2">Download &amp; Save ATS PDF</button>
+                            <button type="button" class="btn btn-ghost btn-export-print" id="btnDownloadPrint2">Download PDF (Print)</button>
                         </div>
                     </section>
 
-                    <p class="footer-note">Your data stays in your browser — nothing is sent to any server.</p>
+                    <p class="footer-note">Download &amp; Save ATS PDF stores your resume on ElevUra when signed in. Download PDF (Print) is a styled local copy only.</p>
                 </div>
