@@ -87,9 +87,13 @@
       el.style.cursor = 'pointer';
       el.setAttribute('role', 'button');
       el.setAttribute('tabindex', '0');
-      el.addEventListener('click', (e) => handleProtectedClick(e, el));
+      el.addEventListener('click', (e) => {
+        if (e.target.closest('.protected-trigger-link')) return;
+        handleProtectedClick(e, el);
+      });
       el.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
+          if (e.target.closest('.protected-trigger-link')) return;
           e.preventDefault();
           handleProtectedClick(e, el);
         }

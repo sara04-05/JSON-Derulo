@@ -1,3 +1,6 @@
+<?php
+$toolCtaAuthAttr = empty($loggedIn) ? ' data-auth-open="login"' : '';
+?>
             <section class="content-area" id="view-command-center">
                 <!-- HERO PANEL -->
                 <div class="hero-panel">
@@ -153,7 +156,7 @@
         </div>
 
     </div>
-<p class="protected-trigger" data-protected-tool="model" style="
+<p class="protected-trigger" style="
     font-size: 20px;
     line-height: 1.05;
     font-weight: 800;
@@ -165,9 +168,115 @@
     padding-bottom: 0;
     margin-bottom: 0;
 ">
-    To use our model press here.
+    To use our model <a href="cv-optimizer.php" class="protected-trigger-link"<?= $toolCtaAuthAttr ?>>press here</a>.
 </p>
                </section>
+
+        <!-- AI CV WRITER SECTION -->
+        <section class="wow-section" id="cv-writer-section">
+
+    <div class="wow-layout">
+
+        <div class="wow-content-card">
+
+            <span class="wow-badge">BUILD &amp; EXPORT</span>
+
+            <h3>
+                AI <span>CV Writer</span>
+            </h3>
+
+            <p>
+                Build a professional resume step by step with guided personal info, experience, education, and skills sections.
+            </p>
+
+            <p>
+                AI strengthens your summary, rewrites bullet points for impact, and aligns every line to your target role.
+            </p>
+
+            <p>
+                Preview templates in real time, then download ATS-friendly or styled PDFs ready to send to employers.
+            </p>
+
+        </div>
+
+        <div class="cv-demo-card">
+
+            <div class="cv-writer-steps">
+                <span class="cv-writer-step is-active">Personal</span>
+                <span class="cv-writer-step">Experience</span>
+                <span class="cv-writer-step">Education</span>
+                <span class="cv-writer-step">Skills</span>
+                <span class="cv-writer-step">Preview</span>
+            </div>
+
+            <div class="cv-writer-preview">
+
+                <div class="cv-writer-preview-header">
+                    <div class="cv-writer-preview-name">Sarah Johnson</div>
+                    <div class="cv-writer-preview-role">Senior Software Engineer</div>
+                </div>
+
+                <p class="cv-writer-preview-summary">
+                    Results-driven engineer with 6+ years building scalable web products. Led cross-functional teams to deliver features used by 500K+ users.
+                </p>
+
+                <div class="cv-writer-bullet">Increased application performance by 40% through React optimization and API caching.</div>
+                <div class="cv-writer-bullet">Shipped payment integration reducing checkout drop-off by 18% across mobile and web.</div>
+                <div class="cv-writer-bullet">Mentored 4 junior developers and established code review standards for the frontend guild.</div>
+
+                <div class="cv-writer-tags">
+                    <span class="cv-writer-tag">React</span>
+                    <span class="cv-writer-tag">TypeScript</span>
+                    <span class="cv-writer-tag">Node.js</span>
+                    <span class="cv-writer-tag">AWS</span>
+                </div>
+
+            </div>
+
+            <div class="score-details" style="margin-top: 18px;">
+
+                <div class="detail-item">
+                    <h4>Templates</h4>
+                    <div class="detail-value">6</div>
+                </div>
+
+                <div class="detail-item">
+                    <h4>Export</h4>
+                    <div class="detail-value">PDF</div>
+                </div>
+
+                <div class="detail-item">
+                    <h4>AI Rewrite</h4>
+                    <div class="detail-value">On</div>
+                </div>
+
+                <div class="detail-item">
+                    <h4>ATS Ready</h4>
+                    <div class="detail-value">Yes</div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+<p class="protected-trigger" style="
+    font-size: 20px;
+    line-height: 1.05;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    color: white;
+    text-align: center;
+    grid-column: 1 / -1;
+    padding-top: 40px;
+    padding-bottom: 0;
+    margin-bottom: 0;
+">
+    To use our model <a href="CVwriter.php" class="protected-trigger-link"<?= $toolCtaAuthAttr ?>>press here</a>.
+</p>
+
+        </section>
 
         <!-- HOW STUDY BUDDY WORKS SECTION -->
         <section class="study-buddy-works" id="study-buddy-works">
@@ -194,7 +303,7 @@
                 </div>
             </div>
         </section>
-                <p class="protected-trigger" data-protected-tool="model" style="
+                <p class="protected-trigger" style="
     font-size: 20px;
     line-height: 1.05;
     font-weight: 800;
@@ -205,7 +314,7 @@
     padding-bottom: 0;
     margin-bottom: 0;
 ">
-    To use our model press here.
+    To use our model <a href="study-buddy.php" class="protected-trigger-link"<?= $toolCtaAuthAttr ?>>press here</a>.
 </p>
             <section class="wow-section" id="mock-interview" data-protected-block="mock-interview">
                 <div class="wow-layout">
@@ -280,7 +389,7 @@
                             </div>
                         </div>
                     </div>
-<p class="protected-trigger" data-protected-tool="model" style="
+<p class="protected-trigger" style="
     font-size: 20px;
     line-height: 1.05;
     font-weight: 800;
@@ -289,7 +398,7 @@
     text-align: center;
     grid-column: 1 / -1;
 ">
-    To use our model press here.
+    To use our model <a href="career-coach.php" class="protected-trigger-link"<?= $toolCtaAuthAttr ?>>press here</a>.
 </p>
                 </div>
             </section>
