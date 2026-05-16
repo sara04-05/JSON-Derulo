@@ -79,8 +79,14 @@ function study_buddy_call_openrouter(string $prompt, string $token, string $mode
     ];
 
     $ch = curl_init(STUDY_BUDDY_OPENROUTER_ENDPOINT);
-    $headers = ['Content-Type: application/json', 'Accept: application/json', 'Expect:'];
-    $headers[] = 'Authorization: Bearer ' . $token;
+    $headers = [
+        'Content-Type: application/json',
+        'Accept: application/json',
+        'Expect:',
+        'Authorization: Bearer ' . $token,
+        'HTTP-Referer: ' . (string) (app_env('OPENROUTER_HTTP_REFERER', '') ?: 'http://localhost'),
+        'X-Title: ElevUra Study Buddy',
+    ];
 
     curl_setopt_array($ch, [
         CURLOPT_RETURNTRANSFER => true,
@@ -309,6 +315,33 @@ function study_buddy_is_list(array $values): bool
     return $values === [] || array_keys($values) === range(0, count($values) - 1);
 }
 
+function study_buddy_openrouter_auth_failed(array $errors): bool
+{
+    foreach ($errors as $error) {
+        $message = strtolower((string) $error);
+        if (str_contains($message, 'user not found') || str_contains($message, '"code":401') || str_contains($message, 'http 401')) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function study_buddy_build_fallback_warning(array $errors): string
+{
+    if (study_buddy_openrouter_auth_failed($errors)) {
+        return 'AI generation failed because your OpenRouter API key is invalid or expired. '
+            . 'Create a new key at openrouter.ai/keys and set OPENROUTER_API_KEY in ElevUra-AI/.env, then restart Apache. '
+            . 'Showing offline practice content for now.';
+    }
+
+    if ($errors !== []) {
+        return 'AI generation is temporarily unavailable. Showing offline practice content for now.';
+    }
+
+    return '';
+}
+
 function study_buddy_error_to_string(mixed $error): string
 {
     if (is_string($error)) {
@@ -397,7 +430,9 @@ if ($openRouterToken === '') {
 }
 
 $normalizedContent = null;
+$generationSource = 'ai';
 if (empty($aiResult['ok'])) {
+    $generationSource = 'fallback';
     error_log('[StudyBuddy] All OpenRouter attempts failed for user ' . $userId . ': ' . implode(' | ', $openRouterErrors));
     $normalizedContent = study_buddy_build_local_payload($type, $jobTitle, $jobLevel, $industry, $skills, $jobContext);
 } else {
@@ -405,18 +440,24 @@ if (empty($aiResult['ok'])) {
     $decodedContent = study_buddy_parse_model_json($aiContent);
 
     if (!is_array($decodedContent)) {
+        $generationSource = 'fallback';
         error_log('[StudyBuddy] Invalid JSON from OpenRouter model ' . $aiModel . ' for user ' . $userId . '.');
         $openRouterErrors[] = $aiModel . ': invalid JSON response';
         $normalizedContent = study_buddy_build_local_payload($type, $jobTitle, $jobLevel, $industry, $skills, $jobContext);
     } else {
         $normalizedContent = study_buddy_normalize_payload($decodedContent, $type, $jobTitle);
         if (!is_array($normalizedContent)) {
+            $generationSource = 'fallback';
             error_log('[StudyBuddy] Could not normalize OpenRouter output from model ' . $aiModel . ' for user ' . $userId . '.');
             $openRouterErrors[] = $aiModel . ': output could not be normalized';
             $normalizedContent = study_buddy_build_local_payload($type, $jobTitle, $jobLevel, $industry, $skills, $jobContext);
         }
     }
 }
+
+$generationWarning = $generationSource === 'fallback'
+    ? study_buddy_build_fallback_warning($openRouterErrors)
+    : '';
 
 $normalizedJson = json_encode($normalizedContent, JSON_UNESCAPED_UNICODE);
 if ($normalizedJson === false) {
@@ -460,6 +501,8 @@ try {
 json_response([
     'success' => true,
     'material_id' => $materialId,
+    'source' => $generationSource,
+    'warning' => $generationWarning !== '' ? $generationWarning : null,
     'data' => $normalizedContent,
     // Optional debug output: enable in .env with STUDY_BUDDY_DEBUG=1
     'openrouter_debug' => app_env('STUDY_BUDDY_DEBUG', '') === '1' ? [
