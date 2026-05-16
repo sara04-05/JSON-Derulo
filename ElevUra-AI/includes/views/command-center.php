@@ -233,29 +233,24 @@ $toolCtaAuthAttr = empty($loggedIn) ? ' data-auth-open="login"' : '';
 
             </div>
 
-            <div class="score-details" style="margin-top: 18px;">
-
-                <div class="detail-item">
-                    <h4>Templates</h4>
-                    <div class="detail-value">6</div>
-                </div>
-
-                <div class="detail-item">
-                    <h4>Export</h4>
-                    <div class="detail-value">PDF</div>
-                </div>
-
-                <div class="detail-item">
-                    <h4>AI Rewrite</h4>
-                    <div class="detail-value">On</div>
-                </div>
-
-                <div class="detail-item">
-                    <h4>ATS Ready</h4>
-                    <div class="detail-value">Yes</div>
-                </div>
-
-            </div>
+            <ul class="cv-writer-features" aria-label="CV Writer capabilities">
+                <li class="cv-writer-feature">
+                    <span class="cv-writer-feature__label">Templates</span>
+                    <span class="cv-writer-feature__value">6</span>
+                </li>
+                <li class="cv-writer-feature">
+                    <span class="cv-writer-feature__label">Export</span>
+                    <span class="cv-writer-feature__value">PDF</span>
+                </li>
+                <li class="cv-writer-feature">
+                    <span class="cv-writer-feature__label">AI Rewrite</span>
+                    <span class="cv-writer-feature__value">On</span>
+                </li>
+                <li class="cv-writer-feature">
+                    <span class="cv-writer-feature__label">ATS Ready</span>
+                    <span class="cv-writer-feature__value">Yes</span>
+                </li>
+            </ul>
 
         </div>
 

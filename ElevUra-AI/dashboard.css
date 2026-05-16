@@ -1876,7 +1876,74 @@ body {
             font-weight: 600;
         }
 
+        #cv-writer-section .wow-content-card {
+            text-align: center;
+        }
+
+        #cv-writer-section .wow-content-card p {
+            max-width: 520px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #cv-writer-section .wow-layout {
+            grid-template-columns: minmax(280px, 1fr) minmax(340px, 1.05fr);
+            max-width: 1040px;
+        }
+
+        #cv-writer-section .cv-demo-card {
+            justify-content: flex-start;
+            gap: 18px;
+        }
+
+        #cv-writer-section .cv-writer-preview {
+            flex: 1;
+            min-height: 0;
+        }
+
+        .cv-writer-features {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 10px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .cv-writer-feature {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            min-height: 72px;
+            padding: 12px 8px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            text-align: center;
+        }
+
+        .cv-writer-feature__label {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: #94a3b8;
+        }
+
+        .cv-writer-feature__value {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            line-height: 1.1;
+        }
+
         @media (max-width: 900px) {
+            .cv-writer-features {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
             .wow-item {
                 grid-template-columns: 1fr;
             }
@@ -4185,6 +4252,36 @@ body {
             padding-top: 8px;
         }
 
+        .ud-sessions-block--grid {
+            grid-column: 2 / -1;
+            grid-row: 2;
+            margin-top: 0;
+            padding-top: 16px;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 140px;
+        }
+
+        .ud-sessions-block--grid .ud-section-head--sub {
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        .ud-sessions-block--grid .ud-grid--interviews {
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            flex: 1;
+            align-content: start;
+        }
+
+        .ud-sessions-block--grid .ud-empty-card {
+            grid-column: 1 / -1;
+        }
+
+        .ud-sessions-block--grid .ud-card:hover {
+            transform: translateY(-2px);
+        }
+
         .ud-analytics-panel {
             padding: 4px 0 8px;
         }
@@ -4406,31 +4503,6 @@ body {
 
         .ud-stat-card--chart {
             grid-row: span 2;
-        }
-
-        .ud-stat-card--wide {
-            grid-column: 2 / -1;
-            min-height: 160px;
-        }
-
-        .ud-stat-card--wide .ud-card-meta {
-            flex-shrink: 0;
-        }
-
-        .ud-stat-card--wide .ud-feedback-callout {
-            flex: 1;
-            min-height: 0;
-            max-height: 220px;
-            overflow-y: auto;
-        }
-
-        .ud-stat-card--wide .ud-feedback-callout::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .ud-stat-card--wide .ud-feedback-callout::-webkit-scrollbar-thumb {
-            background: rgba(0, 229, 255, 0.25);
-            border-radius: 4px;
         }
 
         .ud-progress--glow {
@@ -4820,7 +4892,7 @@ body {
                 grid-column: 1 / -1;
             }
 
-            .ud-stat-card--wide {
+            .ud-sessions-block--grid {
                 grid-column: 1 / -1;
             }
         }

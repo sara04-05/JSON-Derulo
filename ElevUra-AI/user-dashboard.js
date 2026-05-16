@@ -1,5 +1,5 @@
-/**
- * ElevUra — user dashboard page (separate from homepage)
+﻿/**
+ * ElevUra â€” user dashboard page (separate from homepage)
  */
 (function () {
   const STATUS_CLASS = {
@@ -67,7 +67,7 @@
             <span class="ats-score__label">ATS</span>
           </div>
         </div>
-        <p class="ud-card-meta">Last edited · ${escapeHtml(cv.edited)}</p>
+        <p class="ud-card-meta">Last edited Â· ${escapeHtml(cv.edited)}</p>
         <div class="ud-card-actions">
           <a href="CVwriter.php" class="ud-btn ud-btn--ghost">Edit</a>
           ${
@@ -98,7 +98,7 @@
           </div>
           <span class="job-status ${STATUS_CLASS[job.status] || ''}">${escapeHtml(job.status)}</span>
         </div>
-        <p class="ud-card-meta">Applied · ${escapeHtml(job.date)}</p>
+        <p class="ud-card-meta">Applied Â· ${escapeHtml(job.date)}</p>
       </article>`
       )
       .join('');
@@ -177,89 +177,10 @@
     };
   }
 
-  function tierClass(tier) {
-    const t = tier.toLowerCase();
-    if (t.includes('excellent') || t.includes('strong') || t.includes('ready')) return 'ud-feedback-tier--good';
-    if (t.includes('needs') || t.includes('practice') || t.includes('improve')) return 'ud-feedback-tier--warn';
-    return 'ud-feedback-tier--neutral';
-  }
-
-  function renderFeedbackPanel(aiFeedback) {
-    const root = document.getElementById('ud-feedback-root');
-    if (!root) return;
-
-    const parsed = parseInterviewFeedback(aiFeedback);
-
-    if (parsed.empty) {
-      root.className = 'ud-feedback-callout ud-feedback-callout--empty';
-      root.innerHTML =
-        '<div class="ud-feedback-empty">' +
-        '<span class="ud-feedback-callout__icon" aria-hidden="true">' +
-        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>' +
-        '</span>' +
-        '<p class="ud-feedback-text">' +
-        escapeHtml(FEEDBACK_EMPTY_MSG) +
-        '</p></div>';
-      return;
-    }
-
-    const tips = parsed.items
-      .filter((item) => item && (item.feedback || item.question))
-      .slice(0, 3)
-      .map((item) => {
-        const score = typeof item.score === 'number' ? item.score : parseInt(item.score, 10) || 0;
-        const tip = String(item.feedback || '').trim() || String(item.question || '').trim();
-        return { score, tip };
-      })
-      .filter((t) => t.tip);
-
-    const tierHtml = parsed.tier
-      ? '<span class="ud-feedback-tier ' +
-        tierClass(parsed.tier) +
-        '">' +
-        escapeHtml(parsed.tier) +
-        '</span>'
-      : '';
-
-    const roleHtml = parsed.jobTitle
-      ? '<span class="ud-feedback-role">' + escapeHtml(parsed.jobTitle) + '</span>'
-      : '';
-
-    let tipsHtml = '';
-    if (tips.length) {
-      tipsHtml =
-        '<ul class="ud-feedback-tips">' +
-        tips
-          .map(
-            (t) =>
-              '<li class="ud-feedback-tip">' +
-              '<span class="ud-feedback-tip__score">' +
-              t.score +
-              '</span>' +
-              '<span class="ud-feedback-tip__text">' +
-              escapeHtml(t.tip) +
-              '</span></li>'
-          )
-          .join('') +
-        '</ul>';
-    }
-
-    root.className = 'ud-feedback-callout';
-    root.innerHTML =
-      '<div class="ud-feedback-callout__header">' +
-      roleHtml +
-      tierHtml +
-      '</div>' +
-      '<p class="ud-feedback-text">' +
-      escapeHtml(parsed.summary || 'Review your latest session below for detailed notes.') +
-      '</p>' +
-      tipsHtml;
-  }
-
   function interviewFeedbackPreview(feedback) {
     const parsed = parseInterviewFeedback(feedback);
     if (parsed.empty) return '';
-    const role = parsed.jobTitle ? parsed.jobTitle + ' — ' : '';
+    const role = parsed.jobTitle ? parsed.jobTitle + ' - ' : '';
     return role + parsed.summary;
   }
 
@@ -276,14 +197,14 @@
           return `
       <article class="ud-card ud-interview-card">
         <div class="ud-interview-card__head">
-          <h4 class="ud-card-title">Session · ${escapeHtml(i.date)}</h4>
+          <h4 class="ud-card-title">Session Â· ${escapeHtml(i.date)}</h4>
           <span class="ud-interview-score">${i.interview_score}</span>
         </div>
         <div class="ud-interview-metrics">
           <span class="ud-card-meta">Communication ${i.communication_score}%</span>
           <span class="ud-card-meta">Confidence ${i.confidence_score}%</span>
         </div>
-        <p class="ud-card-meta ud-interview-feedback">${escapeHtml(preview.slice(0, 120))}${preview.length > 120 ? '…' : ''}</p>
+        <p class="ud-card-meta ud-interview-feedback">${escapeHtml(preview.slice(0, 120))}${preview.length > 120 ? 'â€¦' : ''}</p>
       </article>`;
         }
       )
@@ -318,7 +239,6 @@
     if (confBar) confBar.style.setProperty('--progress', `${conf}%`);
     if (commScore) commScore.textContent = `${comm}%`;
     if (confScore) confScore.textContent = `${conf}%`;
-    renderFeedbackPanel(analytics?.ai_feedback);
 
     if (sparkline && interviews?.length) {
       const trend = interviews.slice(0, 7).reverse();
