@@ -1,19 +1,14 @@
 <?php
 declare(strict_types=1);
+
 $pageSlug = 'study-buddy';
 $pageTitle = 'Study Buddy — ElevUra';
-$activeNav = '';
+$activeNav = 'study-buddy';
+
 require_once __DIR__ . '/includes/init.php';
-require_once __DIR__ . '/includes/head.php';
+require_once __DIR__ . '/includes/layout-start.php';
 ?>
-    <div class="container-wrapper">
-<?php require __DIR__ . '/includes/sidebar.php'; ?>
-        <main class="main-content">
-<?php require __DIR__ . '/includes/header.php'; ?>
+            <section class="content-area">
 <?php require __DIR__ . '/includes/views/study-buddy.php'; ?>
-        </main>
-    </div>
-<?php require __DIR__ . '/includes/auth-modal.php'; ?>
-<?php require __DIR__ . '/includes/scripts.php'; ?>
-</body>
-</html>
+            </section>
+<?php require __DIR__ . '/includes/layout-end.php'; ?>
