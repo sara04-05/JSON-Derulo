@@ -1876,6 +1876,11 @@ body {
             font-weight: 600;
         }
 
+        #cv-writer-section .wow-content-card,
+        #cv-writer-section .cv-demo-card {
+            padding-top: 48px;
+        }
+
         #cv-writer-section .wow-content-card {
             text-align: center;
         }
@@ -1899,6 +1904,121 @@ body {
         #cv-writer-section .cv-writer-preview {
             flex: 1;
             min-height: 0;
+        }
+
+        #mock-interview.wow-section {
+            max-width: 1040px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #mock-interview .wow-layout,
+        #mock-interview .mi-layout {
+            grid-template-columns: minmax(300px, 1fr) minmax(320px, 1fr);
+            gap: 24px;
+            align-items: stretch;
+            max-width: none;
+            margin-top: 0;
+        }
+
+        #mock-interview .mi-intro-card,
+        #mock-interview .mi-demo-rail {
+            padding: 40px 32px 32px;
+        }
+
+        #mock-interview .mi-intro-card {
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        #mock-interview .mi-intro-copy {
+            max-width: 480px;
+            margin: 0 auto 8px;
+        }
+
+        #mock-interview .mi-intro-copy p {
+            margin-bottom: 14px;
+        }
+
+        #mock-interview .mi-intro-copy p:last-child {
+            margin-bottom: 0;
+        }
+
+        #mock-interview .mi-setup {
+            margin-top: 24px;
+            padding: 20px;
+            border-radius: 14px;
+            background: rgba(0, 0, 0, 0.22);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            text-align: left;
+            border-top: none;
+        }
+
+        #mock-interview .mi-demo-rail {
+            justify-content: flex-start;
+            gap: 14px;
+        }
+
+        #mock-interview .mi-preview-panel {
+            padding: 16px 18px;
+        }
+
+        #mock-interview .mi-preview-score {
+            margin-top: 12px;
+        }
+
+        #mock-interview .mi-preview-score .big-score {
+            font-size: 40px;
+        }
+
+        #mock-interview .mi-metric-grid {
+            margin-top: 12px;
+            gap: 12px;
+        }
+
+        #mock-interview .mi-metric-value {
+            font-size: 20px;
+        }
+
+        #mock-interview .mi-feedback-stack {
+            margin-top: 12px;
+            gap: 10px;
+        }
+
+        #mock-interview .mi-feedback-item {
+            font-size: 12px;
+            padding: 10px 12px;
+        }
+
+        #mock-interview a.btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        .wow-section-cta {
+            margin-top: 36px;
+            padding-top: 0;
+            font-size: 20px;
+            line-height: 1.05;
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            color: white;
+            text-align: center;
+        }
+
+        @media (max-width: 900px) {
+            #mock-interview .wow-layout,
+            #mock-interview .mi-layout {
+                grid-template-columns: 1fr;
+            }
+
+            #mock-interview .mi-intro-card,
+            #mock-interview .mi-demo-rail {
+                padding: 28px 22px 24px;
+            }
         }
 
         .cv-writer-features {
@@ -4252,36 +4372,6 @@ body {
             padding-top: 8px;
         }
 
-        .ud-sessions-block--grid {
-            grid-column: 2 / -1;
-            grid-row: 2;
-            margin-top: 0;
-            padding-top: 16px;
-            min-width: 0;
-            display: flex;
-            flex-direction: column;
-            min-height: 140px;
-        }
-
-        .ud-sessions-block--grid .ud-section-head--sub {
-            margin-top: 0;
-            margin-bottom: 10px;
-        }
-
-        .ud-sessions-block--grid .ud-grid--interviews {
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            flex: 1;
-            align-content: start;
-        }
-
-        .ud-sessions-block--grid .ud-empty-card {
-            grid-column: 1 / -1;
-        }
-
-        .ud-sessions-block--grid .ud-card:hover {
-            transform: translateY(-2px);
-        }
-
         .ud-analytics-panel {
             padding: 4px 0 8px;
         }
@@ -4503,6 +4593,31 @@ body {
 
         .ud-stat-card--chart {
             grid-row: span 2;
+        }
+
+        .ud-stat-card--wide {
+            grid-column: 2 / -1;
+            min-height: 160px;
+        }
+
+        .ud-stat-card--wide .ud-card-meta {
+            flex-shrink: 0;
+        }
+
+        .ud-stat-card--wide .ud-feedback-callout {
+            flex: 1;
+            min-height: 0;
+            max-height: 220px;
+            overflow-y: auto;
+        }
+
+        .ud-stat-card--wide .ud-feedback-callout::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .ud-stat-card--wide .ud-feedback-callout::-webkit-scrollbar-thumb {
+            background: rgba(0, 229, 255, 0.25);
+            border-radius: 4px;
         }
 
         .ud-progress--glow {
@@ -4892,7 +5007,7 @@ body {
                 grid-column: 1 / -1;
             }
 
-            .ud-sessions-block--grid {
+            .ud-stat-card--wide {
                 grid-column: 1 / -1;
             }
         }

@@ -150,14 +150,26 @@ $udTier = e($currentUser['tier'] ?? 'Free');
                                             <div class="ud-progress ud-progress--glow"><div class="ud-progress__bar ud-progress__bar--purple" id="ud-conf-bar" style="--progress: 0%"></div></div>
                                             <p class="ud-stat-value ud-stat-value--sm" id="ud-conf-score">0%</p>
                                         </article>
-                                        <div class="ud-card ud-sessions-block ud-sessions-block--grid">
-                                            <div class="ud-section-head ud-section-head--sub">
-                                                <h3 class="ud-subtitle">Recent sessions</h3>
-                                                <span class="ud-section-divider" aria-hidden="true"></span>
+                                        <article class="ud-card ud-stat-card ud-stat-card--wide">
+                                            <p class="ud-card-meta">AI feedback summary</p>
+                                            <div class="ud-feedback-callout ud-feedback-callout--empty" id="ud-feedback-root" aria-live="polite">
+                                                <div class="ud-feedback-empty">
+                                                    <span class="ud-feedback-callout__icon" aria-hidden="true">
+                                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                                                    </span>
+                                                    <p class="ud-feedback-text">Complete a mock interview on the Command Center to receive AI feedback.</p>
+                                                </div>
                                             </div>
-                                            <div class="ud-grid ud-grid--interviews" id="ud-interviews-grid"></div>
-                                        </div>
+                                        </article>
                                     </div>
+                                </div>
+
+                                <div class="ud-sessions-block">
+                                    <div class="ud-section-head ud-section-head--sub">
+                                        <h3 class="ud-subtitle">Recent sessions</h3>
+                                        <span class="ud-section-divider" aria-hidden="true"></span>
+                                    </div>
+                                    <div class="ud-grid ud-grid--interviews" id="ud-interviews-grid"></div>
                                 </div>
                             </div>
                         </section>
