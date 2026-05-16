@@ -2033,8 +2033,8 @@ body {
                 grid-template-columns: 1fr;
             }
         }
-        /* ==================== HOW STUDY BUDDY WORKS ==================== */
-        .study-buddy-works {
+        /* ==================== HOW Career Prep WORKS ==================== */
+        .career-path-works {
             width: 100%;
             max-width: 900px;
             margin-top: 48px;
@@ -2048,7 +2048,7 @@ body {
             padding: 30px;
         }
 
-        .study-buddy-title {
+        .career-path-title {
             font-size: 26px;
             font-weight: 700;
             color: var(--text-primary);
@@ -2059,7 +2059,7 @@ body {
             z-index: 1;
         }
 
-        .study-buddy-grid {
+        .career-path-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 20px;
@@ -2067,7 +2067,7 @@ body {
             z-index: 1;
         }
 
-        .study-buddy-card {
+        .career-path-card {
             display: flex;
             flex-direction: column;
             gap: 12px;
@@ -2078,50 +2078,50 @@ body {
             transition: all 0.28s ease;
         }
 
-        .study-buddy-card:hover {
+        .career-path-card:hover {
             transform: translateY(-4px);
             border-color: rgba(0, 242, 255, 0.3);
             box-shadow: 0 12px 28px rgba(0, 242, 255, 0.1);
         }
 
-        .study-buddy-card.purple {
+        .career-path-card.purple {
             border-color: rgba(176, 140, 255, 0.15);
             background: rgba(176, 140, 255, 0.05);
         }
 
-        .study-buddy-card.purple:hover {
+        .career-path-card.purple:hover {
             border-color: rgba(176, 140, 255, 0.3);
             box-shadow: 0 12px 28px rgba(176, 140, 255, 0.1);
         }
 
-        .study-buddy-card.pink {
+        .career-path-card.pink {
             border-color: rgba(244, 114, 182, 0.15);
             background: rgba(244, 114, 182, 0.05);
         }
 
-        .study-buddy-card.pink:hover {
+        .career-path-card.pink:hover {
             border-color: rgba(244, 114, 182, 0.3);
             box-shadow: 0 12px 28px rgba(244, 114, 182, 0.1);
         }
 
-        .study-buddy-icon {
+        .career-path-icon {
             font-size: 28px;
             line-height: 1;
         }
 
-        .study-buddy-card-title {
+        .career-path-card-title {
             font-weight: 700;
             font-size: 14px;
             color: var(--text-primary);
         }
 
-        .study-buddy-card-desc {
+        .career-path-card-desc {
             font-size: 12px;
             color: var(--text-secondary);
             line-height: 1.6;
         }
 
-        .study-buddy-btn {
+        .career-path-btn {
             height: auto;
             min-height: 40px;
             margin: 3px;
@@ -2140,7 +2140,7 @@ body {
         }
 
 
-        .study-buddy-works h3 {
+        .career-path-works h3 {
             font-size: 44px;
             line-height: 1.05;
             font-weight: 800;
@@ -2152,7 +2152,7 @@ body {
             margin-bottom: 28px;
         }
 
-        .study-buddy-works h3 span {
+        .career-path-works h3 span {
             background: linear-gradient(90deg, #00f2ff 0%, #67e8f9 45%, #c084fc 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -2160,10 +2160,10 @@ body {
         }
 
         @media (max-width: 768px) {
-            .study-buddy-grid {
+            .career-path-grid {
                 grid-template-columns: 1fr;
             }
-            .study-buddy-works {
+            .career-path-works {
                 padding: 24px;
             }
         }
@@ -3615,13 +3615,13 @@ body {
 
         [data-protected-block].is-protected-locked,
         .module-card.is-protected-locked,
-        .study-buddy-card.is-protected-locked {
+        .career-path-card.is-protected-locked {
             filter: blur(0.4px);
         }
 
         [data-protected-block].is-protected-locked::after,
         .module-card.is-protected-locked::after,
-        .study-buddy-card.is-protected-locked::after {
+        .career-path-card.is-protected-locked::after {
             content: '';
             position: absolute;
             inset: 0;
@@ -3633,13 +3633,13 @@ body {
 
         .tools-unlocked [data-protected-block].is-protected-locked,
         .tools-unlocked .module-card.is-protected-locked,
-        .tools-unlocked .study-buddy-card.is-protected-locked {
+        .tools-unlocked .career-path-card.is-protected-locked {
             filter: none;
         }
 
         .tools-unlocked [data-protected-block].is-protected-locked::after,
         .tools-unlocked .module-card.is-protected-locked::after,
-        .tools-unlocked .study-buddy-card.is-protected-locked::after {
+        .tools-unlocked .career-path-card.is-protected-locked::after {
             opacity: 0;
         }
 

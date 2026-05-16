@@ -1,9 +1,9 @@
 /**
- * Study Buddy page — visual polish only (scoped to study-buddy.php).
+ * Career Prep page — visual polish only (scoped to career-path.php).
  * Tokens and patterns match dashboard.css (module-card, wow-content-card, ud-card).
  */
 
-body[data-page="study-buddy"] .study-buddy-works {
+body[data-page="career-path"] .career-path-works {
     background: linear-gradient(145deg, rgba(21, 23, 23, 0.92) 0%, rgba(12, 14, 18, 0.88) 100%);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
@@ -17,18 +17,18 @@ body[data-page="study-buddy"] .study-buddy-works {
     text-align: center;
 }
 
-body[data-page="study-buddy"] .study-buddy-works > .wow-badge {
+body[data-page="career-path"] .career-path-works > .wow-badge {
     margin-left: auto;
     margin-right: auto;
 }
 
-body[data-page="study-buddy"] .study-buddy-grid {
+body[data-page="career-path"] .career-path-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
     text-align: left;
 }
 
-body[data-page="study-buddy"] .study-buddy-card {
+body[data-page="career-path"] .career-path-card {
     padding: 22px;
     border-radius: 16px;
     cursor: pointer;
@@ -36,11 +36,11 @@ body[data-page="study-buddy"] .study-buddy-card {
     transition: all 0.25s ease;
 }
 
-body[data-page="study-buddy"] .study-buddy-card:hover {
+body[data-page="career-path"] .career-path-card:hover {
     transform: translateY(-4px);
 }
 
-body[data-page="study-buddy"] .study-buddy-icon {
+body[data-page="career-path"] .career-path-icon {
     width: 42px;
     height: 42px;
     border-radius: 12px;
@@ -52,31 +52,31 @@ body[data-page="study-buddy"] .study-buddy-icon {
     flex-shrink: 0;
 }
 
-body[data-page="study-buddy"] .study-buddy-card.purple .study-buddy-icon {
+body[data-page="career-path"] .career-path-card.purple .career-path-icon {
     color: var(--accent-purple);
     background: rgba(176, 140, 255, 0.08);
     border: 1px solid rgba(176, 140, 255, 0.35);
 }
 
-body[data-page="study-buddy"] .study-buddy-card.pink .study-buddy-icon {
+body[data-page="career-path"] .career-path-card.pink .career-path-icon {
     color: #f472b6;
     background: rgba(244, 114, 182, 0.08);
     border: 1px solid rgba(244, 114, 182, 0.35);
 }
 
-body[data-page="study-buddy"] .study-buddy-card.purple .study-buddy-icon::before {
+body[data-page="career-path"] .career-path-card.purple .career-path-icon::before {
     content: "✦";
 }
 
-body[data-page="study-buddy"] .study-buddy-card.pink .study-buddy-icon::before {
+body[data-page="career-path"] .career-path-card.pink .career-path-icon::before {
     content: "◆";
 }
 
-body[data-page="study-buddy"] .study-buddy-card-desc {
+body[data-page="career-path"] .career-path-card-desc {
     flex: 1;
 }
 
-body[data-page="study-buddy"] .study-buddy-btn {
+body[data-page="career-path"] .career-path-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -89,7 +89,7 @@ body[data-page="study-buddy"] .study-buddy-btn {
     transition: all 0.25s ease;
 }
 
-body[data-page="study-buddy"] .study-buddy-btn:hover {
+body[data-page="career-path"] .career-path-btn:hover {
     background: #ffffff;
     color: #0f172a;
     transform: translateY(-1px);
@@ -97,19 +97,19 @@ body[data-page="study-buddy"] .study-buddy-btn:hover {
 }
 
 /* Workspace (inline layout props moved here; IDs/classes unchanged) */
-body[data-page="study-buddy"] #study-buddy-workspace {
+body[data-page="career-path"] #career-path-workspace {
     margin-top: 40px;
     width: 100%;
     max-width: 900px;
 }
 
-body[data-page="study-buddy"] #study-buddy-workspace .wow-layout {
+body[data-page="career-path"] #career-path-workspace .wow-layout {
     grid-template-columns: 1fr;
     margin-top: 0;
     gap: 0;
 }
 
-body[data-page="study-buddy"] #study-buddy-workspace .wow-content-card {
+body[data-page="career-path"] #career-path-workspace .wow-content-card {
     background: linear-gradient(155deg, rgba(18, 20, 22, 0.95) 0%, rgba(12, 14, 16, 0.98) 100%);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
@@ -120,55 +120,55 @@ body[data-page="study-buddy"] #study-buddy-workspace .wow-content-card {
     padding-bottom: 24px;
 }
 
-body[data-page="study-buddy"] #study-buddy-workspace .wow-content-card > .wow-badge {
+body[data-page="career-path"] #career-path-workspace .wow-content-card > .wow-badge {
     display: inline-flex;
 }
 
-body[data-page="study-buddy"] #study-buddy-workspace .mi-setup {
+body[data-page="career-path"] #career-path-workspace .mi-setup {
     margin-top: 20px;
     padding-top: 20px;
     border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-body[data-page="study-buddy"] #sb-results {
+body[data-page="career-path"] #sb-results {
     margin-top: 30px;
     padding-top: 24px;
     border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-body[data-page="study-buddy"] #sb-results .mi-btn-row {
+body[data-page="career-path"] #sb-results .mi-btn-row {
     margin-top: 20px;
 }
 
-body[data-page="study-buddy"] #sb-error.hint.err {
+body[data-page="career-path"] #sb-error.hint.err {
     margin-top: 14px;
     text-align: left;
 }
 
-/* Dynamic results (classes from study-buddy.js — style only) */
-body[data-page="study-buddy"] #sb-content-container .ud-card {
+/* Dynamic results (classes from career-path.js — style only) */
+body[data-page="career-path"] #sb-content-container .ud-card {
     background: linear-gradient(155deg, rgba(18, 20, 22, 0.95) 0%, rgba(12, 14, 16, 0.98) 100%);
     border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: 16px;
     margin-bottom: 20px;
 }
 
-body[data-page="study-buddy"] #sb-content-container .ud-card:last-child {
+body[data-page="career-path"] #sb-content-container .ud-card:last-child {
     margin-bottom: 0;
 }
 
-body[data-page="study-buddy"] #sb-content-container .ud-card-title {
+body[data-page="career-path"] #sb-content-container .ud-card-title {
     font-size: 1.05rem;
     line-height: 1.45;
 }
 
-body[data-page="study-buddy"] #sb-content-container .quiz-options {
+body[data-page="career-path"] #sb-content-container .quiz-options {
     display: grid;
     gap: 10px;
     margin-top: 15px;
 }
 
-body[data-page="study-buddy"] #sb-content-container .quiz-options .ud-btn {
+body[data-page="career-path"] #sb-content-container .quiz-options .ud-btn {
     width: 100%;
     justify-content: flex-start;
     text-align: left;
@@ -177,7 +177,7 @@ body[data-page="study-buddy"] #sb-content-container .quiz-options .ud-btn {
     font-size: 14px;
 }
 
-body[data-page="study-buddy"] #sb-content-container .sb-flashcard {
+body[data-page="career-path"] #sb-content-container .sb-flashcard {
     min-height: 150px;
     display: flex;
     align-items: center;
@@ -190,22 +190,22 @@ body[data-page="study-buddy"] #sb-content-container .sb-flashcard {
     transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.28s ease;
 }
 
-body[data-page="study-buddy"] #sb-content-container .sb-flashcard:hover {
+body[data-page="career-path"] #sb-content-container .sb-flashcard:hover {
     transform: translateY(-2px);
     border-color: rgba(0, 229, 255, 0.22);
     box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
 }
 
 @media (max-width: 768px) {
-    body[data-page="study-buddy"] .study-buddy-grid {
+    body[data-page="career-path"] .career-path-grid {
         grid-template-columns: 1fr;
     }
 
-    body[data-page="study-buddy"] .study-buddy-works {
+    body[data-page="career-path"] .career-path-works {
         padding: 24px;
     }
 
-    body[data-page="study-buddy"] #study-buddy-workspace .wow-content-card {
+    body[data-page="career-path"] #career-path-workspace .wow-content-card {
         padding: 24px 20px;
     }
 }

@@ -13,9 +13,9 @@
     <?php elseif (($pageSlug ?? 'home') === 'research-assistant'): ?>
         <script src="dashboard-interactions.js"></script>
         <script src="research-assistant.js"></script>
-    <?php elseif (($pageSlug ?? 'home') === 'study-buddy'): ?>
+    <?php elseif (($pageSlug ?? 'home') === 'career-path'): ?>
         <script src="dashboard-interactions.js"></script>
-        <script src="study-buddy.js"></script>
+        <script src="career-path.js"></script>
 <?php else: ?>
     <script src="dashboard-interactions.js"></script>
     <script>

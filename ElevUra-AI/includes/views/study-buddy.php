@@ -1,23 +1,23 @@
-<section class="study-buddy-works">
+<section class="career-path-works">
    <span class="wow-badge">PRACTICE &amp; INSTANT FEEDBACK</span>
     <h3>Study <span> Buddy</span> AI</h3>
-    <div class="study-buddy-grid">
-        <div class="study-buddy-card purple" data-sb-type="quiz" data-protected-tool="study-buddy">
-            <div class="study-buddy-icon" aria-hidden="true"></div>
-            <div class="study-buddy-card-title">Adaptive Quizzes</div>
-            <div class="study-buddy-card-desc">Dynamically generated questions that adjust difficulty based on your performance and aspiring learning goals.</div>
-            <button type="button" class="study-buddy-btn" data-sb-type="quiz" data-protected-tool="study-buddy">Execute</button>
+    <div class="career-path-grid">
+        <div class="career-path-card purple" data-sb-type="quiz" data-protected-tool="career-path">
+            <div class="career-path-icon" aria-hidden="true"></div>
+            <div class="career-path-card-title">Adaptive Quizzes</div>
+            <div class="career-path-card-desc">Dynamically generated questions that adjust difficulty based on your performance and aspiring learning goals.</div>
+            <button type="button" class="career-path-btn" data-sb-type="quiz" data-protected-tool="career-path">Execute</button>
         </div>
-        <div class="study-buddy-card pink" data-sb-type="flashcard" data-protected-tool="study-buddy">
-            <div class="study-buddy-icon" aria-hidden="true"></div>
-            <div class="study-buddy-card-title">Personalized Flashcards</div>
-            <div class="study-buddy-card-desc">AI creates structured interview prep cards based on your role, seniority, and industry focus.</div>
-            <button type="button" class="study-buddy-btn" data-sb-type="flashcard" data-protected-tool="study-buddy">Execute</button>
+        <div class="career-path-card pink" data-sb-type="flashcard" data-protected-tool="career-path">
+            <div class="career-path-icon" aria-hidden="true"></div>
+            <div class="career-path-card-title">Personalized Flashcards</div>
+            <div class="career-path-card-desc">AI creates structured interview prep cards based on your role, seniority, and industry focus.</div>
+            <button type="button" class="career-path-btn" data-sb-type="flashcard" data-protected-tool="career-path">Execute</button>
         </div>
     </div>
 
-    <!-- STUDY BUDDY WORKSPACE (Hidden by default) -->
-    <div id="study-buddy-workspace" class="wow-section hidden" style="margin-top: 40px; width: 100%; max-width: 900px;">
+    <!-- Career Prep WORKSPACE (Hidden by default) -->
+    <div id="career-path-workspace" class="wow-section hidden" style="margin-top: 40px; width: 100%; max-width: 900px;">
         <div class="wow-layout">
             <div class="wow-content-card">
                 <span class="wow-badge" id="sb-workspace-badge">STUDY PREP</span>
@@ -58,7 +58,7 @@
                     </div>
 
                     <div class="btn-row mi-btn-row">
-                        <button type="button" class="btn btn-primary" id="btnGenerateStudy" data-protected-tool="study-buddy">Generate Materials</button>
+                        <button type="button" class="btn btn-primary" id="btnGenerateStudy" data-protected-tool="career-path">Generate Materials</button>
                     </div>
                     <p id="sb-error" class="hint err hidden"></p>
                 </div>

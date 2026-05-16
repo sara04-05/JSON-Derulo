@@ -4,8 +4,8 @@
 (function () {
   const LOCKABLE_SELECTOR = [
     '[data-protected-block]',
-    '.study-buddy-card[data-protected-tool]',
-    '.study-buddy-btn[data-protected-tool]',
+    '.career-path-card[data-protected-tool]',
+    '.career-path-btn[data-protected-tool]',
     '#btnStart[data-protected-tool]',
   ].join(',');
 

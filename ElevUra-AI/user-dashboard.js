@@ -107,7 +107,7 @@
   function renderCourses(container, items) {
     if (!container) return;
     if (!items?.length) {
-      container.innerHTML = emptyCard('Start learning with Study Buddy to build your course progress.', 'courses');
+      container.innerHTML = emptyCard('Start learning with Career Prep to build your course progress.', 'courses');
       return;
     }
     container.innerHTML = items

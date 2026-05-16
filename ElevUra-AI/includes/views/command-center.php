@@ -59,14 +59,14 @@ $toolCtaAuthAttr = empty($loggedIn) ? ' data-auth-open="login"' : '';
                         </p>
                     </div>
 
-                    <!-- Study Buddy (now a dedicated page) -->
-                    <div class="module-card" id="module-study-buddy" data-protected-tool="study-buddy">
+                    <!-- Career Prep (now a dedicated page) -->
+                    <div class="module-card" id="module-career-path" data-protected-tool="career-path">
                         <div class="module-header">
                             <div class="module-icon module-icon-accent-cyan" aria-hidden="true">
                                 <svg viewBox="0 0 24 24"><circle cx="9" cy="12" r="5"/><circle cx="15" cy="12" r="5"/></svg>
                             </div>
                         </div>
-                        <h3 class="module-title">Study Buddy</h3>
+                        <h3 class="module-title">Career Prep</h3>
                         <p class="module-description">
                             Explains complex topics, generates quizzes, creates personalized study plans, and prepares for exams.
                         </p>
@@ -278,28 +278,28 @@ $toolCtaAuthAttr = empty($loggedIn) ? ' data-auth-open="login"' : '';
 
         </section>
 
-        <!-- HOW STUDY BUDDY WORKS SECTION -->
-        <section class="study-buddy-works" id="study-buddy-works">
+        <!-- HOW Career Prep WORKS SECTION -->
+        <section class="career-path-works" id="career-path-works">
            <span class="wow-badge">PRACTICE &amp; INSTANT FEEDBACK</span>
             <h3>Study <span> Buddy</span> AI</h3>
-            <div class="study-buddy-grid">
-                <div class="study-buddy-card" data-protected-tool="study-buddy">
-                    <div class="study-buddy-icon" aria-hidden="true"></div>
-                    <div class="study-buddy-card-title">AI-Powered Explanations</div>
-                    <div class="study-buddy-card-desc">Enter any topic and get instant, personalized explanations tailored to your learning level with real-world examples.</div>
-                    <button type="button" class="study-buddy-btn" data-protected-tool="study-buddy">Execute</button>
+            <div class="career-path-grid">
+                <div class="career-path-card" data-protected-tool="career-path">
+                    <div class="career-path-icon" aria-hidden="true"></div>
+                    <div class="career-path-card-title">AI-Powered Explanations</div>
+                    <div class="career-path-card-desc">Enter any topic and get instant, personalized explanations tailored to your learning level with real-world examples.</div>
+                    <button type="button" class="career-path-btn" data-protected-tool="career-path">Execute</button>
                 </div>
-                <div class="study-buddy-card purple" data-protected-tool="study-buddy">
-                    <div class="study-buddy-icon" aria-hidden="true"></div>
-                    <div class="study-buddy-card-title">Adaptive Quizzes</div>
-                    <div class="study-buddy-card-desc">Dynamically generated questions that adjust difficulty based on your performance and aspiring learning goals.</div>
-                    <button type="button" class="study-buddy-btn" data-protected-tool="study-buddy">Execute</button>
+                <div class="career-path-card purple" data-protected-tool="career-path">
+                    <div class="career-path-icon" aria-hidden="true"></div>
+                    <div class="career-path-card-title">Adaptive Quizzes</div>
+                    <div class="career-path-card-desc">Dynamically generated questions that adjust difficulty based on your performance and aspiring learning goals.</div>
+                    <button type="button" class="career-path-btn" data-protected-tool="career-path">Execute</button>
                 </div>
-                <div class="study-buddy-card pink" data-protected-tool="study-buddy">
-                    <div class="study-buddy-icon" aria-hidden="true"></div>
-                    <div class="study-buddy-card-title">Personalized Study Plans</div>
-                    <div class="study-buddy-card-desc">AI creates structured 4-week roadmaps aligned with your goals, intensity, and schedule for optimal learning.</div>
-                    <button type="button" class="study-buddy-btn" data-protected-tool="study-buddy">Execute</button>
+                <div class="career-path-card pink" data-protected-tool="career-path">
+                    <div class="career-path-icon" aria-hidden="true"></div>
+                    <div class="career-path-card-title">Personalized Study Plans</div>
+                    <div class="career-path-card-desc">AI creates structured 4-week roadmaps aligned with your goals, intensity, and schedule for optimal learning.</div>
+                    <button type="button" class="career-path-btn" data-protected-tool="career-path">Execute</button>
                 </div>
             </div>
         </section>
@@ -314,7 +314,7 @@ $toolCtaAuthAttr = empty($loggedIn) ? ' data-auth-open="login"' : '';
     padding-bottom: 0;
     margin-bottom: 0;
 ">
-    To use our model <a href="study-buddy.php" class="protected-trigger-link"<?= $toolCtaAuthAttr ?>>press here</a>.
+    To use our model <a href="career-path.php" class="protected-trigger-link"<?= $toolCtaAuthAttr ?>>press here</a>.
 </p>
             <section class="wow-section" id="mock-interview" data-protected-block="mock-interview">
                 <div class="wow-layout">
@@ -460,7 +460,7 @@ $toolCtaAuthAttr = empty($loggedIn) ? ' data-auth-open="login"' : '';
 
             <div class="testimonial-card fade-in">
                 <div class="stars" aria-label="5 out of 5 stars">5/5</div>
-                <p class="testimonial-text">"The AI Study Buddy helped me understand complex algorithms. My exam score improved alot!"</p>
+                <p class="testimonial-text">"The AI Career Prep helped me understand complex algorithms. My exam score improved alot!"</p>
                 <div class="testimonial-author">- Liam, Computer Science</div>
             </div>
 

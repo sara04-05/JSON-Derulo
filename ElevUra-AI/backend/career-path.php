@@ -1,6 +1,6 @@
 <?php
 /**
- * ElevUra — Study Buddy AI Generation Backend
+ * ElevUra — Career Prep AI Generation Backend
  */
 declare(strict_types=1);
 
@@ -85,7 +85,7 @@ function study_buddy_call_openrouter(string $prompt, string $token, string $mode
         'Expect:',
         'Authorization: Bearer ' . $token,
         'HTTP-Referer: ' . (string) (app_env('OPENROUTER_HTTP_REFERER', '') ?: 'http://localhost'),
-        'X-Title: ElevUra Study Buddy',
+        'X-Title: ElevUra Career Prep',
     ];
 
     curl_setopt_array($ch, [

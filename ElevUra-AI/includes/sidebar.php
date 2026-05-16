@@ -1,9 +1,9 @@
 <?php
-/** @var string $activeNav home|dashboard|research-assistant|study-buddy */
+/** @var string $activeNav home|dashboard|research-assistant|career-path */
 $activeNav = $activeNav ?? (
     $pageSlug === 'user-dashboard' ? 'dashboard' : (
         $pageSlug === 'research-assistant' ? 'research-assistant' : (
-            $pageSlug === 'study-buddy' ? 'study-buddy' : 'home'
+            $pageSlug === 'career-path' ? 'career-path' : 'home'
         )
     )
 );
@@ -15,7 +15,7 @@ $navItems = [
     'dashboard' => ['href' => 'user_dashboard.php', 'label' => 'Mission Control', 'icon' => 'grid'],
     'career-coach' => ['href' => 'MockInterview.php', 'label' => 'AI Career Coach', 'icon' => 'coach'],
     'cv-optimizer' => ['href' => 'cv-optimizer.php', 'label' => 'CV Optimizer', 'icon' => 'cv'],
-    'study-buddy' => ['href' => 'study-buddy.php', 'label' => 'Study Buddy', 'icon' => 'study'],
+    'career-path' => ['href' => 'career-path.php', 'label' => 'Career Prep', 'icon' => 'study'],
     'ai-cv-writer' => ['href' => 'CVwriter.php', 'label' => 'AI CV Writer', 'icon' => 'writer'],
 ];
 
@@ -54,11 +54,11 @@ function sidebar_active(string $key, string $activeNav): string
                     </span>
                     <span><?= e($navItems['cv-optimizer']['label']) ?></span>
                 </a>
-                <a href="<?= e($navItems['study-buddy']['href']) ?>" class="sidebar-item<?= sidebar_active('study-buddy', $activeNav) ?>"<?= $sidebarAuthAttr ?>>
+                <a href="<?= e($navItems['career-path']['href']) ?>" class="sidebar-item<?= sidebar_active('career-path', $activeNav) ?>"<?= $sidebarAuthAttr ?>>
                     <span class="sidebar-item-icon" aria-hidden="true">
                         <svg viewBox="0 0 24 24"><circle cx="9" cy="12" r="5"/><circle cx="15" cy="12" r="5"/></svg>
                     </span>
-                    <span><?= e($navItems['study-buddy']['label']) ?></span>
+                    <span><?= e($navItems['career-path']['label']) ?></span>
                 </a>
                 <a href="<?= e($navItems['ai-cv-writer']['href']) ?>" class="sidebar-item<?= sidebar_active('ai-cv-writer', $activeNav) ?>"<?= $sidebarAuthAttr ?>>
                     <span class="sidebar-item-icon" aria-hidden="true">

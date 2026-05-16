@@ -1,5 +1,5 @@
 /**
- * ElevUra — Study Buddy Frontend Logic
+ * ElevUra — Career Prep Frontend Logic
  */
 (function () {
   function $(sel) { return document.querySelector(sel); }
@@ -8,11 +8,11 @@
   const API_ENDPOINT = 'backend/study_buddy.php';
 
   function init() {
-    const workspace = $('#study-buddy-workspace');
+    const workspace = $('#career-path-workspace');
     if (!workspace) return;
 
-    // Handle Study Buddy Card clicks
-    $$('.study-buddy-card, .study-buddy-btn').forEach(el => {
+    // Handle Career Prep Card clicks
+    $$('.career-path-card, .career-path-btn').forEach(el => {
       el.addEventListener('click', (e) => {
         if (!window.ElevUraAuth?.isLoggedIn()) return; // Handled by protected-ui.js
         
@@ -28,7 +28,7 @@
   }
 
   function openWorkspace(type) {
-    const workspace = $('#study-buddy-workspace');
+    const workspace = $('#career-path-workspace');
     const typeInput = $('#sb-type');
     const titleEl = $('#sb-workspace-title');
     const badgeEl = $('#sb-workspace-badge');
@@ -173,7 +173,7 @@
     $('#sb-content-container').innerHTML = '';
     $('#sb-error').classList.add('hidden');
     showWarning('');
-    if (hideWorkspace) $('#study-buddy-workspace').classList.add('hidden');
+    if (hideWorkspace) $('#career-path-workspace').classList.add('hidden');
   }
 
   function setLoading(loading) {
