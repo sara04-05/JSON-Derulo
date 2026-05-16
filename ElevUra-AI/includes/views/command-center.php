@@ -170,7 +170,7 @@
                </section>
 
         <!-- HOW STUDY BUDDY WORKS SECTION -->
-        <section class="study-buddy-works">
+        <section class="study-buddy-works" id="study-buddy-works">
            <span class="wow-badge">PRACTICE &amp; INSTANT FEEDBACK</span>
             <h3>Study <span> Buddy</span> AI</h3>
             <div class="study-buddy-grid">

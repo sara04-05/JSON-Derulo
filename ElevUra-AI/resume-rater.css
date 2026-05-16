@@ -1,15 +1,15 @@
 /* ATS Resume Analyzer — extended dashboard styles */
-.content {
+.content-area .elevura-tool .content {
     max-width: 1100px;
 }
 
-.job-description-block {
+.content-area .elevura-tool .job-description-block {
     margin-top: 24px;
     padding-top: 24px;
     border-top: 1px solid var(--border-secondary);
 }
 
-.job-description-block label {
+.content-area .elevura-tool .job-description-block label {
     display: block;
     font-size: 13px;
     font-weight: 600;
@@ -17,13 +17,13 @@
     margin-bottom: 8px;
 }
 
-.job-description-block .label-hint {
+.content-area .elevura-tool .job-description-block .label-hint {
     font-weight: 400;
     color: var(--text-muted);
     font-size: 12px;
 }
 
-#jobDescription {
+.content-area .elevura-tool #jobDescription {
     width: 100%;
     min-height: 120px;
     padding: 14px 16px;
@@ -38,49 +38,49 @@
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-#jobDescription:focus {
+.content-area .elevura-tool #jobDescription:focus {
     outline: none;
     border-color: var(--accent-cyan);
     box-shadow: 0 0 0 3px rgba(0, 231, 255, 0.12);
 }
 
-.upload-area.file-ready {
+.content-area .elevura-tool .upload-area.file-ready {
     border-color: var(--accent-teal);
     background: rgba(0, 229, 255, 0.06);
 }
 
-.glass-card {
+.content-area .elevura-tool .glass-card {
     background: linear-gradient(145deg, rgba(34, 37, 44, 0.92) 0%, rgba(26, 29, 34, 0.88) 100%);
     backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.06);
     box-shadow: var(--shadow-card);
 }
 
-.ats-dashboard {
+.content-area .elevura-tool .ats-dashboard {
     display: flex;
     flex-direction: column;
     gap: 24px;
     animation: slideIn 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.ats-metrics-grid {
+.content-area .elevura-tool .ats-metrics-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 16px;
 }
 
-.ats-metric-card {
+.content-area .elevura-tool .ats-metric-card {
     padding: 20px;
     border-radius: 18px;
     transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-.ats-metric-card:hover {
+.content-area .elevura-tool .ats-metric-card:hover {
     transform: translateY(-3px);
     box-shadow: 0 12px 40px rgba(0, 231, 255, 0.08);
 }
 
-.ats-metric-label {
+.content-area .elevura-tool .ats-metric-label {
     font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
@@ -89,7 +89,7 @@
     margin-bottom: 8px;
 }
 
-.ats-metric-value {
+.content-area .elevura-tool .ats-metric-value {
     font-size: 32px;
     font-weight: 800;
     font-variant-numeric: tabular-nums;
@@ -100,82 +100,82 @@
     line-height: 1.1;
 }
 
-.ats-metric-sub {
+.content-area .elevura-tool .ats-metric-sub {
     font-size: 12px;
     color: var(--text-secondary);
     margin-top: 4px;
     margin-bottom: 12px;
 }
 
-.ats-metric-bar {
+.content-area .elevura-tool .ats-metric-bar {
     height: 5px;
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.08);
     overflow: hidden;
 }
 
-.ats-metric-fill {
+.content-area .elevura-tool .ats-metric-fill {
     height: 100%;
     border-radius: 999px;
     background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
     transition: width 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.2s;
 }
 
-.ats-row-2 {
+.content-area .elevura-tool .ats-row-2 {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
 }
 
-.ats-panel {
+.content-area .elevura-tool .ats-panel {
     padding: 24px;
     border-radius: 20px;
 }
 
-.ats-panel-title {
+.content-area .elevura-tool .ats-panel-title {
     font-size: 16px;
     font-weight: 700;
     color: var(--text-primary);
     margin-bottom: 16px;
 }
 
-.assessment-text {
+.content-area .elevura-tool .assessment-text {
     font-size: 14px;
     color: var(--text-secondary);
     line-height: 1.8;
     margin-bottom: 8px;
 }
 
-.ats-muted {
+.content-area .elevura-tool .ats-muted {
     font-size: 13px;
     color: var(--text-muted);
     line-height: 1.6;
 }
 
-.keyword-panel {
+.content-area .elevura-tool .keyword-panel {
     padding: 20px;
 }
 
-.keyword-score-row {
+.content-area .elevura-tool .keyword-score-row {
     font-size: 14px;
     color: var(--text-secondary);
     margin-bottom: 16px;
 }
 
-.keyword-pct {
+.content-area .elevura-tool .keyword-pct {
     font-size: 28px;
     font-weight: 800;
     color: var(--accent-cyan);
     margin-right: 6px;
 }
 
-.kw-section {
+.content-area .elevura-tool .kw-section {
     margin-bottom: 14px;
     font-size: 13px;
     color: var(--text-secondary);
 }
 
-.kw-section strong {
+.content-area .elevura-tool .kw-section strong {
     display: block;
     color: var(--text-primary);
     margin-bottom: 8px;
@@ -184,44 +184,44 @@
     letter-spacing: 0.4px;
 }
 
-.kw-tags {
+.content-area .elevura-tool .kw-tags {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
 }
 
-.kw-tag {
+.content-area .elevura-tool .kw-tag {
     font-size: 12px;
     padding: 5px 10px;
     border-radius: 8px;
     font-weight: 500;
 }
 
-.kw-match {
+.content-area .elevura-tool .kw-match {
     background: rgba(16, 185, 129, 0.15);
     color: #6ee7b7;
     border: 1px solid rgba(16, 185, 129, 0.25);
 }
 
-.kw-miss {
+.content-area .elevura-tool .kw-miss {
     background: rgba(245, 158, 11, 0.12);
     color: #fcd34d;
     border: 1px solid rgba(245, 158, 11, 0.2);
 }
 
-.skills-grid {
+.content-area .elevura-tool .skills-grid {
     display: flex;
     flex-direction: column;
     gap: 12px;
 }
 
-.skill-category {
+.content-area .elevura-tool .skill-category {
     padding: 14px;
     border-radius: 12px;
     background: rgba(0, 0, 0, 0.2);
 }
 
-.skill-cat-title {
+.content-area .elevura-tool .skill-cat-title {
     font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
@@ -230,13 +230,13 @@
     margin-bottom: 10px;
 }
 
-.skill-tags {
+.content-area .elevura-tool .skill-tags {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
 }
 
-.skill-tag {
+.content-area .elevura-tool .skill-tag {
     font-size: 12px;
     padding: 4px 10px;
     border-radius: 999px;
@@ -245,13 +245,13 @@
     color: var(--text-primary);
 }
 
-.checklist {
+.content-area .elevura-tool .checklist {
     list-style: none;
     margin: 0 0 20px;
     padding: 0;
 }
 
-.check-item {
+.content-area .elevura-tool .check-item {
     display: flex;
     align-items: flex-start;
     gap: 10px;
@@ -261,11 +261,11 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.04);
 }
 
-.check-item.done {
+.content-area .elevura-tool .check-item.done {
     color: var(--text-primary);
 }
 
-.check-box {
+.content-area .elevura-tool .check-box {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -278,19 +278,19 @@
     color: var(--accent-cyan);
 }
 
-.check-item.done .check-box {
+.content-area .elevura-tool .check-item.done .check-box {
     background: rgba(16, 185, 129, 0.2);
     border-color: rgba(16, 185, 129, 0.4);
 }
 
-.btn-row {
+.content-area .elevura-tool .btn-row {
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
     margin-top: 8px;
 }
 
-.btn-download {
+.content-area .elevura-tool .btn-download {
     padding: 12px 20px;
     border-radius: 12px;
     border: none;
@@ -302,12 +302,12 @@
     transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.btn-download:hover {
+.content-area .elevura-tool .btn-download:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 24px rgba(0, 231, 255, 0.3);
 }
 
-.btn-secondary-ui {
+.content-area .elevura-tool .btn-secondary-ui {
     padding: 12px 20px;
     border-radius: 12px;
     border: 1px solid var(--border-secondary);
@@ -319,19 +319,19 @@
     transition: background 0.2s, border-color 0.2s;
 }
 
-.btn-secondary-ui:hover {
+.content-area .elevura-tool .btn-secondary-ui:hover {
     background: rgba(255, 255, 255, 0.08);
     border-color: var(--accent-cyan);
 }
 
-.loading-steps {
+.content-area .elevura-tool .loading-steps {
     display: flex;
     gap: 16px;
     flex-wrap: wrap;
     justify-content: center;
 }
 
-.loading-step {
+.content-area .elevura-tool .loading-step {
     font-size: 12px;
     color: var(--text-muted);
     padding: 6px 12px;
@@ -339,25 +339,25 @@
     border: 1px solid transparent;
 }
 
-.loading-step.active {
+.content-area .elevura-tool .loading-step.active {
     color: var(--accent-cyan);
     border-color: rgba(0, 231, 255, 0.3);
     background: rgba(0, 231, 255, 0.08);
 }
 
-.ats-error-card {
+.content-area .elevura-tool .ats-error-card {
     text-align: center;
     padding: 48px 32px;
 }
 
-.ats-error-title {
+.content-area .elevura-tool .ats-error-title {
     font-size: 20px;
     font-weight: 700;
     color: #f87171;
     margin-bottom: 12px;
 }
 
-.extraction-badge {
+.content-area .elevura-tool .extraction-badge {
     display: inline-block;
     margin-top: 12px;
     padding: 4px 10px;
@@ -370,16 +370,16 @@
 }
 
 @media (max-width: 900px) {
-    .ats-metrics-grid {
+.content-area .elevura-tool .ats-metrics-grid {
         grid-template-columns: repeat(2, 1fr);
     }
-    .ats-row-2 {
+.content-area .elevura-tool .ats-row-2 {
         grid-template-columns: 1fr;
     }
 }
 
 @media (max-width: 560px) {
-    .ats-metrics-grid {
+.content-area .elevura-tool .ats-metrics-grid {
         grid-template-columns: 1fr;
     }
 }
