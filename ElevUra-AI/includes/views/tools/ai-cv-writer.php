@@ -1,8 +1,8 @@
-﻿<div class="cv-wrap">
+<div class="cv-wrap">
                     <header class="header">
                         <div class="badge">ElevUra AI</div>
                         <h1>AI <span>CV Writer</span></h1>
-                        <p class="sub">Fill in your details below, preview your professional resume in real-time, then download it as a polished PDF â€” ready to impress.</p>
+                        <p class="sub">Fill in your details below, preview your professional resume in real-time, then download it as a polished PDF — ready to impress.</p>
                     </header>
 
                     <!-- Progress Steps -->
@@ -20,7 +20,7 @@
 
                     <!-- Step 0: Personal Info -->
                     <section id="step0" class="card step-panel active">
-                        <div class="pill">Step 1 â€” Personal Information</div>
+                        <div class="pill">Step 1 — Personal Information</div>
                         <div class="row">
                             <div class="field">
                                 <label for="fullName">Full Name *</label>
@@ -57,37 +57,37 @@
                             <p class="hint">A strong summary hooks the recruiter. Focus on impact and specialisation.</p>
                         </div>
                         <div class="btn-row">
-                            <button type="button" class="btn btn-primary" id="btnNext0">Continue to Experience â†’</button>
+                            <button type="button" class="btn btn-primary" id="btnNext0">Continue to Experience →</button>
                         </div>
                     </section>
 
                     <!-- Step 1: Experience -->
                     <section id="step1" class="card step-panel">
-                        <div class="pill">Step 2 â€” Work Experience</div>
+                        <div class="pill">Step 2 — Work Experience</div>
                         <p class="hint" style="margin-bottom:18px;">Add your work history, most recent first. You can add multiple positions.</p>
                         <div id="experienceList"></div>
                         <button type="button" class="btn btn-ghost add-btn" id="addExperience">+ Add Position</button>
                         <div class="btn-row" style="margin-top:18px;">
-                            <button type="button" class="btn btn-ghost" id="btnBack1">â† Back</button>
-                            <button type="button" class="btn btn-primary" id="btnNext1">Continue to Education â†’</button>
+                            <button type="button" class="btn btn-ghost" id="btnBack1">← Back</button>
+                            <button type="button" class="btn btn-primary" id="btnNext1">Continue to Education →</button>
                         </div>
                     </section>
 
                     <!-- Step 2: Education -->
                     <section id="step2" class="card step-panel">
-                        <div class="pill">Step 3 â€” Education</div>
+                        <div class="pill">Step 3 — Education</div>
                         <p class="hint" style="margin-bottom:18px;">Add your educational background.</p>
                         <div id="educationList"></div>
                         <button type="button" class="btn btn-ghost add-btn" id="addEducation">+ Add Education</button>
                         <div class="btn-row" style="margin-top:18px;">
-                            <button type="button" class="btn btn-ghost" id="btnBack2">â† Back</button>
-                            <button type="button" class="btn btn-primary" id="btnNext2">Continue to Skills â†’</button>
+                            <button type="button" class="btn btn-ghost" id="btnBack2">← Back</button>
+                            <button type="button" class="btn btn-primary" id="btnNext2">Continue to Skills →</button>
                         </div>
                     </section>
 
                     <!-- Step 3: Skills -->
                     <section id="step3" class="card step-panel">
-                        <div class="pill">Step 4 â€” Skills & Extras</div>
+                        <div class="pill">Step 4 — Skills & Extras</div>
                         <div class="field">
                             <label for="skills">Technical Skills *</label>
                             <textarea id="skills" placeholder="e.g. JavaScript, React, Node.js, Python, SQL, AWS, Docker..."></textarea>
@@ -106,14 +106,14 @@
                             <input type="text" id="interests" placeholder="e.g. Open source, marathon running, photography">
                         </div>
                         <div class="btn-row" style="margin-top:18px;">
-                            <button type="button" class="btn btn-ghost" id="btnBack3">â† Back</button>
-                            <button type="button" class="btn btn-primary" id="btnNext3">Preview Resume â†’</button>
+                            <button type="button" class="btn btn-ghost" id="btnBack3">← Back</button>
+                            <button type="button" class="btn btn-primary" id="btnNext3">Preview Resume →</button>
                         </div>
                     </section>
 
                     <!-- Step 4: Preview & Download -->
                     <section id="step4" class="card step-panel preview-step">
-                        <div class="pill">Step 5 â€” Preview & Download</div>
+                        <div class="pill">Step 5 — Preview & Download</div>
                         <div class="preview-toolbar">
                             <div class="template-selector">
                                 <label for="templateSelect">Template</label>
@@ -141,7 +141,7 @@
                                 <button type="button" class="btn btn-primary download-btn" id="btnDownloadATS" title="Selectable text PDF for ATS systems">
                                     Download ATS PDF
                                 </button>
-                                <button type="button" class="btn btn-ghost download-btn btn-export-print" id="btnDownloadPrint" title="Opens print dialog â€” Save as PDF with full styling">
+                                <button type="button" class="btn btn-ghost download-btn btn-export-print" id="btnDownloadPrint" title="Opens print dialog — Save as PDF with full styling">
                                     Save as PDF (Print)
                                 </button>
                             </div>
@@ -156,11 +156,11 @@
                             </div>
                         </div>
                         <div class="btn-row btn-row-downloads" style="margin-top:18px;">
-                            <button type="button" class="btn btn-ghost" id="btnBack4">â† Back to Edit</button>
+                            <button type="button" class="btn btn-ghost" id="btnBack4">← Back to Edit</button>
                             <button type="button" class="btn btn-primary" id="btnDownloadATS2">Download ATS PDF</button>
                             <button type="button" class="btn btn-ghost btn-export-print" id="btnDownloadPrint2">Save as PDF (Print)</button>
                         </div>
                     </section>
 
-                    <p class="footer-note">Your data stays in your browser â€” nothing is sent to any server.</p>
+                    <p class="footer-note">Your data stays in your browser — nothing is sent to any server.</p>
                 </div>
