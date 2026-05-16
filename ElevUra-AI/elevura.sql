@@ -99,6 +99,22 @@ CREATE TABLE `mock_interviews` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ---------------------------------------------------------------------------
+-- study_materials
+-- ---------------------------------------------------------------------------
+CREATE TABLE `study_materials` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` INT UNSIGNED NOT NULL,
+  `material_type` VARCHAR(32) NOT NULL,
+  `job_title` VARCHAR(255) NOT NULL,
+  `job_level` VARCHAR(50) DEFAULT NULL,
+  `content_json` LONGTEXT NOT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_study_materials_user_created` (`user_id`, `created_at`),
+  CONSTRAINT `fk_study_materials_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ---------------------------------------------------------------------------
 -- Demo user (password: password123)
 -- ---------------------------------------------------------------------------
 INSERT INTO `users` (`id`, `username`, `email`, `password_hash`, `avatar`, `membership_tier`, `created_at`) VALUES

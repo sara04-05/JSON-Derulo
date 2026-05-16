@@ -64,7 +64,6 @@
       industry: $('#sb-industry').value.trim(),
       skills: $('#sb-skills').value.trim(),
       jobContext: $('#sb-context').value.trim(),
-      geminiKey: $('#sb-geminiKey').value.trim()
     };
 
     if (!data.jobTitle) {

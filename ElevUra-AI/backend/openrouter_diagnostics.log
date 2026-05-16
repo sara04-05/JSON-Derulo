@@ -1,0 +1,9 @@
+[2026-05-16T10:42:25+02:00] model=deepseek/deepseek-chat-v3-0324:free ok=0 http=404 err=-
+RAW_RESPONSE: {"error":{"message":"No endpoints found for deepseek/deepseek-chat-v3-0324:free.","code":404},"user_id":"user_2xbQqCKw1LswJvauCsA8eV7FN3f"}
+--------------------------------------------------------------------------------
+[2026-05-16T10:42:25+02:00] model=meta-llama/llama-3.1-8b-instruct:free ok=0 http=404 err=-
+RAW_RESPONSE: {"error":{"message":"No endpoints found for meta-llama/llama-3.1-8b-instruct:free.","code":404},"user_id":"user_2xbQqCKw1LswJvauCsA8eV7FN3f"}
+--------------------------------------------------------------------------------
+[2026-05-16T10:42:25+02:00] model=mistralai/mistral-7b-instruct:free ok=0 http=404 err=-
+RAW_RESPONSE: {"error":{"message":"No endpoints found for mistralai/mistral-7b-instruct:free.","code":404},"user_id":"user_2xbQqCKw1LswJvauCsA8eV7FN3f"}
+--------------------------------------------------------------------------------

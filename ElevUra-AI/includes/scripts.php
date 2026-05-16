@@ -7,11 +7,16 @@
     <script src="auth-state.js"></script>
     <script src="auth-ui.js"></script>
     <script src="protected-ui.js"></script>
-<?php if (($pageSlug ?? 'home') === 'user-dashboard'): ?>
+    <?php if (($pageSlug ?? 'home') === 'user-dashboard'): ?>
     <script src="user-dashboard.js"></script>
+    <?php elseif (($pageSlug ?? 'home') === 'research-assistant'): ?>
+        <script src="dashboard-interactions.js"></script>
+        <script src="research-assistant.js"></script>
+    <?php elseif (($pageSlug ?? 'home') === 'study-buddy'): ?>
+        <script src="dashboard-interactions.js"></script>
+        <script src="study-buddy.js"></script>
 <?php else: ?>
     <script src="dashboard-interactions.js"></script>
-    <script src="study-buddy.js"></script>
     <script>
         function toggleFAQ(element) {
             const faqItem = element.parentElement;

@@ -1,6 +1,6 @@
 ﻿<?php
-/** @var string $activeNav home|dashboard */
-$activeNav = $activeNav ?? ($pageSlug === 'user-dashboard' ? 'dashboard' : 'home');
+/** @var string $activeNav home|dashboard|research-assistant */
+$activeNav = $activeNav ?? ($pageSlug === 'user-dashboard' ? 'dashboard' : ($pageSlug === 'research-assistant' ? 'research-assistant' : 'home'));
 ?>
         <aside class="sidebar">
             <div class="sidebar-brand">
@@ -32,13 +32,13 @@ $activeNav = $activeNav ?? ($pageSlug === 'user-dashboard' ? 'dashboard' : 'home
                     </span>
                     <span>CV Optimizer</span>
                 </a>
-                <a href="index.php#module-study-buddy" class="sidebar-item" data-nav-tool="study-buddy">
+                <a href="study-buddy.php" class="sidebar-item" data-nav-tool="study-buddy">
                     <span class="sidebar-item-icon" aria-hidden="true">
                         <svg viewBox="0 0 24 24"><circle cx="9" cy="12" r="5"/><circle cx="15" cy="12" r="5"/></svg>
                     </span>
                     <span>Study Buddy</span>
                 </a>
-                <a href="index.php#module-research-assistant" class="sidebar-item" data-nav-tool="research-assistant">
+                <a href="research_assistant.php" class="sidebar-item<?= $activeNav === 'research-assistant' ? ' active' : '' ?>">
                     <span class="sidebar-item-icon" aria-hidden="true">
                         <svg viewBox="0 0 24 24"><path d="M9 3h6v2H9V3z"/><path d="M10 5v5.2c0 .86-.37 1.68-1 2.26L6 16h12l-3-3.54c-.63-.58-1-1.4-1-2.26V5"/><path d="M6 16h12v2a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-2z"/></svg>
                     </span>
