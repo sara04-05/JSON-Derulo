@@ -6,6 +6,48 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/config.php';
 
+// Load .env into environment (server-side only) and provide app_env helper
+if (!function_exists('app_load_env_file')) {
+    function app_load_env_file(?string $path = null): void
+    {
+        $root = dirname(__DIR__);
+        $path = $path ?? $root . '/.env';
+        if (!is_file($path)) {
+            return;
+        }
+
+        $lines = @file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        if (!is_array($lines)) return;
+
+        foreach ($lines as $line) {
+            $line = trim($line);
+            if ($line === '' || str_starts_with($line, '#')) continue;
+            if (strpos($line, '=') === false) continue;
+            [$k, $v] = explode('=', $line, 2);
+            $k = trim($k);
+            $v = trim($v);
+            $v = preg_replace('/^\"(.*)\"$/', '$1', $v);
+            $v = preg_replace('/^\'(.*)\'$/', '$1', $v);
+            if (getenv($k) === false) {
+                putenv($k . '=' . $v);
+            }
+            if (!isset($_ENV[$k])) $_ENV[$k] = $v;
+            if (!isset($_SERVER[$k])) $_SERVER[$k] = $v;
+        }
+    }
+}
+
+if (!function_exists('app_env')) {
+    function app_env(string $key, $default = null)
+    {
+        $val = getenv($key);
+        return $val === false ? $default : $val;
+    }
+}
+
+// Load env file once on bootstrap
+app_load_env_file();
+
 if (session_status() === PHP_SESSION_NONE) {
     session_set_cookie_params([
         'lifetime' => 0,

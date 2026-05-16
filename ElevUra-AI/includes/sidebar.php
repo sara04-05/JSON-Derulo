@@ -1,6 +1,6 @@
 ﻿<?php
-/** @var string $activeNav home|dashboard */
-$activeNav = $activeNav ?? ($pageSlug === 'user-dashboard' ? 'dashboard' : 'home');
+/** @var string $activeNav home|dashboard|research-assistant */
+$activeNav = $activeNav ?? ($pageSlug === 'user-dashboard' ? 'dashboard' : ($pageSlug === 'research-assistant' ? 'research-assistant' : 'home'));
 $sidebarGuest = empty($loggedIn);
 $sidebarAuthAttr = $sidebarGuest ? ' data-auth-open="login"' : '';
 ?>
@@ -34,13 +34,13 @@ $sidebarAuthAttr = $sidebarGuest ? ' data-auth-open="login"' : '';
                     </span>
                     <span>CV Optimizer</span>
                 </a>
-                <a href="index.php#module-study-buddy" class="sidebar-item"<?= $sidebarAuthAttr ?>>
+                <a href="study-buddy.php" class="sidebar-item" data-nav-tool="study-buddy">
                     <span class="sidebar-item-icon" aria-hidden="true">
                         <svg viewBox="0 0 24 24"><circle cx="9" cy="12" r="5"/><circle cx="15" cy="12" r="5"/></svg>
                     </span>
                     <span>Study Buddy</span>
                 </a>
-                <a href="index.php#module-ai-cv-writer" class="sidebar-item"<?= $sidebarAuthAttr ?>>
+                <a href="research_assistant.php" class="sidebar-item<?= $activeNav === 'research-assistant' ? ' active' : '' ?>">
                     <span class="sidebar-item-icon" aria-hidden="true">
                         <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
                     </span>
