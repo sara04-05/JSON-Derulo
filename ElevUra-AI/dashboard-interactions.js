@@ -82,14 +82,63 @@ class ElevUraDashboard {
     const icon = document.querySelector('.notification-icon');
     if (icon) {
       icon.addEventListener('click', () => console.log('Notification menu'));
+  setupInteractions() {
+    this.setupSidebarNavigation();
+
+    if (this.commandInput) {
+      this.commandInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') this.executeCommand();
+      });
     }
+
+    if (this.executeButton) {
+      this.executeButton.addEventListener('click', () => this.executeCommand());
+    }
+
+    this.setupNotificationIcon();
+    this.setupFullscreenToggle();
   }
+
+  setupSidebarNavigation() {
+    document.querySelectorAll('.sidebar-menu .sidebar-item[data-view="command"]').forEach((item) => {
+      item.addEventListener('click', (e) => {
+        if (item.hasAttribute('data-protected-tool')) return;
+        e.preventDefault();
+        document.querySelectorAll('.sidebar-item').forEach((i) => i.classList.remove('active'));
+        item.classList.add('active');
+      });
+    });
+  }
+
+  setupFullscreenToggle() {
+    const btn = document.querySelector('.header-fullscreen');
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen?.().catch(() => {});
+      } else {
+        document.exitFullscreen?.().catch(() => {});
+      }
+    });
+  }
+
+  setupNotificationIcon() {
+    const icon = document.querySelector('.notification-icon');
+    if (icon) icon.addEventListener('click', () => console.log('Notification menu'));
+  }
+
+  executeCommand() {
+    if (window.ElevUraProtected && !window.ElevUraAuth?.isLoggedIn()) {
+      window.ElevUraAuthUI?.openAuth('login');
+      return;
+    }
 
   /**
    * Execute command with visual feedback
    */
   executeCommand() {
     const value = this.commandInput.value.trim();
+    const value = this.commandInput?.value.trim();
     if (!value) return;
 
     this.executeButton.textContent = 'Processing...';
@@ -98,11 +147,13 @@ class ElevUraDashboard {
 
     setTimeout(() => {
       this.executeButton.innerHTML = '✓ Executed <span class="execute-key" aria-hidden="true">↵</span>';
+      this.executeButton.innerHTML = 'Executed <span class="execute-key" aria-hidden="true">Enter</span>';
       this.executeButton.style.background = 'linear-gradient(135deg, #A78BFA 0%, #8B5CF6 100%)';
       this.executeButton.style.color = '#F5F3FF';
 
       setTimeout(() => {
         this.executeButton.innerHTML = 'Execute <span class="execute-key" aria-hidden="true">↵</span>';
+        this.executeButton.innerHTML = 'Execute <span class="execute-key" aria-hidden="true">Enter</span>';
         this.executeButton.disabled = false;
         this.executeButton.style.opacity = '1';
         this.executeButton.style.background = '';
@@ -112,11 +163,11 @@ class ElevUraDashboard {
     }, 800);
 
     console.log(`Command: ${value}`);
+        if (this.commandInput) this.commandInput.value = '';
+      }, 1500);
+    }, 800);
   }
 
-  /**
-   * Setup metrics counter animation
-   */
   setupMetricsAnimation() {
     document.querySelectorAll('.metric-value[data-count-to]').forEach((metric) => {
       const target = parseInt(metric.getAttribute('data-count-to'), 10);
@@ -136,13 +187,14 @@ class ElevUraDashboard {
   }
 }
 
-/**
- * Initialize on DOM ready
- */
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
     new ElevUraDashboard();
   });
+} else {
+  new ElevUraDashboard();
+}
+  document.addEventListener('DOMContentLoaded', () => new ElevUraDashboard());
 } else {
   new ElevUraDashboard();
 }

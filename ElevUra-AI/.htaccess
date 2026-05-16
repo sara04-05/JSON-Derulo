@@ -1,0 +1,7 @@
+DirectoryIndex index.php
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^dashboard\.html$ index.php [R=301,L]
+    RewriteRule ^auth\.html$ auth.php [R=301,L]
+</IfModule>
