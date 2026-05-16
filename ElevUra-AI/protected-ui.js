@@ -4,7 +4,6 @@
 (function () {
   const LOCKABLE_SELECTOR = [
     '[data-protected-block]',
-    '.module-card[data-protected-tool]',
     '.study-buddy-card[data-protected-tool]',
     '.study-buddy-btn[data-protected-tool]',
     '#btnStart[data-protected-tool]',
@@ -97,35 +96,11 @@
       });
     });
 
-    document.querySelectorAll('.module-card[data-protected-tool]').forEach((card) => {
-      card.addEventListener('click', (e) => {
-        if (isLoggedIn()) return;
-        handleProtectedClick(e, card);
-      });
-    });
-  }
-
-  function bindSidebarNav() {
-    document.querySelector('[data-sidebar-dashboard]')?.addEventListener('click', (e) => {
-      if (!isLoggedIn()) {
-        e.preventDefault();
-        openAuth();
-      }
-    });
-
-    document.querySelectorAll('[data-nav-tool]').forEach((link) => {
-      link.addEventListener('click', (e) => {
-        if (isLoggedIn()) return;
-        e.preventDefault();
-        openAuth();
-      });
-    });
   }
 
   function init() {
     syncProtectedState();
     bindProtectedClicks();
-    bindSidebarNav();
     window.addEventListener('elevura:auth-change', syncProtectedState);
   }
 

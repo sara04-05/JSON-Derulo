@@ -31,7 +31,7 @@
                 <!-- MODULE GRID -->
                 <div class="module-grid">
                     <!-- AI Career Coach -->
-                    <div class="module-card" id="module-career-coach" data-protected-tool="career-coach">
+                    <div class="module-card" id="module-career-coach">
                         <div class="module-header">
                             <div class="module-icon module-icon-accent-purple" aria-hidden="true">
                                 <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -44,7 +44,7 @@
                     </div>
 
                     <!-- CV Optimizer -->
-                    <div class="module-card" id="module-cv-optimizer" data-protected-tool="cv-optimizer">
+                    <div class="module-card" id="module-cv-optimizer">
                         <div class="module-header">
                             <div class="module-icon module-icon-accent-cyan" aria-hidden="true">
                                 <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"></svg>
@@ -57,7 +57,7 @@
                     </div>
 
                     <!-- Study Buddy -->
-                    <div class="module-card" id="module-study-buddy" data-protected-tool="study-buddy">
+                    <div class="module-card" id="module-study-buddy">
                         <div class="module-header">
                             <div class="module-icon module-icon-accent-cyan" aria-hidden="true">
                                 <svg viewBox="0 0 24 24"><circle cx="9" cy="12" r="5"/><circle cx="15" cy="12" r="5"/></svg>
@@ -69,16 +69,16 @@
                         </p>
                         </div>
 
-                    <!-- Research Assistant -->
-                    <div class="module-card" id="module-research-assistant" data-protected-tool="research-assistant">
+                    <!-- AI CV Writer -->
+                    <div class="module-card" id="module-ai-cv-writer">
                         <div class="module-header">
                             <div class="module-icon module-icon-accent-purple" aria-hidden="true">
-                                <svg viewBox="0 0 24 24"><path d="M9 3h6v2H9V3z"/><path d="M10 5v5.2c0 .86-.37 1.68-1 2.26L6 16h12l-3-3.54c-.63-.58-1-1.4-1-2.26V5"/><path d="M6 16h12v2a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-2z"/></svg>
+                                <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
                             </div>
                         </div>
-                        <h3 class="module-title">Research Assistant</h3>
+                        <h3 class="module-title">AI CV Writer</h3>
                         <p class="module-description">
-                            Summarizes PDFs, generates citations, extracts key points, and provides research recommendations.
+                            Writes  CVs, rewrites bullet points, strengthens summaries, and aligns content to your target role.
                         </p>
                     </div>
                 </div>

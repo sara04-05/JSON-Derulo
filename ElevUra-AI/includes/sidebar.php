@@ -1,6 +1,8 @@
 ﻿<?php
 /** @var string $activeNav home|dashboard */
 $activeNav = $activeNav ?? ($pageSlug === 'user-dashboard' ? 'dashboard' : 'home');
+$sidebarGuest = empty($loggedIn);
+$sidebarAuthAttr = $sidebarGuest ? ' data-auth-open="login"' : '';
 ?>
         <aside class="sidebar">
             <div class="sidebar-brand">
@@ -10,39 +12,39 @@ $activeNav = $activeNav ?? ($pageSlug === 'user-dashboard' ? 'dashboard' : 'home
                 <span class="sidebar-brand-text">ElevUra</span>
             </div>
             <nav class="sidebar-menu">
-                <a href="index.php" class="sidebar-item<?= $activeNav === 'home' ? ' active' : '' ?>" data-view="command">
+                <a href="index.php" class="sidebar-item<?= $activeNav === 'home' ? ' active' : '' ?>" data-view="command"<?= $sidebarAuthAttr ?>>
                     <span class="sidebar-item-icon sidebar-item-icon-terminal" aria-hidden="true">&gt;_</span>
                     <span>Command Center</span>
                 </a>
-                <a href="user_dashboard.php" class="sidebar-item<?= $activeNav === 'dashboard' ? ' active' : '' ?>" id="sidebar-mission-control" data-sidebar-dashboard>
+                <a href="user_dashboard.php" class="sidebar-item<?= $activeNav === 'dashboard' ? ' active' : '' ?>" id="sidebar-mission-control" data-sidebar-dashboard<?= $sidebarAuthAttr ?>>
                     <span class="sidebar-item-icon" aria-hidden="true">
                         <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
                     </span>
                     <span>Mission Control</span>
                 </a>
-                <a href="index.php#module-career-coach" class="sidebar-item" data-nav-tool="career-coach">
+                <a href="index.php#module-career-coach" class="sidebar-item"<?= $sidebarAuthAttr ?>>
                     <span class="sidebar-item-icon" aria-hidden="true">
                         <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                     </span>
                     <span>AI Career Coach</span>
                 </a>
-                <a href="index.php#module-cv-optimizer" class="sidebar-item" data-nav-tool="cv-optimizer">
+                <a href="index.php#module-cv-optimizer" class="sidebar-item"<?= $sidebarAuthAttr ?>>
                     <span class="sidebar-item-icon" aria-hidden="true">
                         <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
                     </span>
                     <span>CV Optimizer</span>
                 </a>
-                <a href="index.php#module-study-buddy" class="sidebar-item" data-nav-tool="study-buddy">
+                <a href="index.php#module-study-buddy" class="sidebar-item"<?= $sidebarAuthAttr ?>>
                     <span class="sidebar-item-icon" aria-hidden="true">
                         <svg viewBox="0 0 24 24"><circle cx="9" cy="12" r="5"/><circle cx="15" cy="12" r="5"/></svg>
                     </span>
                     <span>Study Buddy</span>
                 </a>
-                <a href="index.php#module-research-assistant" class="sidebar-item" data-nav-tool="research-assistant">
+                <a href="index.php#module-ai-cv-writer" class="sidebar-item"<?= $sidebarAuthAttr ?>>
                     <span class="sidebar-item-icon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24"><path d="M9 3h6v2H9V3z"/><path d="M10 5v5.2c0 .86-.37 1.68-1 2.26L6 16h12l-3-3.54c-.63-.58-1-1.4-1-2.26V5"/><path d="M6 16h12v2a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-2z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
                     </span>
-                    <span>Research Assistant</span>
+                    <span>AI CV Writer</span>
                 </a>
             </nav>
 
