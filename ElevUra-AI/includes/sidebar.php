@@ -1,6 +1,6 @@
 ﻿<?php
-/** @var string $activeNav home|dashboard|career-coach|cv-optimizer|study-buddy|ai-cv-writer */
-$activeNav = $activeNav ?? ($pageSlug === 'user-dashboard' ? 'dashboard' : 'home');
+/** @var string $activeNav home|dashboard|research-assistant */
+$activeNav = $activeNav ?? ($pageSlug === 'user-dashboard' ? 'dashboard' : ($pageSlug === 'research-assistant' ? 'research-assistant' : 'home'));
 $sidebarGuest = empty($loggedIn);
 $sidebarAuthAttr = $sidebarGuest ? ' data-auth-open="login"' : '';
 

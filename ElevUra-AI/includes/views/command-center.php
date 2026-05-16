@@ -1,4 +1,4 @@
-﻿            <section class="content-area" id="view-command-center">
+            <section class="content-area" id="view-command-center">
                 <!-- HERO PANEL -->
                 <div class="hero-panel">
                     <div class="hero-left">
@@ -56,8 +56,8 @@
                         </p>
                     </div>
 
-                    <!-- Study Buddy -->
-                    <div class="module-card" id="module-study-buddy">
+                    <!-- Study Buddy (now a dedicated page) -->
+                    <div class="module-card" id="module-study-buddy" data-protected-tool="study-buddy">
                         <div class="module-header">
                             <div class="module-icon module-icon-accent-cyan" aria-hidden="true">
                                 <svg viewBox="0 0 24 24"><circle cx="9" cy="12" r="5"/><circle cx="15" cy="12" r="5"/></svg>
@@ -67,7 +67,8 @@
                         <p class="module-description">
                             Explains complex topics, generates quizzes, creates personalized study plans, and prepares for exams.
                         </p>
-                        </div>
+                        <p style="margin-top:12px;"><a href="study-buddy.php" class="btn btn-ghost">Open Study Buddy</a></p>
+                    </div>
 
                     <!-- AI CV Writer -->
                     <div class="module-card" id="module-ai-cv-writer">
@@ -230,12 +231,7 @@
                                         <option value="7">7</option>
                                     </select>
                                 </div>
-                                <div class="field">
-                                    <label for="geminiKey">Gemini API key (optional)</label>
-                                    <input type="password" id="geminiKey" placeholder="Paste key for smarter Q&amp;A" autocomplete="off">
-                                </div>
                             </div>
-                            <p class="hint">If you add a <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">Google AI Studio</a> key, questions and final scoring can use Gemini.</p>
                             <div class="btn-row mi-btn-row">
                                 <button type="button" class="btn btn-primary" id="btnStart" data-protected-tool="mock-interview">Start mock interview</button>
                             </div>
