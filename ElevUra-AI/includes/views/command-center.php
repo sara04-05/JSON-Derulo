@@ -67,7 +67,6 @@
                         <p class="module-description">
                             Explains complex topics, generates quizzes, creates personalized study plans, and prepares for exams.
                         </p>
-                        <p style="margin-top:12px;"><a href="study-buddy.php" class="btn btn-ghost">Open Study Buddy</a></p>
                     </div>
 
                     <!-- AI CV Writer -->
