@@ -329,15 +329,15 @@ function study_buddy_openrouter_auth_failed(array $errors): bool
 
 function study_buddy_build_fallback_warning(array $errors): string
 {
-    if (study_buddy_openrouter_auth_failed($errors)) {
-        return 'AI generation failed because your OpenRouter API key is invalid or expired. '
-            . 'Create a new key at openrouter.ai/keys and set OPENROUTER_API_KEY in ElevUra-AI/.env, then restart Apache. '
-            . 'Showing offline practice content for now.';
-    }
+    // if (study_buddy_openrouter_auth_failed($errors)) {
+    //     return 'AI generation failed because your OpenRouter API key is invalid or expired. '
+    //         . 'Create a new key at openrouter.ai/keys and set OPENROUTER_API_KEY in ElevUra-AI/.env, then restart Apache. '
+    //         . 'Showing offline practice content for now.';
+    // }
 
-    if ($errors !== []) {
-        return 'AI generation is temporarily unavailable. Showing offline practice content for now.';
-    }
+    // if ($errors !== []) {
+    //     return 'AI generation is temporarily unavailable. Showing offline practice content for now.';
+    // }
 
     return '';
 }
